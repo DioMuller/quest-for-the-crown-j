@@ -19,3 +19,8 @@
 *.exe
 *.out
 *.app
+/src/QuestForTheCrownJ/Debug/*.ilk
+/src/QuestForTheCrownJ/Debug/*.pdb
+/src/QuestForTheCrownJ/*.sdf
+/src/QuestForTheCrownJ/*.suo
+/src/QuestForTheCrownJ/qftcj-game/Debug
