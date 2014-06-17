@@ -2,16 +2,31 @@
 <Project ToolsVersion="4.0" xmlns="http://schemas.microsoft.com/developer/msbuild/2003">
   <ItemGroup>
     <ClCompile Include="main.cpp" />
+    <ClCompile Include="AnimatedSprite.cpp">
+      <Filter>Base\Drawing</Filter>
+    </ClCompile>
+    <ClCompile Include="Window.cpp">
+      <Filter>Base\Base</Filter>
+    </ClCompile>
   </ItemGroup>
   <ItemGroup>
-    <Filter Include="Rendering">
+    <Filter Include="Base">
       <UniqueIdentifier>{8fdf1bfa-e6a8-4564-aeed-85bcc4afe928}</UniqueIdentifier>
     </Filter>
-    <Filter Include="Rendering\Headers">
+    <Filter Include="Base\Drawing">
       <UniqueIdentifier>{4bc96a6f-ec3c-45ef-a527-30fb6892b201}</UniqueIdentifier>
     </Filter>
-    <Filter Include="Rendering\Source">
-      <UniqueIdentifier>{f7411ca8-fc1a-4a8d-b242-58fa1eee0dfd}</UniqueIdentifier>
+    <Filter Include="Base\Base">
+      <UniqueIdentifier>{e9ea7899-3e3d-4fb8-9660-80c2402643a4}</UniqueIdentifier>
     </Filter>
+  </ItemGroup>
+  <ItemGroup>
+    <ClInclude Include="AnimatedSprite.h">
+      <Filter>Base\Drawing</Filter>
+    </ClInclude>
+    <ClInclude Include="Definitions.h" />
+    <ClInclude Include="Window.h">
+      <Filter>Base\Base</Filter>
+    </ClInclude>
   </ItemGroup>
 </Project>
