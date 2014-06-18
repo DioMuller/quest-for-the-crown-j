@@ -6,7 +6,19 @@
       <Filter>Base\Drawing</Filter>
     </ClCompile>
     <ClCompile Include="Window.cpp">
-      <Filter>Base\Base</Filter>
+      <Filter>Base\Core</Filter>
+    </ClCompile>
+    <ClCompile Include="Behavior.cpp">
+      <Filter>Base\Core</Filter>
+    </ClCompile>
+    <ClCompile Include="Entity.cpp">
+      <Filter>Base\Core</Filter>
+    </ClCompile>
+    <ClCompile Include="Scene.cpp">
+      <Filter>Base\Core</Filter>
+    </ClCompile>
+    <ClCompile Include="Log.cpp">
+      <Filter>Base\Log</Filter>
     </ClCompile>
   </ItemGroup>
   <ItemGroup>
@@ -16,17 +28,34 @@
     <Filter Include="Base\Drawing">
       <UniqueIdentifier>{4bc96a6f-ec3c-45ef-a527-30fb6892b201}</UniqueIdentifier>
     </Filter>
-    <Filter Include="Base\Base">
+    <Filter Include="Base\Core">
       <UniqueIdentifier>{e9ea7899-3e3d-4fb8-9660-80c2402643a4}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Base\Log">
+      <UniqueIdentifier>{037c2353-3c1f-4d8f-a97a-e87af4e64622}</UniqueIdentifier>
     </Filter>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="AnimatedSprite.h">
       <Filter>Base\Drawing</Filter>
     </ClInclude>
-    <ClInclude Include="Definitions.h" />
     <ClInclude Include="Window.h">
-      <Filter>Base\Base</Filter>
+      <Filter>Base\Core</Filter>
+    </ClInclude>
+    <ClInclude Include="Behavior.h">
+      <Filter>Base\Core</Filter>
+    </ClInclude>
+    <ClInclude Include="Entity.h">
+      <Filter>Base\Core</Filter>
+    </ClInclude>
+    <ClInclude Include="Definitions.h">
+      <Filter>Base</Filter>
+    </ClInclude>
+    <ClInclude Include="Scene.h">
+      <Filter>Base\Core</Filter>
+    </ClInclude>
+    <ClInclude Include="Log.h">
+      <Filter>Base\Log</Filter>
     </ClInclude>
   </ItemGroup>
 </Project>

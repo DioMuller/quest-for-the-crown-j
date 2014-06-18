@@ -1,0 +1,23 @@
+#include "Behavior.h"
+
+using namespace qfcbase;
+
+/////////////////////////////////////
+// Constructors
+/////////////////////////////////////
+Behavior::Behavior(Entity* parent)
+{
+	this->parent = parent;
+}
+
+Behavior::~Behavior()
+{
+}
+
+/////////////////////////////////////
+// Methods
+/////////////////////////////////////
+void Behavior::Update(double dt)
+{
+
+}
