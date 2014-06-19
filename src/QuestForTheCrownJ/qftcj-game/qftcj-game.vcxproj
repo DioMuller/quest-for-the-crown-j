@@ -85,6 +85,7 @@
     <ClCompile Include="AnimatedSprite.cpp" />
     <ClCompile Include="Behavior.cpp" />
     <ClCompile Include="Entity.cpp" />
+    <ClCompile Include="Game.cpp" />
     <ClCompile Include="Log.cpp" />
     <ClCompile Include="main.cpp" />
     <ClCompile Include="Scene.cpp" />
@@ -95,6 +96,7 @@
     <ClInclude Include="Behavior.h" />
     <ClInclude Include="Definitions.h" />
     <ClInclude Include="Entity.h" />
+    <ClInclude Include="Game.h" />
     <ClInclude Include="Log.h" />
     <ClInclude Include="Scene.h" />
     <ClInclude Include="Window.h" />

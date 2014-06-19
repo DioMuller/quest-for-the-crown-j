@@ -5,21 +5,22 @@
     <ClCompile Include="AnimatedSprite.cpp">
       <Filter>Base\Drawing</Filter>
     </ClCompile>
-    <ClCompile Include="Window.cpp">
-      <Filter>Base\Core</Filter>
-    </ClCompile>
-    <ClCompile Include="Behavior.cpp">
-      <Filter>Base\Core</Filter>
-    </ClCompile>
-    <ClCompile Include="Entity.cpp">
-      <Filter>Base\Core</Filter>
-    </ClCompile>
-    <ClCompile Include="Scene.cpp">
-      <Filter>Base\Core</Filter>
-    </ClCompile>
     <ClCompile Include="Log.cpp">
       <Filter>Base\Log</Filter>
     </ClCompile>
+    <ClCompile Include="Behavior.cpp">
+      <Filter>Base\Core\Sources</Filter>
+    </ClCompile>
+    <ClCompile Include="Entity.cpp">
+      <Filter>Base\Core\Sources</Filter>
+    </ClCompile>
+    <ClCompile Include="Scene.cpp">
+      <Filter>Base\Core\Sources</Filter>
+    </ClCompile>
+    <ClCompile Include="Window.cpp">
+      <Filter>Base\Core\Sources</Filter>
+    </ClCompile>
+    <ClCompile Include="Game.cpp" />
   </ItemGroup>
   <ItemGroup>
     <Filter Include="Base">
@@ -34,28 +35,35 @@
     <Filter Include="Base\Log">
       <UniqueIdentifier>{037c2353-3c1f-4d8f-a97a-e87af4e64622}</UniqueIdentifier>
     </Filter>
+    <Filter Include="Base\Core\Headers">
+      <UniqueIdentifier>{977d7efc-3ba6-4652-8ad2-0dc2f74cd2f6}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Base\Core\Sources">
+      <UniqueIdentifier>{93cfb60f-4947-4171-8af0-ed02785254ed}</UniqueIdentifier>
+    </Filter>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="AnimatedSprite.h">
       <Filter>Base\Drawing</Filter>
     </ClInclude>
-    <ClInclude Include="Window.h">
-      <Filter>Base\Core</Filter>
-    </ClInclude>
-    <ClInclude Include="Behavior.h">
-      <Filter>Base\Core</Filter>
-    </ClInclude>
-    <ClInclude Include="Entity.h">
-      <Filter>Base\Core</Filter>
-    </ClInclude>
     <ClInclude Include="Definitions.h">
       <Filter>Base</Filter>
-    </ClInclude>
-    <ClInclude Include="Scene.h">
-      <Filter>Base\Core</Filter>
     </ClInclude>
     <ClInclude Include="Log.h">
       <Filter>Base\Log</Filter>
     </ClInclude>
+    <ClInclude Include="Behavior.h">
+      <Filter>Base\Core\Headers</Filter>
+    </ClInclude>
+    <ClInclude Include="Entity.h">
+      <Filter>Base\Core\Headers</Filter>
+    </ClInclude>
+    <ClInclude Include="Scene.h">
+      <Filter>Base\Core\Headers</Filter>
+    </ClInclude>
+    <ClInclude Include="Window.h">
+      <Filter>Base\Core\Headers</Filter>
+    </ClInclude>
+    <ClInclude Include="Game.h" />
   </ItemGroup>
 </Project>
