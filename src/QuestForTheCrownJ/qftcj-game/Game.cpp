@@ -4,6 +4,7 @@ using namespace qfcbase;
 
 Game::Game()
 {
+	currentScene = nullptr;
 }
 
 
@@ -16,12 +17,12 @@ Game::~Game()
 /////////////////////////////////////
 void Game::Update(double dt)
 {
-
+	if( currentScene != nullptr ) currentScene->Update(dt);
 }
 
 void Game::Draw(sf::RenderWindow* renderer)
 {
-
+	if (currentScene != nullptr) currentScene->Draw(renderer);
 }
 
 void Game::LoadScene(Scene* s, bool stack)

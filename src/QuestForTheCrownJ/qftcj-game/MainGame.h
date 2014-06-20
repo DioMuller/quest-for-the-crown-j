@@ -1,0 +1,20 @@
+#pragma once
+#include "Game.h"
+namespace qfcgame
+{
+	class MainGame : public qfcbase::Game
+	{
+		/////////////////////////////////////
+		// Constructors
+		/////////////////////////////////////
+		public:
+			MainGame();
+			~MainGame();
+
+		/////////////////////////////////////
+		// Methods
+		/////////////////////////////////////
+		public:
+			void Update(double dt);
+	};
+}

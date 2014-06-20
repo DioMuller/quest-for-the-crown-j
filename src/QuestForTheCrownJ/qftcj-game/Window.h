@@ -1,9 +1,9 @@
 #pragma once
-#include "Definitions.h"
 #include <SFML/Graphics.hpp>
 #include <chrono>
 #include <thread>
-
+#include "Definitions.h"
+#include "Game.h"
 
 namespace qfcbase
 {
@@ -16,6 +16,7 @@ namespace qfcbase
 			sf::Vector2i size;
 			std::string title;
 			sf::RenderWindow* window;
+			Game* game;
 
 		/////////////////////////////////////
 		// Constructors
@@ -28,6 +29,6 @@ namespace qfcbase
 		// Methods
 		/////////////////////////////////////
 		public:
-			void Run();
+			void Run(Game* game);
 	};
 }

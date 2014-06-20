@@ -33,7 +33,7 @@ void Entity::Update(double dt)
 
 void Entity::Draw(sf::RenderWindow* renderer)
 {
-	sprite->Render(renderer);
+	sprite->Draw(renderer);
 }
 
 void Entity::AddBehavior(Behavior* b)

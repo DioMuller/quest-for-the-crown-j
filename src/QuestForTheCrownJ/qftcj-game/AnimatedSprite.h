@@ -43,7 +43,7 @@ namespace qfcbase
 		// Methods
 		/////////////////////////////////////
 		public:
-			void Render(sf::RenderWindow* window);
+			void Draw(sf::RenderWindow* window);
 			void Update(double deltaTime);
 
 			void AddAnimation(std::string key, Animation animation);

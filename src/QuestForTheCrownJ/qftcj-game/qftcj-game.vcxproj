@@ -88,6 +88,7 @@
     <ClCompile Include="Game.cpp" />
     <ClCompile Include="Log.cpp" />
     <ClCompile Include="main.cpp" />
+    <ClCompile Include="MainGame.cpp" />
     <ClCompile Include="Scene.cpp" />
     <ClCompile Include="Window.cpp" />
   </ItemGroup>
@@ -98,6 +99,7 @@
     <ClInclude Include="Entity.h" />
     <ClInclude Include="Game.h" />
     <ClInclude Include="Log.h" />
+    <ClInclude Include="MainGame.h" />
     <ClInclude Include="Scene.h" />
     <ClInclude Include="Window.h" />
   </ItemGroup>

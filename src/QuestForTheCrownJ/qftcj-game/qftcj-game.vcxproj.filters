@@ -20,7 +20,12 @@
     <ClCompile Include="Window.cpp">
       <Filter>Base\Core\Sources</Filter>
     </ClCompile>
-    <ClCompile Include="Game.cpp" />
+    <ClCompile Include="Game.cpp">
+      <Filter>Base\Core\Sources</Filter>
+    </ClCompile>
+    <ClCompile Include="MainGame.cpp">
+      <Filter>Game\Core</Filter>
+    </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <Filter Include="Base">
@@ -40,6 +45,12 @@
     </Filter>
     <Filter Include="Base\Core\Sources">
       <UniqueIdentifier>{93cfb60f-4947-4171-8af0-ed02785254ed}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Game">
+      <UniqueIdentifier>{e9c38a9c-4a7c-4414-94b9-053e91838abd}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Game\Core">
+      <UniqueIdentifier>{c5dea831-7856-40e6-9e0b-7df1e81c6fe1}</UniqueIdentifier>
     </Filter>
   </ItemGroup>
   <ItemGroup>
@@ -64,6 +75,11 @@
     <ClInclude Include="Window.h">
       <Filter>Base\Core\Headers</Filter>
     </ClInclude>
-    <ClInclude Include="Game.h" />
+    <ClInclude Include="Game.h">
+      <Filter>Base\Core\Headers</Filter>
+    </ClInclude>
+    <ClInclude Include="MainGame.h">
+      <Filter>Game\Core</Filter>
+    </ClInclude>
   </ItemGroup>
 </Project>

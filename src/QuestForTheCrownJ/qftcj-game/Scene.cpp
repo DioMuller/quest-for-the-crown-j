@@ -1,12 +1,14 @@
 #include "Scene.h"
+#include "Game.h"
 
 using namespace qfcbase;
 
 /////////////////////////////////////
 // Constructors
 /////////////////////////////////////
-Scene::Scene()
+Scene::Scene(Game* parent)
 {
+	this->parent = parent;
 }
 
 

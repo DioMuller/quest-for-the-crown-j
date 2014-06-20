@@ -36,7 +36,7 @@ AnimatedSprite::~AnimatedSprite()
 /////////////////////////////////////
 // Methods
 /////////////////////////////////////
-void AnimatedSprite::Render(sf::RenderWindow* window)
+void AnimatedSprite::Draw(sf::RenderWindow* window)
 {
 	sprite.setTextureRect(sf::IntRect(currentFrame.x * frameSize.x, currentFrame.y * frameSize.y, frameSize.x, frameSize.y));
 	sprite.setPosition(position);

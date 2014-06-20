@@ -1,8 +1,6 @@
 #include "Window.h"
 #include "Definitions.h"
 
-#include "AnimatedSprite.h"
-
 using namespace qfcbase;
 
 Window::Window(sf::Vector2i size, std::string title)
@@ -16,11 +14,13 @@ Window::Window(sf::Vector2i size, std::string title)
 Window::~Window()
 {
 	delete window;
+	delete game;
 }
 
-void Window::Run()
+void Window::Run(Game* game)
 {
-	qfcbase::AnimatedSprite sprite("Content/sprites/characters/bat.png", sf::Vector2i{ 18, 16 }, sf::Vector2f{ 100.0f, 100.0f });
+	// Sets the game.
+	this->game = game;
 
 	//Initial update duration = 1 frame.
 	double delta = MILISECONDS_PER_FRAME;
@@ -38,8 +38,8 @@ void Window::Run()
 		}
 
 		window->clear();
-		sprite.Update(delta);
-		sprite.Render(window);
+		game->Update(delta);
+		game->Draw(window);
 		window->display();
 		end = std::chrono::system_clock::now();
 
