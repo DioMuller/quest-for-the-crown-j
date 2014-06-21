@@ -31,8 +31,6 @@ namespace qfcbase
 			virtual void Draw(sf::RenderWindow* renderer);
 
 			void LoadScene(Scene* s, bool stack = false);
-
-		private:
-			void StackCurrentScene();
+			void UnstackScene();
 	};
 }

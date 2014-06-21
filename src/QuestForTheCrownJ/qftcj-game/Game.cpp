@@ -33,9 +33,17 @@ void Game::LoadScene(Scene* s, bool stack)
 	{
 		pastScenes.push(currentScene);
 	}
+	else
+	{
+		delete currentScene;
+	}
+
+	currentScene = s;
 }
 
-void Game::StackCurrentScene()
+void Game::UnstackScene()
 {
-
+	delete currentScene;
+	currentScene = (Scene*)pastScenes.top();
+	pastScenes.pop();
 }
