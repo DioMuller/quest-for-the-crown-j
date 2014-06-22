@@ -2,84 +2,18 @@
 <Project ToolsVersion="4.0" xmlns="http://schemas.microsoft.com/developer/msbuild/2003">
   <ItemGroup>
     <ClCompile Include="main.cpp" />
-    <ClCompile Include="AnimatedSprite.cpp">
-      <Filter>Base\Drawing</Filter>
-    </ClCompile>
-    <ClCompile Include="Log.cpp">
-      <Filter>Base\Log</Filter>
-    </ClCompile>
-    <ClCompile Include="Behavior.cpp">
-      <Filter>Base\Core\Sources</Filter>
-    </ClCompile>
-    <ClCompile Include="Entity.cpp">
-      <Filter>Base\Core\Sources</Filter>
-    </ClCompile>
-    <ClCompile Include="Scene.cpp">
-      <Filter>Base\Core\Sources</Filter>
-    </ClCompile>
-    <ClCompile Include="Window.cpp">
-      <Filter>Base\Core\Sources</Filter>
-    </ClCompile>
-    <ClCompile Include="Game.cpp">
-      <Filter>Base\Core\Sources</Filter>
-    </ClCompile>
     <ClCompile Include="MainGame.cpp">
-      <Filter>Game\Core</Filter>
+      <Filter>Core</Filter>
     </ClCompile>
   </ItemGroup>
   <ItemGroup>
-    <Filter Include="Base">
-      <UniqueIdentifier>{8fdf1bfa-e6a8-4564-aeed-85bcc4afe928}</UniqueIdentifier>
-    </Filter>
-    <Filter Include="Base\Drawing">
-      <UniqueIdentifier>{4bc96a6f-ec3c-45ef-a527-30fb6892b201}</UniqueIdentifier>
-    </Filter>
-    <Filter Include="Base\Core">
-      <UniqueIdentifier>{e9ea7899-3e3d-4fb8-9660-80c2402643a4}</UniqueIdentifier>
-    </Filter>
-    <Filter Include="Base\Log">
-      <UniqueIdentifier>{037c2353-3c1f-4d8f-a97a-e87af4e64622}</UniqueIdentifier>
-    </Filter>
-    <Filter Include="Base\Core\Headers">
-      <UniqueIdentifier>{977d7efc-3ba6-4652-8ad2-0dc2f74cd2f6}</UniqueIdentifier>
-    </Filter>
-    <Filter Include="Base\Core\Sources">
-      <UniqueIdentifier>{93cfb60f-4947-4171-8af0-ed02785254ed}</UniqueIdentifier>
-    </Filter>
-    <Filter Include="Game">
-      <UniqueIdentifier>{e9c38a9c-4a7c-4414-94b9-053e91838abd}</UniqueIdentifier>
-    </Filter>
-    <Filter Include="Game\Core">
+    <Filter Include="Core">
       <UniqueIdentifier>{c5dea831-7856-40e6-9e0b-7df1e81c6fe1}</UniqueIdentifier>
     </Filter>
   </ItemGroup>
   <ItemGroup>
-    <ClInclude Include="AnimatedSprite.h">
-      <Filter>Base\Drawing</Filter>
-    </ClInclude>
-    <ClInclude Include="Definitions.h">
-      <Filter>Base</Filter>
-    </ClInclude>
-    <ClInclude Include="Log.h">
-      <Filter>Base\Log</Filter>
-    </ClInclude>
-    <ClInclude Include="Behavior.h">
-      <Filter>Base\Core\Headers</Filter>
-    </ClInclude>
-    <ClInclude Include="Entity.h">
-      <Filter>Base\Core\Headers</Filter>
-    </ClInclude>
-    <ClInclude Include="Scene.h">
-      <Filter>Base\Core\Headers</Filter>
-    </ClInclude>
-    <ClInclude Include="Window.h">
-      <Filter>Base\Core\Headers</Filter>
-    </ClInclude>
-    <ClInclude Include="Game.h">
-      <Filter>Base\Core\Headers</Filter>
-    </ClInclude>
     <ClInclude Include="MainGame.h">
-      <Filter>Game\Core</Filter>
+      <Filter>Core</Filter>
     </ClInclude>
   </ItemGroup>
 </Project>

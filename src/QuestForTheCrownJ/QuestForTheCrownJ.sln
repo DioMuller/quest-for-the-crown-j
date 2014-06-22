@@ -5,6 +5,8 @@ VisualStudioVersion = 12.0.30501.0
 MinimumVisualStudioVersion = 10.0.40219.1
 Project("{8BC9CEB8-8B4A-11D0-8D11-00A0C91BC942}") = "qftcj-game", "qftcj-game\qftcj-game.vcxproj", "{F1AE15DC-DBE0-4ABC-B257-F0C50C8DC960}"
 EndProject
+Project("{8BC9CEB8-8B4A-11D0-8D11-00A0C91BC942}") = "qftc-base", "qftc-base\qftc-base.vcxproj", "{4ED5039F-FE29-4B54-89C3-52967EB2FC15}"
+EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
 		Debug|Win32 = Debug|Win32
@@ -15,6 +17,10 @@ Global
 		{F1AE15DC-DBE0-4ABC-B257-F0C50C8DC960}.Debug|Win32.Build.0 = Debug|Win32
 		{F1AE15DC-DBE0-4ABC-B257-F0C50C8DC960}.Release|Win32.ActiveCfg = Release|Win32
 		{F1AE15DC-DBE0-4ABC-B257-F0C50C8DC960}.Release|Win32.Build.0 = Release|Win32
+		{4ED5039F-FE29-4B54-89C3-52967EB2FC15}.Debug|Win32.ActiveCfg = Debug|Win32
+		{4ED5039F-FE29-4B54-89C3-52967EB2FC15}.Debug|Win32.Build.0 = Debug|Win32
+		{4ED5039F-FE29-4B54-89C3-52967EB2FC15}.Release|Win32.ActiveCfg = Release|Win32
+		{4ED5039F-FE29-4B54-89C3-52967EB2FC15}.Release|Win32.Build.0 = Release|Win32
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE
