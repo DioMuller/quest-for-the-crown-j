@@ -7,6 +7,9 @@
     <Filter Include="Drawing">
       <UniqueIdentifier>{9c8b8761-43ba-45d8-9b74-e434489f2c06}</UniqueIdentifier>
     </Filter>
+    <Filter Include="References">
+      <UniqueIdentifier>{75836827-fc6e-4e72-8200-7c17aaeb3279}</UniqueIdentifier>
+    </Filter>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="Behavior.cpp">
@@ -54,5 +57,37 @@
       <Filter>Drawing</Filter>
     </ClInclude>
     <ClInclude Include="Definitions.h" />
+  </ItemGroup>
+  <ItemGroup>
+    <None Include="..\..\..\references\SFML-2.1\bin\sfml-audio-d-2.dll">
+      <Filter>References</Filter>
+    </None>
+    <None Include="..\..\..\references\SFML-2.1\bin\sfml-graphics-d-2.dll">
+      <Filter>References</Filter>
+    </None>
+    <None Include="..\..\..\references\SFML-2.1\bin\sfml-network-d-2.dll">
+      <Filter>References</Filter>
+    </None>
+    <None Include="..\..\..\references\SFML-2.1\bin\sfml-system-d-2.dll">
+      <Filter>References</Filter>
+    </None>
+    <None Include="..\..\..\references\SFML-2.1\bin\sfml-window-d-2.dll">
+      <Filter>References</Filter>
+    </None>
+    <None Include="..\..\..\references\SFML-2.1\bin\sfml-audio-2.dll">
+      <Filter>References</Filter>
+    </None>
+    <None Include="..\..\..\references\SFML-2.1\bin\sfml-graphics-2.dll">
+      <Filter>References</Filter>
+    </None>
+    <None Include="..\..\..\references\SFML-2.1\bin\sfml-network-2.dll">
+      <Filter>References</Filter>
+    </None>
+    <None Include="..\..\..\references\SFML-2.1\bin\sfml-system-2.dll">
+      <Filter>References</Filter>
+    </None>
+    <None Include="..\..\..\references\SFML-2.1\bin\sfml-window-2.dll">
+      <Filter>References</Filter>
+    </None>
   </ItemGroup>
 </Project>
