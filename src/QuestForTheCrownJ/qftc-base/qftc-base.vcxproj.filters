@@ -54,7 +54,9 @@
     <ClCompile Include="Layer.cpp">
       <Filter>Tiled</Filter>
     </ClCompile>
-    <ClCompile Include="Tileset.cpp" />
+    <ClCompile Include="Tileset.cpp">
+      <Filter>Tiled</Filter>
+    </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="Behavior.h">
@@ -91,7 +93,9 @@
     <ClInclude Include="Layer.h">
       <Filter>Tiled</Filter>
     </ClInclude>
-    <ClInclude Include="Tileset.h" />
+    <ClInclude Include="Tileset.h">
+      <Filter>Tiled</Filter>
+    </ClInclude>
   </ItemGroup>
   <ItemGroup>
     <None Include="..\..\..\references\SFML-2.1\bin\sfml-audio-d-2.dll">
@@ -107,21 +111,6 @@
       <Filter>References</Filter>
     </None>
     <None Include="..\..\..\references\SFML-2.1\bin\sfml-window-d-2.dll">
-      <Filter>References</Filter>
-    </None>
-    <None Include="..\..\..\references\SFML-2.1\bin\sfml-audio-2.dll">
-      <Filter>References</Filter>
-    </None>
-    <None Include="..\..\..\references\SFML-2.1\bin\sfml-graphics-2.dll">
-      <Filter>References</Filter>
-    </None>
-    <None Include="..\..\..\references\SFML-2.1\bin\sfml-network-2.dll">
-      <Filter>References</Filter>
-    </None>
-    <None Include="..\..\..\references\SFML-2.1\bin\sfml-system-2.dll">
-      <Filter>References</Filter>
-    </None>
-    <None Include="..\..\..\references\SFML-2.1\bin\sfml-window-2.dll">
       <Filter>References</Filter>
     </None>
   </ItemGroup>
