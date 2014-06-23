@@ -7,6 +7,14 @@ Project("{8BC9CEB8-8B4A-11D0-8D11-00A0C91BC942}") = "qftcj-game", "qftcj-game\qf
 EndProject
 Project("{8BC9CEB8-8B4A-11D0-8D11-00A0C91BC942}") = "qftc-base", "qftc-base\qftc-base.vcxproj", "{4ED5039F-FE29-4B54-89C3-52967EB2FC15}"
 EndProject
+Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "Client", "Client", "{DC1293DA-1087-49AC-B7D2-4C3F52BE876A}"
+EndProject
+Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "Server", "Server", "{8DE8860F-2779-42A2-8C0B-E1AB7B9A5DCC}"
+EndProject
+Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "Common", "Common", "{899B5D48-4D79-484A-B87F-95B11EAC7E8E}"
+EndProject
+Project("{8BC9CEB8-8B4A-11D0-8D11-00A0C91BC942}") = "QftCJ.Launcher", "QftCJ.Launcher\QftCJ.Launcher.vcxproj", "{7A267AC5-D2EF-40CE-BCD7-596FBF51DB99}"
+EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
 		Debug|Win32 = Debug|Win32
@@ -21,8 +29,17 @@ Global
 		{4ED5039F-FE29-4B54-89C3-52967EB2FC15}.Debug|Win32.Build.0 = Debug|Win32
 		{4ED5039F-FE29-4B54-89C3-52967EB2FC15}.Release|Win32.ActiveCfg = Release|Win32
 		{4ED5039F-FE29-4B54-89C3-52967EB2FC15}.Release|Win32.Build.0 = Release|Win32
+		{7A267AC5-D2EF-40CE-BCD7-596FBF51DB99}.Debug|Win32.ActiveCfg = Debug|Win32
+		{7A267AC5-D2EF-40CE-BCD7-596FBF51DB99}.Debug|Win32.Build.0 = Debug|Win32
+		{7A267AC5-D2EF-40CE-BCD7-596FBF51DB99}.Release|Win32.ActiveCfg = Release|Win32
+		{7A267AC5-D2EF-40CE-BCD7-596FBF51DB99}.Release|Win32.Build.0 = Release|Win32
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE
+	EndGlobalSection
+	GlobalSection(NestedProjects) = preSolution
+		{F1AE15DC-DBE0-4ABC-B257-F0C50C8DC960} = {DC1293DA-1087-49AC-B7D2-4C3F52BE876A}
+		{4ED5039F-FE29-4B54-89C3-52967EB2FC15} = {899B5D48-4D79-484A-B87F-95B11EAC7E8E}
+		{7A267AC5-D2EF-40CE-BCD7-596FBF51DB99} = {DC1293DA-1087-49AC-B7D2-4C3F52BE876A}
 	EndGlobalSection
 EndGlobal
