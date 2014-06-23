@@ -7,9 +7,9 @@
     <Filter Include="Drawing">
       <UniqueIdentifier>{9c8b8761-43ba-45d8-9b74-e434489f2c06}</UniqueIdentifier>
     </Filter>
+    <Filter Include="References">
     <Filter Include="Aditional">
-      <UniqueIdentifier>{1b54b8a7-aed6-4e1a-aef0-0b2a5883f139}</UniqueIdentifier>
-    </Filter>
+
     <Filter Include="Aditional\tinyxml2">
       <UniqueIdentifier>{26d4a9cc-64d2-4cb9-a183-e93c7fb4298b}</UniqueIdentifier>
     </Filter>
@@ -89,5 +89,37 @@
       <Filter>Tiled</Filter>
     </ClInclude>
     <ClInclude Include="Tileset.h" />
+  </ItemGroup>
+  <ItemGroup>
+    <None Include="..\..\..\references\SFML-2.1\bin\sfml-audio-d-2.dll">
+      <Filter>References</Filter>
+    </None>
+    <None Include="..\..\..\references\SFML-2.1\bin\sfml-graphics-d-2.dll">
+      <Filter>References</Filter>
+    </None>
+    <None Include="..\..\..\references\SFML-2.1\bin\sfml-network-d-2.dll">
+      <Filter>References</Filter>
+    </None>
+    <None Include="..\..\..\references\SFML-2.1\bin\sfml-system-d-2.dll">
+      <Filter>References</Filter>
+    </None>
+    <None Include="..\..\..\references\SFML-2.1\bin\sfml-window-d-2.dll">
+      <Filter>References</Filter>
+    </None>
+    <None Include="..\..\..\references\SFML-2.1\bin\sfml-audio-2.dll">
+      <Filter>References</Filter>
+    </None>
+    <None Include="..\..\..\references\SFML-2.1\bin\sfml-graphics-2.dll">
+      <Filter>References</Filter>
+    </None>
+    <None Include="..\..\..\references\SFML-2.1\bin\sfml-network-2.dll">
+      <Filter>References</Filter>
+    </None>
+    <None Include="..\..\..\references\SFML-2.1\bin\sfml-system-2.dll">
+      <Filter>References</Filter>
+    </None>
+    <None Include="..\..\..\references\SFML-2.1\bin\sfml-window-2.dll">
+      <Filter>References</Filter>
+    </None>
   </ItemGroup>
 </Project>
