@@ -1,4 +1,5 @@
 #include "AnimatedSprite.h"
+#include "Log.h"
 
 using namespace qfcbase;
 
@@ -9,23 +10,25 @@ AnimatedSprite::AnimatedSprite(std::string path, sf::Vector2i frameSize, sf::Vec
 {
 	if (!texture.loadFromFile(path))
 	{
-		// TODO: Log.
+		Log::Error("Error loading texture file: " + path);
 	}
+	else
+	{
+		sprite.setTexture(texture);
 
-	sprite.setTexture(texture);
+		// Position
+		this->position = position;
 
-	// Position
-	this->position = position;
+		// Animation
+		this->frameSize = frameSize;
+		this->frameCount;
+		this->currentFrame = sf::Vector2i(0, 0);
+		this->current_interval = 0.0f;
 
-	// Animation
-	this->frameSize = frameSize;
-	this->frameCount;
-	this->currentFrame = sf::Vector2i(0, 0);
-	this->current_interval = 0.0f;
-
-	// Animation list
-	animations["Default"] = { sf::Vector2i(0, 0), sf::Vector2i(3, 0), 60.0 };
-	currentAnimation = "Default";
+		// Animation list
+		animations["Default"] = { sf::Vector2i(0, 0), sf::Vector2i(3, 0), 60.0 };
+		currentAnimation = "Default";
+	}
 }
 
 

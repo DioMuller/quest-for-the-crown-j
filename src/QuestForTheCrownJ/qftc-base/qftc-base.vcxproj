@@ -83,8 +83,12 @@
     <ClCompile Include="Behavior.cpp" />
     <ClCompile Include="Entity.cpp" />
     <ClCompile Include="Game.cpp" />
+    <ClCompile Include="Layer.cpp" />
     <ClCompile Include="Log.cpp" />
     <ClCompile Include="Scene.cpp" />
+    <ClCompile Include="StringHelper.cpp" />
+    <ClCompile Include="Tileset.cpp" />
+    <ClCompile Include="tinyxml2\tinyxml2.cpp" />
     <ClCompile Include="Window.cpp" />
   </ItemGroup>
   <ItemGroup>
@@ -93,8 +97,13 @@
     <ClInclude Include="Definitions.h" />
     <ClInclude Include="Entity.h" />
     <ClInclude Include="Game.h" />
+    <ClInclude Include="Layer.h" />
     <ClInclude Include="Log.h" />
     <ClInclude Include="Scene.h" />
+    <ClInclude Include="StringHelper.h" />
+    <ClInclude Include="Tile.h" />
+    <ClInclude Include="Tileset.h" />
+    <ClInclude Include="tinyxml2\tinyxml2.h" />
     <ClInclude Include="Window.h" />
   </ItemGroup>
   <Import Project="$(VCTargetsPath)\Microsoft.Cpp.targets" />

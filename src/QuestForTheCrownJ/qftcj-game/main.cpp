@@ -5,19 +5,10 @@
 
 int main(int argc, char* argv[])
 {
-	bool isServer = false;
+	qfcbase::Window window({ 800, 600 }, "Quest for the Crown J");
+	qfcgame::MainGame* game = new qfcgame::MainGame();
 
-	if (isServer)
-	{
-
-	}
-	else
-	{
-		qfcbase::Window window({ 800, 600 }, "Quest for the Crown J");
-		qfcgame::MainGame* game = new qfcgame::MainGame();
-
-		window.Run(game);
-	}
+	window.Run(game);
 
 	return 0;
 }

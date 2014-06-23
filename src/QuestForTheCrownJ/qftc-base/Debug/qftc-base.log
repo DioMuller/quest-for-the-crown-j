@@ -1,28 +1,23 @@
-﻿Build started 22/06/2014 14:20:23.
+﻿Build started 22/06/2014 23:03:53.
      1>Project "D:\Pós\Jogos Multiplayer\Trabalhos\quest-for-the-crown-j\src\QuestForTheCrownJ\qftc-base\qftc-base.vcxproj" on node 2 (Build target(s)).
      1>ClCompile:
-         C:\Program Files (x86)\Microsoft Visual Studio 12.0\VC\bin\CL.exe /c /ZI /nologo /W3 /WX- /Od /Oy- /D WIN32 /D _DEBUG /D _WINDOWS /D _USRDLL /D QFTCBASE_EXPORTS /D _UNICODE /D UNICODE /Gm /EHsc /RTC1 /MDd /GS /fp:precise /Zc:wchar_t /Zc:forScope /Fo"Debug\\" /Fd"Debug\vc120.pdb" /Gd /TP /analyze- /errorReport:prompt AnimatedSprite.cpp Behavior.cpp Entity.cpp Game.cpp Log.cpp Scene.cpp Window.cpp
-         Window.cpp
-         Scene.cpp
-         Log.cpp
-     1>d:\pós\jogos multiplayer\trabalhos\quest-for-the-crown-j\src\questforthecrownj\qftc-base\log.cpp(48): warning C4996: 'localtime': This function or variable may be unsafe. Consider using localtime_s instead. To disable deprecation, use _CRT_SECURE_NO_WARNINGS. See online help for details.
-                 c:\program files (x86)\microsoft visual studio 12.0\vc\include\time.inl(112) : see declaration of 'localtime'
-         Game.cpp
-         Entity.cpp
-         Behavior.cpp
-         AnimatedSprite.cpp
-         Generating Code...
+         C:\Program Files (x86)\Microsoft Visual Studio 12.0\VC\bin\CL.exe /c /ZI /nologo /W3 /WX- /Od /Oy- /D WIN32 /D _DEBUG /D _WINDOWS /D _USRDLL /D QFTCBASE_EXPORTS /D _UNICODE /D UNICODE /Gm /EHsc /RTC1 /MDd /GS /fp:precise /Zc:wchar_t /Zc:forScope /Fo"Debug\\" /Fd"Debug\vc120.pdb" /Gd /TP /analyze- /errorReport:prompt Tileset.cpp
+         Tileset.cpp
        Lib:
          C:\Program Files (x86)\Microsoft Visual Studio 12.0\VC\bin\Lib.exe /OUT:"D:\Pós\Jogos Multiplayer\Trabalhos\quest-for-the-crown-j\src\QuestForTheCrownJ\Debug\qftc-base.lib" /NOLOGO Debug\AnimatedSprite.obj
          Debug\Behavior.obj
          Debug\Entity.obj
          Debug\Game.obj
+         Debug\Layer.obj
          Debug\Log.obj
          Debug\Scene.obj
+         Debug\StringHelper.obj
+         Debug\Tileset.obj
+         Debug\tinyxml2.obj
          Debug\Window.obj
          qftc-base.vcxproj -> D:\Pós\Jogos Multiplayer\Trabalhos\quest-for-the-crown-j\src\QuestForTheCrownJ\Debug\qftc-base.lib
      1>Done Building Project "D:\Pós\Jogos Multiplayer\Trabalhos\quest-for-the-crown-j\src\QuestForTheCrownJ\qftc-base\qftc-base.vcxproj" (Build target(s)).
 
 Build succeeded.
 
-Time Elapsed 00:00:04.70
+Time Elapsed 00:00:01.50
