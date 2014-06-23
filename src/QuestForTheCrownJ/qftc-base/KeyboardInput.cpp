@@ -2,16 +2,16 @@
 #include <SFML/Window/Keyboard.hpp>
 #include <SFML/Window.hpp>
 
-qfcbase::KeyboardInput::KeyboardInput()
+qfcgame::KeyboardInput::KeyboardInput()
 {
 }
 
 
-qfcbase::KeyboardInput::~KeyboardInput()
+qfcgame::KeyboardInput::~KeyboardInput()
 {
 }
 
-qfcbase::input_state qfcbase::KeyboardInput::GetState()
+qfcgame::input_state qfcgame::KeyboardInput::GetState()
 {
     input_state state;
     state.move_up = sf::Keyboard::isKeyPressed(sf::Keyboard::Up);

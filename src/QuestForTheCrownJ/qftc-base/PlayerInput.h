@@ -1,5 +1,5 @@
 #pragma once
-namespace qfcbase
+namespace qfcgame
 {
     typedef struct input_state
     {

@@ -22,9 +22,6 @@
     <Filter Include="References">
       <UniqueIdentifier>{75836827-fc6e-4e72-8200-7c17aaeb3279}</UniqueIdentifier>
     </Filter>
-    <Filter Include="Core\Input">
-      <UniqueIdentifier>{95922b82-159e-455a-a6c3-7b0490f7bb0c}</UniqueIdentifier>
-    </Filter>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="Behavior.cpp">
@@ -59,12 +56,6 @@
     </ClCompile>
     <ClCompile Include="Tileset.cpp">
       <Filter>Tiled</Filter>
-    </ClCompile>
-    <ClCompile Include="PlayerInput.cpp">
-      <Filter>Core\Input</Filter>
-    </ClCompile>
-    <ClCompile Include="KeyboardInput.cpp">
-      <Filter>Core\Input</Filter>
     </ClCompile>
   </ItemGroup>
   <ItemGroup>
@@ -104,12 +95,6 @@
     </ClInclude>
     <ClInclude Include="Tileset.h">
       <Filter>Tiled</Filter>
-    </ClInclude>
-    <ClInclude Include="PlayerInput.h">
-      <Filter>Core\Input</Filter>
-    </ClInclude>
-    <ClInclude Include="KeyboardInput.h">
-      <Filter>Core\Input</Filter>
     </ClInclude>
   </ItemGroup>
   <ItemGroup>

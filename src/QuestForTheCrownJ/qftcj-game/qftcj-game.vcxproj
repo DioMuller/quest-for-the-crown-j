@@ -83,10 +83,14 @@
     </Link>
   </ItemDefinitionGroup>
   <ItemGroup>
+    <ClCompile Include="..\qftc-base\KeyboardInput.cpp" />
+    <ClCompile Include="..\qftc-base\PlayerInput.cpp" />
     <ClCompile Include="main.cpp" />
     <ClCompile Include="MainGame.cpp" />
   </ItemGroup>
   <ItemGroup>
+    <ClInclude Include="..\qftc-base\KeyboardInput.h" />
+    <ClInclude Include="..\qftc-base\PlayerInput.h" />
     <ClInclude Include="MainGame.h" />
   </ItemGroup>
   <ItemGroup>

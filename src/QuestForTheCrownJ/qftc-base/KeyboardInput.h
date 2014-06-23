@@ -1,7 +1,7 @@
 #pragma once
 #include "PlayerInput.h"
 
-namespace qfcbase
+namespace qfcgame
 {
     class KeyboardInput :
         public PlayerInput

@@ -80,8 +80,6 @@
   </ItemDefinitionGroup>
   <ItemGroup>
     <ClCompile Include="AnimatedSprite.cpp" />
-    <ClCompile Include="KeyboardInput.cpp" />
-    <ClCompile Include="PlayerInput.cpp" />
     <ClCompile Include="Behavior.cpp" />
     <ClCompile Include="Entity.cpp" />
     <ClCompile Include="Game.cpp" />
@@ -95,8 +93,6 @@
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="AnimatedSprite.h" />
-    <ClInclude Include="KeyboardInput.h" />
-    <ClInclude Include="PlayerInput.h" />
     <ClInclude Include="Behavior.h" />
     <ClInclude Include="Definitions.h" />
     <ClInclude Include="Entity.h" />
