@@ -3,7 +3,8 @@
 
 namespace qfcgame
 {
-    class Hero : qfcbase::Entity
+    class Hero :
+		public qfcbase::Entity
     {
     public:
         Hero();

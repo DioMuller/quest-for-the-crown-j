@@ -19,10 +19,6 @@ qfcgame::Hero::Hero()
 
 	sprite->AddAnimation("dying", { { 0, 64 * 12 }, { 64 * 5, 64 * 12 }, walkFrameDuration });
 	Sprite = sprite;
-
-	Health = Container<int>(8, 8);
-	Arrows = Container<int>(50, 50);
-	Magic = Container<int>(10, 10);
 }
 
 
