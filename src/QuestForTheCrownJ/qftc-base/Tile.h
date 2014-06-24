@@ -4,7 +4,7 @@ namespace qfcbase
 {
 	class Tileset;
 
-#define COLISION_POSITIONS 4
+	#define COLISION_POSITIONS 4
 
 	enum CollisionPosition
 	{
@@ -14,11 +14,37 @@ namespace qfcbase
 		DOWN_RIGHT = 3
 	};
 
-	typedef struct sTile
+	class Tile
 	{
-		int id;
-		Tileset* parent;
-		int terrain[COLISION_POSITIONS];
+		/////////////////////////////////////
+		// Attributes
+		/////////////////////////////////////
+		private:
+			int id;
+			Tileset* parent;
+			int terrain[COLISION_POSITIONS];
 
-	} Tile;
+		/////////////////////////////////////
+		// "Properties"
+		/////////////////////////////////////
+		public:
+			int Id()
+			{
+				return this->id;
+			}
+
+		/////////////////////////////////////
+		// Constructors
+		/////////////////////////////////////
+		public:
+			Tile(int id, Tileset* parent);
+			~Tile();
+
+		/////////////////////////////////////
+		// Methods
+		/////////////////////////////////////
+		public:
+			int GetCollision(CollisionPosition position);
+			void SetCollision(CollisionPosition position, int value);
+	};
 }

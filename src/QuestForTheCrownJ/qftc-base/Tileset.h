@@ -17,7 +17,7 @@ namespace qfcbase
 			sf::Vector2i tileSize;
 			std::string source;
 			sf::Vector2i size;
-			Tile* tiles;
+			std::vector<Tile*> tiles;
 			int tileCount;
 			int numRows;
 			int numCols;
@@ -37,6 +37,10 @@ namespace qfcbase
 				return firstGID + (numCols * numRows);
 			}
 
+			std::vector<Tile*> Tiles()
+			{
+				return tiles;
+			}
 		/////////////////////////////////////
 		// Constructors
 		/////////////////////////////////////

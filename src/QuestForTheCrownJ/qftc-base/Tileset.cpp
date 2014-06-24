@@ -24,11 +24,11 @@ Tileset::Tileset(int firstgid, std::string name, sf::Vector2i tileSize, std::str
 		numCols = size.x / tileSize.x;
 
 		tileCount = numRows * numCols;
-		tiles = new Tile[tileCount];
+		tiles.empty();
 
 		for (int i = 0; i < numRows * numCols; i++)
 		{
-			tiles[i] = { i, this, {0,0,0,0} };
+			tiles.push_back(new Tile{ i, this });
 		}
 	}
 }
@@ -65,7 +65,7 @@ Tile* Tileset::GetTileById(int tileId)
 
 	for (int i = 0; i < tileCount; i++)
 	{
-		if (tiles[i].id == tileId) return &tiles[i];
+		if (tiles[i]->Id() == tileId) return tiles[i];
 	}
 
 	return nullptr;

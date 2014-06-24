@@ -57,6 +57,10 @@
     <ClCompile Include="Tileset.cpp">
       <Filter>Tiled</Filter>
     </ClCompile>
+    <ClCompile Include="Map.cpp" />
+    <ClCompile Include="Tile.cpp">
+      <Filter>Tiled</Filter>
+    </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="Behavior.h">
@@ -96,6 +100,7 @@
     <ClInclude Include="Tileset.h">
       <Filter>Tiled</Filter>
     </ClInclude>
+    <ClInclude Include="Map.h" />
   </ItemGroup>
   <ItemGroup>
     <None Include="..\..\..\references\SFML-2.1\bin\sfml-audio-d-2.dll">
