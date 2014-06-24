@@ -77,7 +77,8 @@ namespace QftCJLauncher {
 
 		}
 
-		private: System::Void ButtonLogin_Click(System::Object^  sender, System::EventArgs^  e);
+		private: 
+			System::Void ButtonLogin_Click(System::Object^  sender, System::EventArgs^  e);
 #pragma endregion
 	};
 }

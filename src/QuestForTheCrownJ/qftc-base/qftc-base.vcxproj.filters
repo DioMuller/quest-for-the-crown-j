@@ -57,8 +57,13 @@
     <ClCompile Include="Tileset.cpp">
       <Filter>Tiled</Filter>
     </ClCompile>
-    <ClCompile Include="Map.cpp" />
     <ClCompile Include="Tile.cpp">
+      <Filter>Tiled</Filter>
+    </ClCompile>
+    <ClCompile Include="Map.cpp">
+      <Filter>Tiled</Filter>
+    </ClCompile>
+    <ClCompile Include="Level.cpp">
       <Filter>Tiled</Filter>
     </ClCompile>
   </ItemGroup>
@@ -100,9 +105,14 @@
     <ClInclude Include="Tileset.h">
       <Filter>Tiled</Filter>
     </ClInclude>
-    <ClInclude Include="Map.h" />
     <ClInclude Include="Container.h">
       <Filter>Core</Filter>
+    </ClInclude>
+    <ClInclude Include="Map.h">
+      <Filter>Tiled</Filter>
+    </ClInclude>
+    <ClInclude Include="Level.h">
+      <Filter>Tiled</Filter>
     </ClInclude>
   </ItemGroup>
   <ItemGroup>

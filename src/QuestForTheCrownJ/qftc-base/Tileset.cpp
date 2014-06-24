@@ -17,6 +17,7 @@ Tileset::Tileset(int firstgid, std::string name, sf::Vector2i tileSize, std::str
 	if (!texture.loadFromFile(imageSource))
 	{
 		Log::Error("Error loading tileset texture file: " + imageSource);
+		sprite.setTexture(texture);
 	}
 	else
 	{

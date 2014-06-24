@@ -33,6 +33,11 @@ namespace qfcbase
 				return this->id;
 			}
 
+			Tileset* Parent()
+			{
+				return this->parent;
+			}
+
 		/////////////////////////////////////
 		// Constructors
 		/////////////////////////////////////

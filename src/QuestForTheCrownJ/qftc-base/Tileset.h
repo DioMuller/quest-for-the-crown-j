@@ -22,6 +22,7 @@ namespace qfcbase
 			int numRows;
 			int numCols;
 			sf::Texture texture;
+			sf::Sprite sprite;
 
 		/////////////////////////////////////
 		// "Properties"
@@ -40,6 +41,11 @@ namespace qfcbase
 			std::vector<Tile*> Tiles()
 			{
 				return tiles;
+			}
+
+			sf::Sprite Sprite()
+			{
+				return sprite;
 			}
 		/////////////////////////////////////
 		// Constructors

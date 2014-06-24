@@ -37,7 +37,7 @@ namespace qfcbase
 		public:
 			bool Collides(sf::IntRect rect, bool allowOutside = false);
 			bool IsOutsideBorders(sf::IntRect rect);
-			void Draw(sf::RenderWindow render, sf::Vector2i camera);
+			void Draw(sf::RenderWindow* window, sf::Vector2i camera);
 		private:
 			Tile* GetTile(int tileId);
 			Tileset* GetTileset(int tileId);
