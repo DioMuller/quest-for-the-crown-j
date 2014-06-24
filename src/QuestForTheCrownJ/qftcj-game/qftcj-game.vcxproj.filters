@@ -11,6 +11,9 @@
     <ClCompile Include="..\qftc-base\PlayerInput.cpp">
       <Filter>Core\Input</Filter>
     </ClCompile>
+    <ClCompile Include="Hero.cpp">
+      <Filter>Entities</Filter>
+    </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <Filter Include="Core">
@@ -18,6 +21,9 @@
     </Filter>
     <Filter Include="Core\Input">
       <UniqueIdentifier>{533bf80f-1fe0-43db-bcee-b92aaeefc0fb}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Entities">
+      <UniqueIdentifier>{43c904ac-2519-43f8-82a1-6f4dd5f56f0f}</UniqueIdentifier>
     </Filter>
   </ItemGroup>
   <ItemGroup>
@@ -29,6 +35,9 @@
     </ClInclude>
     <ClInclude Include="..\qftc-base\PlayerInput.h">
       <Filter>Core\Input</Filter>
+    </ClInclude>
+    <ClInclude Include="Hero.h">
+      <Filter>Entities</Filter>
     </ClInclude>
   </ItemGroup>
 </Project>

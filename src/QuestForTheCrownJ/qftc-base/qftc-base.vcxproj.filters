@@ -101,6 +101,9 @@
       <Filter>Tiled</Filter>
     </ClInclude>
     <ClInclude Include="Map.h" />
+    <ClInclude Include="Container.h">
+      <Filter>Core</Filter>
+    </ClInclude>
   </ItemGroup>
   <ItemGroup>
     <None Include="..\..\..\references\SFML-2.1\bin\sfml-audio-d-2.dll">
