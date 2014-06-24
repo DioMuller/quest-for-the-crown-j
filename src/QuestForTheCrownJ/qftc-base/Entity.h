@@ -2,9 +2,35 @@
 #include "AnimatedSprite.h"
 #include "Behavior.h"
 #include "Container.h"
+#include "Definitions.h"
 
 namespace qfcbase
 {
+	typedef struct struct_status
+	{
+		int level;
+		int hp;
+		int mp;
+
+		int base_hp;
+		int base_mp;
+
+		int base_attack;
+		int base_defense;
+		int base_magic;
+		int base_defense_magic;
+		int base_speed;
+
+		int mul_hp;
+		int mul_mp;
+
+		int mul_attack;
+		int mul_defense;
+		int mul_magic;
+		int mul_defense_magic;
+		int mul_speed;
+	} Status;
+
 	class Entity
 	{
 		/////////////////////////////////////
@@ -12,10 +38,8 @@ namespace qfcbase
 		/////////////////////////////////////
 		private:
 			std::vector<Behavior*> behaviors;
-			AnimatedSprite* sprite;
-			Container<int> health;
-			Container<int> magic;
-			Container<int> arrows;
+		public:
+			Status status;
 
 		/////////////////////////////////////
 		// Constructors
@@ -36,20 +60,6 @@ namespace qfcbase
 		/////////////////////////////////////
 		// Properties
 		/////////////////////////////////////
-		public:
-			void SetHealth(const Container<int>& health) { this->health = health; }
-			void SetMagic(const Container<int>& magic) { this->magic = magic; }
-			void SetArrows(const Container<int>& arrows) { this->arrows = arrows; }
-
-			__declspec(property(put = SetHealth)) Container<int> Health;
-			__declspec(property(put = SetMagic)) Container<int> Magic;
-			__declspec(property(put = SetArrows)) Container<int> Arrows;
-
-		protected:
-			AnimatedSprite* GetSprite() { return this->sprite; }
-			void SetSprite(AnimatedSprite* sprite) { this->sprite = sprite; }
-
-			__declspec(property(put = SetSprite, get = GetSprite)) AnimatedSprite* Sprite;
+			autoprop(public, protected, AnimatedSprite*, sprite, Sprite);
 	};
 }
-
