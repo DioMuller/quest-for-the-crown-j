@@ -80,6 +80,7 @@
   </ItemDefinitionGroup>
   <ItemGroup>
     <ClCompile Include="AnimatedSprite.cpp" />
+    <ClCompile Include="AudioPlayer.cpp" />
     <ClCompile Include="Behavior.cpp" />
     <ClCompile Include="Entity.cpp" />
     <ClCompile Include="Game.cpp" />
@@ -96,6 +97,7 @@
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="AnimatedSprite.h" />
+    <ClInclude Include="AudioPlayer.h" />
     <ClInclude Include="Behavior.h" />
     <ClInclude Include="Container.h" />
     <ClInclude Include="Definitions.h" />

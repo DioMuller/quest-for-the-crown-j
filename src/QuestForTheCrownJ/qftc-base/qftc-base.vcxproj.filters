@@ -22,6 +22,9 @@
     <Filter Include="References">
       <UniqueIdentifier>{75836827-fc6e-4e72-8200-7c17aaeb3279}</UniqueIdentifier>
     </Filter>
+    <Filter Include="Audio">
+      <UniqueIdentifier>{60e7bc1b-1ed7-4893-ac61-9b33a9213f0d}</UniqueIdentifier>
+    </Filter>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="Behavior.cpp">
@@ -66,6 +69,7 @@
     <ClCompile Include="Level.cpp">
       <Filter>Tiled</Filter>
     </ClCompile>
+    <ClCompile Include="AudioPlayer.cpp" />
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="Behavior.h">
@@ -114,6 +118,7 @@
     <ClInclude Include="Level.h">
       <Filter>Tiled</Filter>
     </ClInclude>
+    <ClInclude Include="AudioPlayer.h" />
   </ItemGroup>
   <ItemGroup>
     <None Include="..\..\..\references\SFML-2.1\bin\sfml-audio-d-2.dll">
