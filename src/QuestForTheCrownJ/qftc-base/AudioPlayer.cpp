@@ -4,7 +4,8 @@
 using namespace qfcbase;
 
 std::string AudioPlayer::soundPath = "";
-std::map<std::string, sf::Sound> AudioPlayer::sounds = std::map<std::string, sf::Sound>();
+std::map<std::string, sf::SoundBuffer> AudioPlayer::sounds = std::map<std::string, sf::SoundBuffer>();
+sf::Sound AudioPlayer::soundPlayer = sf::Sound();
 std::string AudioPlayer::bgmPath = "";
 std::string AudioPlayer::currentBgmName = "";
 sf::Music AudioPlayer::currentBgm = sf::Music();
@@ -26,10 +27,17 @@ void AudioPlayer::PlaySound(std::string name)
 {
 	if (sounds.count(name) == 0)
 	{
+		sounds[name] = sf::SoundBuffer();
 
+		if (!sounds[name].loadFromFile(soundPath + name + ".wav"))
+		{
+			currentBgmName = "";
+			Log::Error("Could not open sound file: " + name);
+		}
 	}
 
-	sounds[name].play();
+	soundPlayer.setBuffer(sounds[name]);
+	soundPlayer.play();
 }
 
 void AudioPlayer::PlayBGM(std::string name)

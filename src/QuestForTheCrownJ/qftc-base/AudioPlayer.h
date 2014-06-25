@@ -12,7 +12,8 @@ namespace qfcbase
 		/////////////////////////////////////
 		private:
 			static std::string soundPath;
-			static std::map<std::string, sf::Sound> sounds;
+			static std::map<std::string, sf::SoundBuffer> sounds;
+			static sf::Sound soundPlayer;
 			static std::string bgmPath;
 			static std::string currentBgmName;
 			static sf::Music currentBgm;

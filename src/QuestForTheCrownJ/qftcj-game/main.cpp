@@ -13,10 +13,7 @@ int main(int argc, char* argv[])
 	qfcgame::MainGame* game = new qfcgame::MainGame();
 
 	qfcbase::AudioPlayer::SetMusicPath("Content/bgm/");
-	qfcbase::AudioPlayer::SetMusicPath("Content/sound/");
-
-
-	qfcbase::AudioPlayer::PlayBGM("Call to Adventure");
+	qfcbase::AudioPlayer::SetSoundPath("Content/sound/");
 
 	window.Run(game);
 
