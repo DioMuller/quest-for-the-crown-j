@@ -60,6 +60,7 @@ namespace qfcbase
 		/////////////////////////////////////
 		// Properties
 		/////////////////////////////////////
+		public:
 			autoprop(public, protected, AnimatedSprite*, sprite, Sprite);
 	};
 }

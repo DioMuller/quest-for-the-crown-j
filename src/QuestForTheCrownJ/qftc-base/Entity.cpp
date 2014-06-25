@@ -31,6 +31,8 @@ void Entity::Update(double dt)
 	{
 		b->Update(dt);
 	}
+
+	sprite->Update(dt);
 }
 
 void Entity::Draw(sf::RenderWindow* renderer)

@@ -1,6 +1,7 @@
 #pragma once
 
 #include <SFML/Graphics.hpp>
+#include "Definitions.h"
 
 namespace qfcbase
 {
@@ -33,6 +34,13 @@ namespace qfcbase
 			std::string currentAnimation;
 
 		/////////////////////////////////////
+		// Properties
+		/////////////////////////////////////
+		public:
+			getsetdecl(std::string, CurrentAnimation);
+			propgetset(public, public, sf::Vector2f, position, Position);
+
+		/////////////////////////////////////
 		// Constructors
 		/////////////////////////////////////
 		public:
@@ -45,8 +53,10 @@ namespace qfcbase
 		public:
 			void Draw(sf::RenderWindow* window);
 			void Update(double deltaTime);
+			void Move(const sf::Vector2f& offset);
 
 			void AddAnimation(std::string key, Animation animation);
+			std::string GetCurrentAnimation() { return currentAnimation; }
 			void SetCurrentAnimation(std::string animationKey);
 	};
 }

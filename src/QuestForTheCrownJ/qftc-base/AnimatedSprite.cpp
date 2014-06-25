@@ -72,5 +72,22 @@ void AnimatedSprite::Update(double deltaTime)
 
 void AnimatedSprite::AddAnimation(std::string key, Animation animation)
 {
+	animations[key] = animation;
+}
 
+void AnimatedSprite::SetCurrentAnimation(std::string animationKey)
+{
+	auto anim = animations[animationKey];
+
+	if (currentAnimation == animationKey && !(currentFrame == anim.lastFrame && current_interval >= anim.frameInterval))
+		return;
+
+	currentAnimation = animationKey;
+	this->currentFrame = anim.firstFrame;
+	this->current_interval = 0;
+}
+
+void AnimatedSprite::Move(const sf::Vector2f& offset)
+{
+	position += offset;
 }
