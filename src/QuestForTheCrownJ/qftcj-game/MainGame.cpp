@@ -1,9 +1,12 @@
 #include "MainGame.h"
+#include "AudioPlayer.h"
 
 using namespace qfcgame;
 
 MainGame::MainGame()
 {
+	qfcbase::AudioPlayer::SetMusicPath("Content/bgm/");
+	qfcbase::AudioPlayer::SetSoundPath("Content/sound/");
 }
 
 
