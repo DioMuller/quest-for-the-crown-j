@@ -1,49 +1,50 @@
 #pragma once
+#include <SFML\System\Vector2.hpp>
+
 namespace qfcgame
 {
-    typedef struct input_state
-    {
-    public:
-        input_state() : move_up(false), move_down(false), move_left(false), move_right(false), action(false), run(false), open_menu(false)
-        {
+	const float AnalogToDigital = 0.4f;
 
-        }
+	typedef struct input_state
+	{
+	public:
+		input_state() : movement({ 0, 0 }), action(false), run(false), open_menu(false)
+		{
 
-        bool move_up, move_down, move_left, move_right;
-        bool action, run, open_menu;
-    };
+		}
 
-    class PlayerInput
-    {
-    private:
-        input_state old_state, current_state;
+		sf::Vector2f movement;
+		bool action, run, open_menu;
+	};
 
-    protected:
-        virtual input_state GetState() = 0;
+	class PlayerInput
+	{
+	private:
+		input_state old_state, current_state;
 
-    public:
-        PlayerInput();
-        ~PlayerInput();
+	protected:
+		virtual input_state GetState() = 0;
 
-        void Update(double dt);
+	public:
+		PlayerInput();
+		~PlayerInput();
 
-        // GamePlay
-        bool MoveUp() { return current_state.move_up; }
-        bool MoveDown() { return current_state.move_down; }
-        bool MoveLeft() { return current_state.move_left; }
-        bool MoveRight() { return current_state.move_right; }
+		void Update(double dt);
 
-        bool Run() { return current_state.run; }
-        bool Action() { return current_state.action; }
+		// GamePlay
+		sf::Vector2f Movement() { return current_state.movement; }
 
-        // Menu
-        bool MenuUp() { return current_state.move_up && !old_state.move_up; }
-        bool MenuDown() { return current_state.move_down && !old_state.move_down; }
-        bool MenuLeft() { return current_state.move_left && !old_state.move_left; }
-        bool MenuRight() { return current_state.move_right && !old_state.move_right; }
+		bool Run() { return current_state.run; }
+		bool Action() { return current_state.action; }
 
-        bool MenuOpen() { return current_state.open_menu && !old_state.open_menu; }
-        bool MenuAccept() { return current_state.action && !old_state.action; }
-        bool MenuCancel() { return current_state.run && !old_state.run; }
-    };
+		// Menu
+		bool MenuUp() { return current_state.movement.y < -AnalogToDigital && !(old_state.movement.y < -AnalogToDigital); }
+		bool MenuDown() { return current_state.movement.y > AnalogToDigital && !(old_state.movement.y > AnalogToDigital); }
+		bool MenuLeft() { return current_state.movement.x < -AnalogToDigital && !(old_state.movement.x < -AnalogToDigital); }
+		bool MenuRight() { return current_state.movement.x > AnalogToDigital && !(old_state.movement.x > AnalogToDigital); }
+
+		bool MenuOpen() { return current_state.open_menu && !old_state.open_menu; }
+		bool MenuAccept() { return current_state.action && !old_state.action; }
+		bool MenuCancel() { return current_state.run && !old_state.run; }
+	};
 }

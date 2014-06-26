@@ -23,7 +23,7 @@ void Window::Run(Game* game)
 	this->game = game;
 
 	//Initial update duration = 1 frame.
-	double delta = MILISECONDS_PER_FRAME;
+	double delta = SECONDS_PER_FRAME;
 
 	while (window->isOpen())
 	{
@@ -45,10 +45,10 @@ void Window::Run(Game* game)
 
 		delta = ((double)std::chrono::duration_cast<std::chrono::microseconds>(end - start).count()) / (1000.0 * 1000.0);
 
-		if (delta < MILISECONDS_PER_FRAME)
+		if (delta < SECONDS_PER_FRAME)
 		{
-			std::this_thread::sleep_for(std::chrono::microseconds((long long)(MILISECONDS_PER_FRAME - delta) * (1000 * 1000)));
-			delta = MILISECONDS_PER_FRAME;
+			std::this_thread::sleep_for(std::chrono::microseconds((long long)((SECONDS_PER_FRAME - delta) * (1000 * 1000))));
+			delta = SECONDS_PER_FRAME;
 		}
 	}
 }

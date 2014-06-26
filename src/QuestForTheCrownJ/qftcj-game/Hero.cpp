@@ -4,7 +4,7 @@
 
 qfcgame::Hero::Hero()
 {
-	const double walkFrameDuration = 0.100;
+	const double walkFrameDuration = 0.1;
 
 	auto sprite = new qfcbase::AnimatedSprite("Content/sprites/characters/main.png", sf::Vector2i(64, 64));
 	sprite->AddAnimation("stopped_up", { { 0, 0 }, { 0, 0 }, walkFrameDuration });

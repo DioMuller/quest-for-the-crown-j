@@ -13,7 +13,7 @@
 
 // FPS Definitions
 #define FPS 60.0
-#define MILISECONDS_PER_FRAME (double) (1.0 / FPS)
+#define SECONDS_PER_FRAME (double) (1.0 / FPS)
 
 // Properties
 // Declare methods as properties
