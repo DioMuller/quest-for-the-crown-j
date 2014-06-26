@@ -4,20 +4,21 @@
 
 qfcgame::Hero::Hero()
 {
-	const double walkFrameDuration = 100;
+	Speed = 5 * 32;
+	const double walkFrameDuration = 0.1;
 
 	auto sprite = new qfcbase::AnimatedSprite("Content/sprites/characters/main.png", sf::Vector2i(64, 64));
 	sprite->AddAnimation("stopped_up", { { 0, 0 }, { 0, 0 }, walkFrameDuration });
-	sprite->AddAnimation("stopped_down", { { 0, 64 * 2 }, { 0, 64 * 2 }, walkFrameDuration });
-	sprite->AddAnimation("stopped_left", { { 0, 64 * 1 }, { 0, 64 * 1 }, walkFrameDuration });
-	sprite->AddAnimation("stopped_right", { { 0, 64 * 3 }, { 0, 64 * 3 }, walkFrameDuration });
+	sprite->AddAnimation("stopped_down", { { 0, 2 }, { 0, 2 }, walkFrameDuration });
+	sprite->AddAnimation("stopped_left", { { 0, 1 }, { 0, 1 }, walkFrameDuration });
+	sprite->AddAnimation("stopped_right", { { 0, 3 }, { 0, 3 }, walkFrameDuration });
 
-	sprite->AddAnimation("walking_up", { { 64, 64 * 0 }, { 64 * 8, 64 * 0 }, walkFrameDuration });
-	sprite->AddAnimation("walking_down", { { 64, 64 * 2 }, { 64 * 8, 64 * 2 }, walkFrameDuration });
-	sprite->AddAnimation("walking_left", { { 64, 64 * 1 }, { 64 * 8, 64 * 1 }, walkFrameDuration });
-	sprite->AddAnimation("walking_right", { { 64, 64 * 3 }, { 64 * 8, 64 * 3 }, walkFrameDuration });
+	sprite->AddAnimation("walking_up", { { 1, 0 }, { 8, 0 }, walkFrameDuration });
+	sprite->AddAnimation("walking_down", { { 1, 2 }, { 8, 2 }, walkFrameDuration });
+	sprite->AddAnimation("walking_left", { { 1, 1 }, { 8, 1 }, walkFrameDuration });
+	sprite->AddAnimation("walking_right", { { 1, 3 }, { 8, 3 }, walkFrameDuration });
 
-	sprite->AddAnimation("dying", { { 0, 64 * 12 }, { 64 * 5, 64 * 12 }, walkFrameDuration });
+	sprite->AddAnimation("dying", { { 0, 12 }, { 5, 12 }, walkFrameDuration });
 	Sprite = sprite;
 }
 

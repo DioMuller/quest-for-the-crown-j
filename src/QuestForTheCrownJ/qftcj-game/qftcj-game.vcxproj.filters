@@ -13,6 +13,9 @@
     <ClCompile Include="Hero.cpp">
       <Filter>Entities</Filter>
     </ClCompile>
+    <ClCompile Include="Controllable.cpp">
+      <Filter>Behaviors</Filter>
+    </ClCompile>
     <ClCompile Include="client-main.cpp" />
   </ItemGroup>
   <ItemGroup>
@@ -24,6 +27,9 @@
     </Filter>
     <Filter Include="Entities">
       <UniqueIdentifier>{43c904ac-2519-43f8-82a1-6f4dd5f56f0f}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Behaviors">
+      <UniqueIdentifier>{b470c142-1151-4360-989b-331ece890e22}</UniqueIdentifier>
     </Filter>
   </ItemGroup>
   <ItemGroup>
@@ -38,6 +44,9 @@
     </ClInclude>
     <ClInclude Include="Hero.h">
       <Filter>Entities</Filter>
+    </ClInclude>
+    <ClInclude Include="Controllable.h">
+      <Filter>Behaviors</Filter>
     </ClInclude>
   </ItemGroup>
 </Project>

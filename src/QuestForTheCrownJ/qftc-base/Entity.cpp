@@ -6,9 +6,8 @@ using namespace qfcbase;
 // Constructors
 /////////////////////////////////////
 Entity::Entity()
-	: status({})
+	: status({}), speed(32)
 {
-	status.level = 1;
 }
 
 
@@ -31,6 +30,8 @@ void Entity::Update(double dt)
 	{
 		b->Update(dt);
 	}
+
+	sprite->Update(dt);
 }
 
 void Entity::Draw(sf::RenderWindow* renderer)

@@ -8,27 +8,24 @@ namespace qfcbase
 {
 	typedef struct struct_status
 	{
-		int level;
-		int hp;
-		int mp;
+		int level = 1;
+		int hp = 1;
+		int mp = 1;
 
-		int base_hp;
-		int base_mp;
+#ifndef CREATE_STATUS
+#define CREATE_STATUS(type, field, prop) type base_##field = 0, mul_##field = 1; type Get##prop() { return (base_##field + mul_##field * level); } getdecl(type, prop)
 
-		int base_attack;
-		int base_defense;
-		int base_magic;
-		int base_defense_magic;
-		int base_speed;
+		CREATE_STATUS(int, hp, HP);
+		CREATE_STATUS(int, mp, MP);
 
-		int mul_hp;
-		int mul_mp;
+		CREATE_STATUS(int, attack, Attack);
+		CREATE_STATUS(int, defense, Defense);
+		CREATE_STATUS(int, magic, Magic);
+		CREATE_STATUS(int, defense_magic, DefenseMagic);
+		CREATE_STATUS(int, speed, Speed);
 
-		int mul_attack;
-		int mul_defense;
-		int mul_magic;
-		int mul_defense_magic;
-		int mul_speed;
+#undef CREATE_STATUS
+#endif
 	} Status;
 
 	class Entity
@@ -60,6 +57,8 @@ namespace qfcbase
 		/////////////////////////////////////
 		// Properties
 		/////////////////////////////////////
+		public:
 			autoprop(public, protected, AnimatedSprite*, sprite, Sprite);
+			autoprop(public, protected, float, speed, Speed);
 	};
 }

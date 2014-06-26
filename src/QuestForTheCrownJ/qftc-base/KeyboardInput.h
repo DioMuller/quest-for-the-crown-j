@@ -8,6 +8,8 @@ namespace qfcgame
     {
     protected:
         virtual input_state GetState();
+	private:
+		sf::Vector2f GetMovement();
 
     public:
         KeyboardInput();

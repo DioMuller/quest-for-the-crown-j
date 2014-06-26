@@ -1,36 +1,36 @@
 #pragma once
-#include "Definitions.h"
+#include <string>
+#include "Behavior.h"
+#include "PlayerInput.h"
 
-namespace qfcbase
+namespace qfcgame
 {
-	class Entity;
-
-	class Behavior
+	class Controllable :
+		public qfcbase::Behavior
 	{
 		/////////////////////////////////////
 		// Attributes
 		/////////////////////////////////////
 		private:
-			Entity* parent;
-
-		/////////////////////////////////////
-		// Properties
-		/////////////////////////////////////
+			PlayerInput* input;
+			std::string lastDirection;
 		public:
-			propget(Entity*, parent, Parent);
+			float speed;
 
 		/////////////////////////////////////
 		// Constructors
 		/////////////////////////////////////
 		public:
-			Behavior(Entity* parent);
-			~Behavior();
+			Controllable(qfcbase::Entity* parent, PlayerInput* input);
+			~Controllable();
 
 		/////////////////////////////////////
 		// Methods
 		/////////////////////////////////////
 		public:
 			virtual void Update(double dt);
+
+		private:
+			void UpdateAnimation();
 	};
 }
-
