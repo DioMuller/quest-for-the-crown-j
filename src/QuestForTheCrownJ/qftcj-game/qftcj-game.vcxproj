@@ -57,7 +57,7 @@
       <WarningLevel>Level3</WarningLevel>
       <Optimization>Disabled</Optimization>
       <PreprocessorDefinitions>WIN32;_DEBUG;_CONSOLE;_LIB;%(PreprocessorDefinitions)</PreprocessorDefinitions>
-      <AdditionalIncludeDirectories>$(SolutionDir)qftc-base;%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
+      <AdditionalIncludeDirectories>$(SolutionDir)qftc-base;$(SolutionDir)qftc-netlib;%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
     </ClCompile>
     <Link>
       <SubSystem>Console</SubSystem>
@@ -87,7 +87,7 @@
     <ClCompile Include="..\qftc-base\PlayerInput.cpp" />
     <ClCompile Include="Controllable.cpp" />
     <ClCompile Include="Hero.cpp" />
-    <ClCompile Include="main.cpp" />
+    <ClCompile Include="client-main.cpp" />
     <ClCompile Include="MainGame.cpp" />
   </ItemGroup>
   <ItemGroup>
@@ -100,6 +100,9 @@
   <ItemGroup>
     <ProjectReference Include="..\qftc-base\qftc-base.vcxproj">
       <Project>{4ed5039f-fe29-4b54-89c3-52967eb2fc15}</Project>
+    </ProjectReference>
+    <ProjectReference Include="..\qftc-netlib\qftc-netlib.vcxproj">
+      <Project>{59146722-5a3e-4f77-a63f-cf6e61d471c2}</Project>
     </ProjectReference>
   </ItemGroup>
   <Import Project="$(VCTargetsPath)\Microsoft.Cpp.targets" />

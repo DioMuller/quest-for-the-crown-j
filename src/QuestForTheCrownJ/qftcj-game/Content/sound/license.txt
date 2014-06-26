@@ -1,0 +1,2 @@
+select.wav, powerup.wav, onfire.wav, fireball.wav, boomerang.wav, hit.wav by Diogo Muller de Miranda
+sword.wav, bow.wav by Qat from http://www.freesound.org
