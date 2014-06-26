@@ -7,6 +7,9 @@
     <Filter Include="Crypto">
       <UniqueIdentifier>{4474da78-299c-4a4e-b244-282cb7e1ef19}</UniqueIdentifier>
     </Filter>
+    <Filter Include="Definitions">
+      <UniqueIdentifier>{09c08c5c-284d-4b2c-a8c6-3dc30d161efe}</UniqueIdentifier>
+    </Filter>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="StructBase.h">
@@ -20,6 +23,12 @@
     </ClInclude>
     <ClInclude Include="SHA1.h">
       <Filter>Crypto</Filter>
+    </ClInclude>
+    <ClInclude Include="ClientStructs.h">
+      <Filter>Structs</Filter>
+    </ClInclude>
+    <ClInclude Include="ServerStructs.h">
+      <Filter>Structs</Filter>
     </ClInclude>
   </ItemGroup>
   <ItemGroup>
