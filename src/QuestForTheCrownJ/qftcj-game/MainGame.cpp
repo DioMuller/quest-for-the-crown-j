@@ -5,21 +5,31 @@
 #include "Controllable.h"
 #include "KeyboardInput.h"
 #include "Hero.h"
+#include "Slime.h"
 
 using namespace qfcgame;
+
+qfcbase::Scene* CreateScene(qfcbase::Game* game);
 
 MainGame::MainGame()
 {
 	qfcbase::AudioPlayer::SetMusicPath("Content/bgm/");
 	qfcbase::AudioPlayer::SetSoundPath("Content/sound/");
 
-	auto scene = new qfcbase::Scene(this);
+	LoadScene(CreateScene(this), false);
+}
+
+qfcbase::Scene* CreateScene(qfcbase::Game* game)
+{
+	auto scene = new qfcbase::Scene(game);
 	auto hero = new Hero();
 	hero->AddBehavior(new Controllable(hero, new KeyboardInput()));
 	scene->AddEntity(hero);
-	LoadScene(scene, false);
+	auto enemy = new Slime();
+	enemy->Sprite->Position = { 400, 400 };
+	scene->AddEntity(enemy);
+	return scene;
 }
-
 
 MainGame::~MainGame()
 {

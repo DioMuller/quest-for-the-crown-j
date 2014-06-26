@@ -13,9 +13,6 @@ namespace qfcgame
 		/////////////////////////////////////
 		private:
 			PlayerInput* input;
-			std::string lastDirection;
-		public:
-			float speed;
 
 		/////////////////////////////////////
 		// Constructors

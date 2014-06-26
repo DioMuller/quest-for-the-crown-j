@@ -35,6 +35,7 @@ namespace qfcbase
 		/////////////////////////////////////
 		private:
 			std::vector<Behavior*> behaviors;
+			std::string lastDirectionName;
 		public:
 			Status status;
 
@@ -53,6 +54,7 @@ namespace qfcbase
 			virtual void Draw(sf::RenderWindow* renderer);
 
 			void AddBehavior(Behavior* b);
+			void Walk(sf::Vector2f direction, double dt);
 
 		/////////////////////////////////////
 		// Properties

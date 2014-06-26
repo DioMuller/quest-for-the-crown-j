@@ -19,6 +19,7 @@ qfcgame::Hero::Hero()
 	sprite->AddAnimation("walking_right", { { 1, 3 }, { 8, 3 }, walkFrameDuration });
 
 	sprite->AddAnimation("dying", { { 0, 12 }, { 5, 12 }, walkFrameDuration });
+	sprite->CurrentAnimation = "stopped_down";
 	Sprite = sprite;
 }
 
