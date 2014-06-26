@@ -3,6 +3,7 @@
 
 #include "Scene.h"
 #include "Controllable.h"
+#include "FollowBehavior.h"
 #include "KeyboardInput.h"
 #include "Hero.h"
 #include "Slime.h"
@@ -27,6 +28,7 @@ qfcbase::Scene* CreateScene(qfcbase::Game* game)
 	scene->AddEntity(hero);
 	auto enemy = new Slime();
 	enemy->Sprite->Position = { 400, 400 };
+	enemy->AddBehavior(new FollowBehavior(enemy));
 	scene->AddEntity(enemy);
 	return scene;
 }

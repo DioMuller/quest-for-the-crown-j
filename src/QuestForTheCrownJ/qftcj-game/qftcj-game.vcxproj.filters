@@ -20,6 +20,9 @@
     <ClCompile Include="Slime.cpp">
       <Filter>Entities</Filter>
     </ClCompile>
+    <ClCompile Include="FollowBehavior.cpp">
+      <Filter>Behaviors</Filter>
+    </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <Filter Include="Core">
@@ -53,6 +56,9 @@
     </ClInclude>
     <ClInclude Include="Slime.h">
       <Filter>Entities</Filter>
+    </ClInclude>
+    <ClInclude Include="FollowBehavior.h">
+      <Filter>Behaviors</Filter>
     </ClInclude>
   </ItemGroup>
 </Project>
