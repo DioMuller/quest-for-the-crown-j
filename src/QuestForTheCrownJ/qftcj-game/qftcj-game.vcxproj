@@ -89,6 +89,7 @@
     <ClCompile Include="Hero.cpp" />
     <ClCompile Include="client-main.cpp" />
     <ClCompile Include="MainGame.cpp" />
+    <ClCompile Include="Slime.cpp" />
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="..\qftc-base\KeyboardInput.h" />
@@ -96,6 +97,7 @@
     <ClInclude Include="Controllable.h" />
     <ClInclude Include="Hero.h" />
     <ClInclude Include="MainGame.h" />
+    <ClInclude Include="Slime.h" />
   </ItemGroup>
   <ItemGroup>
     <ProjectReference Include="..\qftc-base\qftc-base.vcxproj">

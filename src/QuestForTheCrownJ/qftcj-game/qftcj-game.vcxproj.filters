@@ -17,6 +17,9 @@
       <Filter>Behaviors</Filter>
     </ClCompile>
     <ClCompile Include="client-main.cpp" />
+    <ClCompile Include="Slime.cpp">
+      <Filter>Entities</Filter>
+    </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <Filter Include="Core">
@@ -47,6 +50,9 @@
     </ClInclude>
     <ClInclude Include="Controllable.h">
       <Filter>Behaviors</Filter>
+    </ClInclude>
+    <ClInclude Include="Slime.h">
+      <Filter>Entities</Filter>
     </ClInclude>
   </ItemGroup>
 </Project>
