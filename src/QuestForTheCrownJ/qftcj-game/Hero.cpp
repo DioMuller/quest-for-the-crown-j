@@ -4,6 +4,7 @@
 
 qfcgame::Hero::Hero()
 {
+	Speed = 5 * 32;
 	const double walkFrameDuration = 0.1;
 
 	auto sprite = new qfcbase::AnimatedSprite("Content/sprites/characters/main.png", sf::Vector2i(64, 64));

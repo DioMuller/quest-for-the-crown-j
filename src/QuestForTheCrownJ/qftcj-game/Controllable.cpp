@@ -2,7 +2,7 @@
 #include "Entity.h"
 
 qfcgame::Controllable::Controllable(qfcbase::Entity* parent, PlayerInput* input)
-	: qfcbase::Behavior(parent), input(input), lastDirection("down"), speed(32 * 5)
+	: qfcbase::Behavior(parent), input(input), lastDirection("down"), speed(parent->Speed)
 {
 }
 

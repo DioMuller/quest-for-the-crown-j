@@ -6,9 +6,8 @@ using namespace qfcbase;
 // Constructors
 /////////////////////////////////////
 Entity::Entity()
-	: status({})
+	: status({}), speed(32)
 {
-	status.level = 1;
 }
 
 
