@@ -1,3 +1,4 @@
+#include <memory>
 #include "MainGame.h"
 #include "AudioPlayer.h"
 
@@ -23,12 +24,13 @@ MainGame::MainGame()
 qfcbase::Scene* CreateScene(qfcbase::Game* game)
 {
 	auto scene = new qfcbase::Scene(game);
-	auto hero = new Hero();
-	hero->AddBehavior(new Controllable(hero, new KeyboardInput()));
+	auto hero = std::make_shared<Hero>();
+	hero->category = "GoodGuy";
+	hero->AddBehavior(std::make_shared<Controllable>(hero, std::make_shared<KeyboardInput>()));
 	scene->AddEntity(hero);
-	auto enemy = new Slime();
+	auto enemy = std::make_shared<Slime>();
 	enemy->Sprite->Position = { 400, 400 };
-	enemy->AddBehavior(new FollowBehavior(enemy));
+	enemy->AddBehavior(std::make_shared<FollowBehavior>(enemy, "GoodGuy", 5, 32 * 4));
 	scene->AddEntity(enemy);
 	return scene;
 }

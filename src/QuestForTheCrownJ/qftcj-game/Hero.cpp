@@ -7,7 +7,7 @@ qfcgame::Hero::Hero()
 	Speed = 5 * 32;
 	const double walkFrameDuration = 0.1;
 
-	auto sprite = new qfcbase::AnimatedSprite("Content/sprites/characters/main.png", sf::Vector2i(64, 64));
+	auto sprite = std::make_shared<qfcbase::AnimatedSprite>("Content/sprites/characters/main.png", sf::Vector2i(64, 64));
 	sprite->AddAnimation("stopped_up", { { 0, 0 }, { 0, 0 }, walkFrameDuration });
 	sprite->AddAnimation("stopped_down", { { 0, 2 }, { 0, 2 }, walkFrameDuration });
 	sprite->AddAnimation("stopped_left", { { 0, 1 }, { 0, 1 }, walkFrameDuration });
@@ -26,5 +26,4 @@ qfcgame::Hero::Hero()
 
 qfcgame::Hero::~Hero()
 {
-	delete Sprite;
 }

@@ -1,4 +1,5 @@
 #pragma once
+#include <memory>
 #include "Definitions.h"
 
 namespace qfcbase
@@ -11,19 +12,19 @@ namespace qfcbase
 		// Attributes
 		/////////////////////////////////////
 		private:
-			Entity* parent;
+			std::weak_ptr<Entity> parent;
 
 		/////////////////////////////////////
 		// Properties
 		/////////////////////////////////////
 		public:
-			propget(Entity*, parent, Parent);
+			propget(std::weak_ptr<Entity>, parent, Parent);
 
 		/////////////////////////////////////
 		// Constructors
 		/////////////////////////////////////
 		public:
-			Behavior(Entity* parent);
+			Behavior(std::weak_ptr<Entity> parent);
 			~Behavior();
 
 		/////////////////////////////////////

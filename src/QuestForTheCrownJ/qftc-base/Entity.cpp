@@ -14,11 +14,7 @@ Entity::Entity()
 Entity::~Entity()
 {
 	while (!behaviors.empty())
-	{
-		Behavior* b = behaviors[behaviors.size() - 1];
 		behaviors.pop_back();
-		delete b;
-	}
 }
 
 /////////////////////////////////////
@@ -26,7 +22,7 @@ Entity::~Entity()
 /////////////////////////////////////
 void Entity::Update(double dt)
 {
-	for (Behavior* b : behaviors)
+	for (const auto& b : behaviors)
 	{
 		b->Update(dt);
 	}
@@ -39,7 +35,7 @@ void Entity::Draw(sf::RenderWindow* renderer)
 	sprite->Draw(renderer);
 }
 
-void Entity::AddBehavior(Behavior* b)
+void Entity::AddBehavior(std::shared_ptr<Behavior> b)
 {
 	behaviors.push_back(b);
 }

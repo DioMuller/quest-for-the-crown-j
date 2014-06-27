@@ -3,11 +3,11 @@
 
 qfcgame::Slime::Slime()
 {
-	Speed = 3 * 32;
+	Speed = 1 * 32;
 	const double stoppedFrameDuration = 0.3;
 	const double walkFrameDuration = 0.1;
 
-	auto sprite = new qfcbase::AnimatedSprite("Content/sprites/characters/slime.png", sf::Vector2i(32, 42));
+	auto sprite = std::make_shared<qfcbase::AnimatedSprite>("Content/sprites/characters/slime.png", sf::Vector2i(32, 42));
 	sprite->AddAnimation("stopped_up", { { 0, 0 }, { 2, 0 }, stoppedFrameDuration });
 	sprite->AddAnimation("stopped_down", { { 0, 2 }, { 2, 2 }, stoppedFrameDuration });
 	sprite->AddAnimation("stopped_left", { { 0, 3 }, { 2, 3 }, stoppedFrameDuration });

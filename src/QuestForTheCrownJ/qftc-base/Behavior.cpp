@@ -5,7 +5,7 @@ using namespace qfcbase;
 /////////////////////////////////////
 // Constructors
 /////////////////////////////////////
-Behavior::Behavior(Entity* parent)
+Behavior::Behavior(std::weak_ptr<Entity> parent)
 {
 	this->parent = parent;
 }

@@ -107,6 +107,7 @@
     <ClInclude Include="Level.h" />
     <ClInclude Include="Log.h" />
     <ClInclude Include="Map.h" />
+    <ClInclude Include="Vector.h" />
     <ClInclude Include="Scene.h" />
     <ClInclude Include="StringHelper.h" />
     <ClInclude Include="Tile.h" />
@@ -150,8 +151,8 @@
   </ItemGroup>
   <ItemGroup>
     <None Include="..\..\..\references\Aditional\libsndfile-1.dll">
-		<CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
-	</None>
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </None>
     <None Include="..\..\..\references\Aditional\openal32.dll">
       <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
     </None>

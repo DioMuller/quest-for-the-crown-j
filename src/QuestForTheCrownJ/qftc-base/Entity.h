@@ -1,8 +1,10 @@
 #pragma once
+#include <memory>
 #include "AnimatedSprite.h"
 #include "Behavior.h"
 #include "Container.h"
 #include "Definitions.h"
+#include "Scene.h"
 
 namespace qfcbase
 {
@@ -28,15 +30,19 @@ namespace qfcbase
 #endif
 	} Status;
 
+	class Scene;
+
 	class Entity
 	{
 		/////////////////////////////////////
 		// Attributes
 		/////////////////////////////////////
 		private:
-			std::vector<Behavior*> behaviors;
+			std::vector<std::shared_ptr<Behavior>> behaviors;
 			std::string lastDirectionName;
 		public:
+			qfcbase::Scene* scene;
+			std::string category;
 			Status status;
 
 		/////////////////////////////////////
@@ -53,14 +59,14 @@ namespace qfcbase
 			virtual void Update(double dt);
 			virtual void Draw(sf::RenderWindow* renderer);
 
-			void AddBehavior(Behavior* b);
+			void AddBehavior(std::shared_ptr<Behavior> b);
 			void Walk(sf::Vector2f direction, double dt);
 
 		/////////////////////////////////////
 		// Properties
 		/////////////////////////////////////
 		public:
-			autoprop(public, protected, AnimatedSprite*, sprite, Sprite);
+			autoprop(public, protected, std::shared_ptr<AnimatedSprite>, sprite, Sprite);
 			autoprop(public, protected, float, speed, Speed);
 	};
 }

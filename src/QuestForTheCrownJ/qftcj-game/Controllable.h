@@ -1,5 +1,6 @@
 #pragma once
 #include <string>
+#include <memory>
 #include "Behavior.h"
 #include "PlayerInput.h"
 
@@ -12,13 +13,13 @@ namespace qfcgame
 		// Attributes
 		/////////////////////////////////////
 		private:
-			PlayerInput* input;
+			std::shared_ptr<PlayerInput> input;
 
 		/////////////////////////////////////
 		// Constructors
 		/////////////////////////////////////
 		public:
-			Controllable(qfcbase::Entity* parent, PlayerInput* input);
+			Controllable(std::weak_ptr<qfcbase::Entity> parent, std::shared_ptr<PlayerInput> input);
 			~Controllable();
 
 		/////////////////////////////////////

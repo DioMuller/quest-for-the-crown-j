@@ -1,5 +1,7 @@
 #pragma once
+#include <memory>
 #include <stack>
+#include <functional>
 #include "Entity.h"
 
 namespace qfcbase
@@ -12,8 +14,8 @@ namespace qfcbase
 		// Attributes
 		/////////////////////////////////////
 		private:
-			std::vector<Entity*> entities;
-			std::stack<Entity*> toRemove;
+			std::vector<std::shared_ptr<Entity>> entities;
+			std::stack<std::shared_ptr<Entity>> toRemove;
 			Game* parent;
 
 		/////////////////////////////////////
@@ -30,7 +32,10 @@ namespace qfcbase
 			virtual void Update(double dt);
 			virtual void Draw(sf::RenderWindow* renderer);
 
-			void AddEntity(Entity* e);
-			void RemoveEntity(Entity* e);
+			void AddEntity(std::shared_ptr<Entity> e);
+			void RemoveEntity(std::shared_ptr<Entity> e);
+
+			std::vector<std::shared_ptr<Entity>> GetEntities(std::string category);
+			std::vector<std::shared_ptr<Entity>> GetEntities(std::function<bool(const std::shared_ptr<Entity>&)> predicate);
 	};
 }

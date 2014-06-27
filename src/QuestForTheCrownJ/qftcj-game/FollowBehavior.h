@@ -10,16 +10,18 @@ namespace qfcgame
 		/////////////////////////////////////
 		// Attributes
 		/////////////////////////////////////
+		private:
+			std::weak_ptr<qfcbase::Entity> currentTarget;
 		public:
-			float distance;
-			float maxDistance;
+			float desiredDistance;
+			float viewDistance;
 			std::string targetCategory;
 
 		/////////////////////////////////////
 		// Constructors
 		/////////////////////////////////////
 		public:
-			FollowBehavior(qfcbase::Entity* parent);
+			FollowBehavior(std::weak_ptr<qfcbase::Entity> parent, std::string targetCategory, float desiredDistance, float viewDistance);
 			~FollowBehavior();
 
 		/////////////////////////////////////
