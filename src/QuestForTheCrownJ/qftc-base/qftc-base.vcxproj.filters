@@ -75,6 +75,9 @@
     <ClCompile Include="AudioPlayer.cpp">
       <Filter>Audio</Filter>
     </ClCompile>
+    <ClCompile Include="LevelCollection.cpp">
+      <Filter>Tiled</Filter>
+    </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="Behavior.h">
@@ -130,6 +133,9 @@
     </ClInclude>
     <ClInclude Include="BattleDefinitions.h">
       <Filter>Definitions</Filter>
+    </ClInclude>
+    <ClInclude Include="LevelCollection.h">
+      <Filter>Tiled</Filter>
     </ClInclude>
   </ItemGroup>
   <ItemGroup>
