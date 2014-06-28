@@ -1,4 +1,5 @@
 #include "Entity.h"
+#include "SFHelper.h"
 
 using namespace qfcbase;
 
@@ -42,9 +43,25 @@ void Entity::AddBehavior(std::shared_ptr<Behavior> b)
 
 void Entity::Walk(sf::Vector2f direction, double dt)
 {
-	std::string directionName = "";
+	auto offset = sf::Vector2f((float)(speed * direction.x * dt), (float)(speed * direction.y * dt));
+	if (!ValidPosition(offset))
+	{
+		auto check = sf::Vector2f(offset.x, 0);
+		if (ValidPosition(check))
+			offset = check;
+		else
+		{
+			check = sf::Vector2f(0, offset.y);
+			if (ValidPosition(check))
+				offset = check;
+			else
+				return;
+		}
+	}
 
-	Sprite->Move({ (float)(speed * direction.x * dt), (float)(speed * direction.y * dt) });
+	std::string directionName = "";
+	auto oldPos = Sprite->Position;
+	Sprite->Move(offset);
 
 	if (abs(direction.x) > abs(direction.y))
 		directionName = direction.x < 0 ? "left" : "right";
@@ -58,4 +75,17 @@ void Entity::Walk(sf::Vector2f direction, double dt)
 		Sprite->CurrentAnimation = "walking_" + directionName;
 		lastDirectionName = directionName;
 	}
+}
+
+bool Entity::ValidPosition(sf::Vector2f offset)
+{
+	auto area = SFHelper::translate(Sprite->GetArea(), offset);
+
+	auto entCollisions = scene->GetEntities([this, area](std::shared_ptr<Entity> e){
+		if (this == e.get())
+			return false;
+		return  e->Sprite->GetArea().intersects(area);
+	});
+
+	return entCollisions.size() <= 0;
 }

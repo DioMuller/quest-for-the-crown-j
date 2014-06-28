@@ -1,6 +1,6 @@
 #include "FollowBehavior.h"
 #include "Entity.h"
-#include "Vector.h"
+#include "SFHelper.h"
 #include <algorithm>
 
 qfcgame::FollowBehavior::FollowBehavior(std::weak_ptr<qfcbase::Entity> parent, std::string targetCategory, float desiredDistance, float viewDistance)
@@ -27,7 +27,7 @@ void qfcgame::FollowBehavior::Update(double dt)
 		auto position = parent->Sprite->Position;
 		for (const auto& e : ents)
 		{
-			float eDist = qfcbase::Vector::length(e->Sprite->Position - position);
+			float eDist = qfcbase::SFHelper::length(e->Sprite->Position - position);
 
 			if (eDist > viewDistance)
 				continue;
@@ -47,9 +47,9 @@ void qfcgame::FollowBehavior::Update(double dt)
 	auto direction = target->Sprite->Feet - parent->Sprite->Feet;
 
 	if (targetDistance < 0)
-		targetDistance = qfcbase::Vector::length(direction);
+		targetDistance = qfcbase::SFHelper::length(direction);
 
-	direction = qfcbase::Vector::normalize(direction);
+	direction = qfcbase::SFHelper::normalize(direction);
 
 	if (targetDistance > viewDistance)
 	{
