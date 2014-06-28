@@ -37,6 +37,7 @@ namespace qfcbase
 		public:
 			getdecl(sf::Vector2f, Center);
 			getdecl(sf::Vector2f, Feet);
+			getdecl(sf::FloatRect, Area);
 			getsetdecl(std::string, CurrentAnimation);
 			// Padding: width = margin-right, height = margin-bottom
 			autoprop(public, public, sf::FloatRect, padding, Padding);
@@ -56,11 +57,13 @@ namespace qfcbase
 			void Draw(sf::RenderWindow* window);
 			void Update(double deltaTime);
 			void Move(const sf::Vector2f& offset);
+			bool Overlaps(const AnimatedSprite& other);
 
 			std::string GetCurrentAnimation() { return currentAnimation; }
 			void SetCurrentAnimation(std::string);
 			sf::Vector2f GetCenter() { return position + sf::Vector2f(static_cast<float>(frameSize.x) / 2, static_cast<float>(frameSize.y) / 2); }
 			sf::Vector2f GetFeet() { return position + sf::Vector2f(static_cast<float>(frameSize.x) / 2, static_cast<float>(frameSize.y - padding.height)); }
+			sf::FloatRect GetArea() const;
 
 			void AddAnimation(std::string key, Animation animation);
 	};

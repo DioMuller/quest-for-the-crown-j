@@ -24,10 +24,10 @@
 #define getsetdecl(type, name) __declspec(property(put = Set##name, get = Get##name)) type name
 
 // creates a Get property to an existing field
-#define propget(type, field, name) type Get##name() { return this->field; } public: getdecl(type, name)
+#define propget(type, field, name) const type& Get##name() const { return this->field; } public: getdecl(type, name)
 // creates a Set property to an existing field
-#define propset(type, field, name) void Set##name(type field) { this->field = field; } public: setdecl(type, name)
+#define propset(type, field, name) void Set##name(const type& field) { this->field = field; } public: setdecl(type, name)
 // creates a Get and a Set property to an existing field
-#define propgetset(get_visibility, set_visibility, type, field, name) get_visibility: type Get##name() { return this->field; } set_visibility: void Set##name(type field) { this->field = field; } public: getsetdecl(type, name)
+#define propgetset(get_visibility, set_visibility, type, field, name) get_visibility: const type& Get##name() const { return this->field; } set_visibility: void Set##name(const type& field) { this->field = field; } public: getsetdecl(type, name)
 // create a field and expose it as a property
 #define autoprop(get_visibility, set_visibility, type, field, name) propgetset(get_visibility, set_visibility, type, field, name); private: type field

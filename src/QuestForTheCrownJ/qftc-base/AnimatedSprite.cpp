@@ -91,3 +91,17 @@ void AnimatedSprite::Move(const sf::Vector2f& offset)
 {
 	position += offset;
 }
+
+bool AnimatedSprite::Overlaps(const AnimatedSprite& other)
+{
+	return GetArea().intersects(other.GetArea());
+}
+
+sf::FloatRect AnimatedSprite::GetArea() const
+{
+	return sf::FloatRect(
+		position.x + padding.left,
+		position.y + padding.top,
+		frameSize.x - padding.width - padding.left,
+		frameSize.y - padding.height - padding.top);
+}
