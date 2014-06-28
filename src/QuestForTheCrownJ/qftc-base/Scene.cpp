@@ -1,5 +1,6 @@
 #include "Scene.h"
 #include "Game.h"
+#include <memory>
 
 using namespace qfcbase;
 
@@ -38,8 +39,15 @@ void Scene::Update(double dt)
 	}
 }
 
+bool IsBehind(const std::shared_ptr<Entity>& a, const std::shared_ptr<Entity>& b)
+{
+	return a->Sprite->Feet.y < b->Sprite->Feet.y;
+}
+
 void Scene::Draw(sf::RenderWindow* renderer)
 {
+	std::sort(entities.begin(), entities.end(), IsBehind);
+
 	for (const auto& e : entities)
 	{
 		e->Draw(renderer);
