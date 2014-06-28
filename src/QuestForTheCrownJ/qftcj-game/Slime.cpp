@@ -19,6 +19,7 @@ qfcgame::Slime::Slime()
 	sprite->AddAnimation("walking_right", { { 0, 1 }, { 2, 1 }, walkFrameDuration });
 	sprite->CurrentAnimation = "stopped_down";
 	Sprite = sprite;
+	sprite->Padding = sf::FloatRect(6, 1, 6, 6);
 }
 
 

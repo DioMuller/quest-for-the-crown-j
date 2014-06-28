@@ -44,7 +44,7 @@ void qfcgame::FollowBehavior::Update(double dt)
 	auto target = currentTarget.lock();
 	if (!target) return;
 
-	auto direction = target->Sprite->Position - parent->Sprite->Position;
+	auto direction = target->Sprite->Feet - parent->Sprite->Feet;
 
 	if (targetDistance < 0)
 		targetDistance = qfcbase::Vector::length(direction);

@@ -21,6 +21,8 @@ qfcgame::Hero::Hero()
 	sprite->AddAnimation("dying", { { 0, 12 }, { 5, 12 }, walkFrameDuration });
 	sprite->CurrentAnimation = "stopped_down";
 	Sprite = sprite;
+
+	sprite->Padding = sf::FloatRect(22, 32, 22, 2);
 }
 
 

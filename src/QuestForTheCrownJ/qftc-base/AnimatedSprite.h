@@ -22,23 +22,25 @@ namespace qfcbase
 			// Texture
 			sf::Texture texture;
 			sf::Sprite sprite;
-			// Position
-			sf::Vector2f position;
 			// Animation
+			std::string currentAnimation;
 			sf::Vector2i frameCount;
 			sf::Vector2i frameSize;
 			sf::Vector2i currentFrame;
 			double current_interval;
 			// Animation list
 			std::map<std::string, Animation> animations;
-			std::string currentAnimation;
 
 		/////////////////////////////////////
 		// Properties
 		/////////////////////////////////////
 		public:
+			getdecl(sf::Vector2f, Center);
+			getdecl(sf::Vector2f, Feet);
 			getsetdecl(std::string, CurrentAnimation);
-			propgetset(public, public, sf::Vector2f, position, Position);
+			// Padding: width = margin-right, height = margin-bottom
+			autoprop(public, public, sf::FloatRect, padding, Padding);
+			autoprop(public, public, sf::Vector2f, position, Position);
 
 		/////////////////////////////////////
 		// Constructors
@@ -55,8 +57,11 @@ namespace qfcbase
 			void Update(double deltaTime);
 			void Move(const sf::Vector2f& offset);
 
-			void AddAnimation(std::string key, Animation animation);
 			std::string GetCurrentAnimation() { return currentAnimation; }
-			void SetCurrentAnimation(std::string animationKey);
+			void SetCurrentAnimation(std::string);
+			sf::Vector2f GetCenter() { return position + sf::Vector2f(static_cast<float>(frameSize.x) / 2, static_cast<float>(frameSize.y) / 2); }
+			sf::Vector2f GetFeet() { return position + sf::Vector2f(static_cast<float>(frameSize.x) / 2, static_cast<float>(frameSize.y - padding.height)); }
+
+			void AddAnimation(std::string key, Animation animation);
 	};
 }
