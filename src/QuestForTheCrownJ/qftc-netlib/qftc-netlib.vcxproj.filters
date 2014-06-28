@@ -4,21 +4,39 @@
     <Filter Include="Structs">
       <UniqueIdentifier>{f9cc33df-5b7e-4e07-bdb5-41ff4bb21774}</UniqueIdentifier>
     </Filter>
-    <Filter Include="Helper">
+    <Filter Include="Crypto">
       <UniqueIdentifier>{4474da78-299c-4a4e-b244-282cb7e1ef19}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Definitions">
+      <UniqueIdentifier>{09c08c5c-284d-4b2c-a8c6-3dc30d161efe}</UniqueIdentifier>
     </Filter>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="StructBase.h">
       <Filter>Structs</Filter>
     </ClInclude>
-    <ClInclude Include="Network.h">
-      <Filter>Helper</Filter>
+    <ClInclude Include="AuthStructs.h">
+      <Filter>Structs</Filter>
+    </ClInclude>
+    <ClInclude Include="Hash.h">
+      <Filter>Crypto</Filter>
+    </ClInclude>
+    <ClInclude Include="SHA1.h">
+      <Filter>Crypto</Filter>
+    </ClInclude>
+    <ClInclude Include="ClientStructs.h">
+      <Filter>Structs</Filter>
+    </ClInclude>
+    <ClInclude Include="ServerStructs.h">
+      <Filter>Structs</Filter>
     </ClInclude>
   </ItemGroup>
   <ItemGroup>
-    <ClCompile Include="Network.cpp">
-      <Filter>Helper</Filter>
+    <ClCompile Include="Hash.cpp">
+      <Filter>Crypto</Filter>
+    </ClCompile>
+    <ClCompile Include="SHA1.cpp">
+      <Filter>Crypto</Filter>
     </ClCompile>
   </ItemGroup>
 </Project>

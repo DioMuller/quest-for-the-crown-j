@@ -41,6 +41,9 @@
   <PropertyGroup Label="UserMacros" />
   <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">
     <LinkIncremental>true</LinkIncremental>
+    <ExecutablePath>$(SolutionDir)..\..\references\SFML-2.1\bin;$(ExecutablePath)</ExecutablePath>
+    <IncludePath>$(SolutionDir)..\..\references\SFML-2.1\include;$(IncludePath)</IncludePath>
+    <LibraryPath>$(SolutionDir)..\..\references\SFML-2.1\lib;$(LibraryPath)</LibraryPath>
   </PropertyGroup>
   <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Release|Win32'">
     <LinkIncremental>false</LinkIncremental>
@@ -52,6 +55,7 @@
       <WarningLevel>Level3</WarningLevel>
       <Optimization>Disabled</Optimization>
       <PreprocessorDefinitions>WIN32;_DEBUG;_WINDOWS;_USRDLL;QFTCNETLIB_EXPORTS;%(PreprocessorDefinitions)</PreprocessorDefinitions>
+      <AdditionalIncludeDirectories>$(SolutionDir)qftc-base;</AdditionalIncludeDirectories>
     </ClCompile>
     <Link>
       <SubSystem>Windows</SubSystem>
@@ -76,11 +80,21 @@
     </Link>
   </ItemDefinitionGroup>
   <ItemGroup>
-    <ClInclude Include="Network.h" />
+    <ClInclude Include="AuthStructs.h" />
+    <ClInclude Include="ClientStructs.h" />
+    <ClInclude Include="Hash.h" />
+    <ClInclude Include="ServerStructs.h" />
+    <ClInclude Include="SHA1.h" />
     <ClInclude Include="StructBase.h" />
   </ItemGroup>
   <ItemGroup>
-    <ClCompile Include="Network.cpp" />
+    <ClCompile Include="Hash.cpp" />
+    <ClCompile Include="SHA1.cpp" />
+  </ItemGroup>
+  <ItemGroup>
+    <ProjectReference Include="..\qftc-base\qftc-base.vcxproj">
+      <Project>{4ed5039f-fe29-4b54-89c3-52967eb2fc15}</Project>
+    </ProjectReference>
   </ItemGroup>
   <Import Project="$(VCTargetsPath)\Microsoft.Cpp.targets" />
   <ImportGroup Label="ExtensionTargets">

@@ -25,6 +25,9 @@
     <Filter Include="Audio">
       <UniqueIdentifier>{60e7bc1b-1ed7-4893-ac61-9b33a9213f0d}</UniqueIdentifier>
     </Filter>
+    <Filter Include="Definitions">
+      <UniqueIdentifier>{40603d33-b53d-4560-9ec7-4d325d1b92c0}</UniqueIdentifier>
+    </Filter>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="Behavior.cpp">
@@ -72,6 +75,9 @@
     <ClCompile Include="AudioPlayer.cpp">
       <Filter>Audio</Filter>
     </ClCompile>
+    <ClCompile Include="LevelCollection.cpp">
+      <Filter>Tiled</Filter>
+    </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="Behavior.h">
@@ -95,7 +101,6 @@
     <ClInclude Include="AnimatedSprite.h">
       <Filter>Drawing</Filter>
     </ClInclude>
-    <ClInclude Include="Definitions.h" />
     <ClInclude Include="tinyxml2\tinyxml2.h">
       <Filter>Aditional\tinyxml2</Filter>
     </ClInclude>
@@ -125,6 +130,15 @@
     </ClInclude>
     <ClInclude Include="SFHelper.h">
       <Filter>Helper</Filter>
+    </ClInclude>
+    <ClInclude Include="Definitions.h">
+      <Filter>Definitions</Filter>
+    </ClInclude>
+    <ClInclude Include="BattleDefinitions.h">
+      <Filter>Definitions</Filter>
+    </ClInclude>
+    <ClInclude Include="LevelCollection.h">
+      <Filter>Tiled</Filter>
     </ClInclude>
   </ItemGroup>
   <ItemGroup>
