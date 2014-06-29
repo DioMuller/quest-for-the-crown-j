@@ -28,6 +28,9 @@
     <Filter Include="Definitions">
       <UniqueIdentifier>{40603d33-b53d-4560-9ec7-4d325d1b92c0}</UniqueIdentifier>
     </Filter>
+    <Filter Include="Tiled\Maping">
+      <UniqueIdentifier>{c8883812-bedb-4c1e-bed9-12d8ff487f48}</UniqueIdentifier>
+    </Filter>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="Behavior.cpp">
@@ -57,27 +60,29 @@
     <ClCompile Include="StringHelper.cpp">
       <Filter>Helper</Filter>
     </ClCompile>
-    <ClCompile Include="Layer.cpp">
-      <Filter>Tiled</Filter>
-    </ClCompile>
-    <ClCompile Include="Tileset.cpp">
-      <Filter>Tiled</Filter>
-    </ClCompile>
-    <ClCompile Include="Tile.cpp">
-      <Filter>Tiled</Filter>
-    </ClCompile>
-    <ClCompile Include="Map.cpp">
-      <Filter>Tiled</Filter>
-    </ClCompile>
-    <ClCompile Include="Level.cpp">
-      <Filter>Tiled</Filter>
-    </ClCompile>
     <ClCompile Include="AudioPlayer.cpp">
       <Filter>Audio</Filter>
     </ClCompile>
     <ClCompile Include="LevelCollection.cpp">
       <Filter>Tiled</Filter>
     </ClCompile>
+    <ClCompile Include="Level.cpp">
+      <Filter>Tiled</Filter>
+    </ClCompile>
+    <ClCompile Include="Layer.cpp">
+      <Filter>Tiled\Maping</Filter>
+    </ClCompile>
+    <ClCompile Include="Map.cpp">
+      <Filter>Tiled\Maping</Filter>
+    </ClCompile>
+    <ClCompile Include="Tile.cpp">
+      <Filter>Tiled\Maping</Filter>
+    </ClCompile>
+    <ClCompile Include="Tileset.cpp">
+      <Filter>Tiled\Maping</Filter>
+    </ClCompile>
+    <ClCompile Include="LevelLoader.cpp" />
+    <ClCompile Include="EntityFactory.cpp" />
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="Behavior.h">
@@ -104,23 +109,11 @@
     <ClInclude Include="tinyxml2\tinyxml2.h">
       <Filter>Aditional\tinyxml2</Filter>
     </ClInclude>
-    <ClInclude Include="Tile.h">
-      <Filter>Tiled</Filter>
-    </ClInclude>
     <ClInclude Include="StringHelper.h">
       <Filter>Helper</Filter>
     </ClInclude>
-    <ClInclude Include="Layer.h">
-      <Filter>Tiled</Filter>
-    </ClInclude>
-    <ClInclude Include="Tileset.h">
-      <Filter>Tiled</Filter>
-    </ClInclude>
     <ClInclude Include="Container.h">
       <Filter>Core</Filter>
-    </ClInclude>
-    <ClInclude Include="Map.h">
-      <Filter>Tiled</Filter>
     </ClInclude>
     <ClInclude Include="Level.h">
       <Filter>Tiled</Filter>
@@ -140,6 +133,20 @@
     <ClInclude Include="LevelCollection.h">
       <Filter>Tiled</Filter>
     </ClInclude>
+    <ClInclude Include="Layer.h">
+      <Filter>Tiled\Maping</Filter>
+    </ClInclude>
+    <ClInclude Include="Map.h">
+      <Filter>Tiled\Maping</Filter>
+    </ClInclude>
+    <ClInclude Include="Tile.h">
+      <Filter>Tiled\Maping</Filter>
+    </ClInclude>
+    <ClInclude Include="Tileset.h">
+      <Filter>Tiled\Maping</Filter>
+    </ClInclude>
+    <ClInclude Include="LevelLoader.h" />
+    <ClInclude Include="EntityFactory.h" />
   </ItemGroup>
   <ItemGroup>
     <None Include="..\..\..\references\SFML-2.1\bin\sfml-audio-d-2.dll">

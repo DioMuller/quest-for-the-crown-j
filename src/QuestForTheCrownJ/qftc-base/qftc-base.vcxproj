@@ -83,10 +83,12 @@
     <ClCompile Include="AudioPlayer.cpp" />
     <ClCompile Include="Behavior.cpp" />
     <ClCompile Include="Entity.cpp" />
+    <ClCompile Include="EntityFactory.cpp" />
     <ClCompile Include="Game.cpp" />
     <ClCompile Include="Layer.cpp" />
     <ClCompile Include="Level.cpp" />
     <ClCompile Include="LevelCollection.cpp" />
+    <ClCompile Include="LevelLoader.cpp" />
     <ClCompile Include="Log.cpp" />
     <ClCompile Include="Map.cpp" />
     <ClCompile Include="Scene.cpp" />
@@ -104,10 +106,12 @@
     <ClInclude Include="Definitions.h" />
     <ClInclude Include="Entity.h" />
     <ClInclude Include="BattleDefinitions.h" />
+    <ClInclude Include="EntityFactory.h" />
     <ClInclude Include="Game.h" />
     <ClInclude Include="Layer.h" />
     <ClInclude Include="Level.h" />
     <ClInclude Include="LevelCollection.h" />
+    <ClInclude Include="LevelLoader.h" />
     <ClInclude Include="Log.h" />
     <ClInclude Include="Map.h" />
     <ClInclude Include="SFHelper.h" />
