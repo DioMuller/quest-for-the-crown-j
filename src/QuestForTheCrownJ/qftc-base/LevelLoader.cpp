@@ -12,7 +12,7 @@ std::shared_ptr<LevelCollection> LevelLoader::LoadLevels(Game* game, std::string
 
 	tinyxml2::XMLElement* root = doc.FirstChildElement("collection");
 
-	tinyxml2::XMLElement* next = root->FirstChild()->ToElement();
+	tinyxml2::XMLElement* next = root->FirstChildElement("levels")->FirstChildElement("level");
 
 	while( next != nullptr )
 	{
@@ -30,7 +30,7 @@ std::shared_ptr<LevelCollection> LevelLoader::LoadLevels(Game* game, std::string
 		}
 
 		collection->AddLevel(level);
-		next = next->NextSibling()->ToElement();
+		next = next->NextSiblingElement("level");
 	}
 
 	return collection;
@@ -38,6 +38,37 @@ std::shared_ptr<LevelCollection> LevelLoader::LoadLevels(Game* game, std::string
 
 std::shared_ptr<Level> LevelLoader::LoadMap(int id, std::string tmxFile)
 {
+	std::shared_ptr<Map> map = nullptr;
+	tinyxml2::XMLDocument doc;
+	doc.LoadFile(tmxFile.c_str());
+
+	// Create map
+	tinyxml2::XMLElement* mapElement = doc.FirstChildElement("map");
+	std::string name = (std::string) (*split(tmxFile, '/').end());
+	replace(name, std::string(".tmx"), std::string(""));
+	sf::Vector2i size = sf::Vector2i(mapElement->IntAttribute("width"), mapElement->IntAttribute("height"));
+	sf::Vector2i tileSize = sf::Vector2i(mapElement->IntAttribute("tilewidth"), mapElement->IntAttribute("tileheight"));
+
+	map = std::shared_ptr<Map>(new Map(name, size, tileSize));
+
+	// Tilesets
+	tinyxml2::XMLElement* next = mapElement->FirstChildElement("tileset");
+
+	while (next != nullptr)
+	{
+		std::shared_ptr<Tileset> tileset;
+		int firstgid = next->IntAttribute("firstgid"); // replace ("../","") ?
+
+		if (next->Attribute("source") == nullptr)
+		{
+			std::string tilename = next->Attribute("name");
+			sf::Vector2i tileSize = sf::Vector2i(next->IntAttribute("tilewidth"), next->IntAttribute("tileheight"));
+		}
+
+		std::string tilename = "";
+		next = next->NextSiblingElement("tileset");
+	}
+
 	return nullptr;
 }
 
