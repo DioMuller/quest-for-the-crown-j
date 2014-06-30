@@ -36,3 +36,8 @@ void Level::GoToDungeon(Entity* entity, int dungeon)
 {
 
 }
+
+void Level::SetNeighbor(Direction direction, int neighborId)
+{
+	this->neighbors[(int)direction] = neighborId;
+}

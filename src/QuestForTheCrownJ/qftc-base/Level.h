@@ -33,6 +33,29 @@ namespace qfcbase
 			std::string title;
 
 		/////////////////////////////////////
+		// "Properties"
+		/////////////////////////////////////
+		public:
+			void BGM(std::string value)
+			{
+				bgm = value;
+			}
+
+			std::string BGM()
+			{
+				return bgm;
+			}
+
+			void Title(std::string value)
+			{
+				title = value;
+			}
+
+			std::string Title()
+			{
+				return title;
+			}
+		/////////////////////////////////////
 		// Constructors
 		/////////////////////////////////////
 		public:
@@ -47,6 +70,7 @@ namespace qfcbase
 			void Draw(sf::RenderWindow* renderer);
 			void GoToNeighbour(Entity* entity, Direction direction);
 			void GoToDungeon(Entity* entity, int dungeon);
+			void SetNeighbor(Direction direction, int neighborId);
 	};
 
 

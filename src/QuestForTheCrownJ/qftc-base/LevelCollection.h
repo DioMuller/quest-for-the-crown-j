@@ -25,5 +25,11 @@ namespace qfcbase
 		public:
 			LevelCollection();
 			~LevelCollection();
+
+		/////////////////////////////////////
+		// Constructors
+		/////////////////////////////////////
+		public:
+			void AddLevel(std::shared_ptr<Level> level);
 	};
 }
