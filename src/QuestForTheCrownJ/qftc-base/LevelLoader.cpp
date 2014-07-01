@@ -1,6 +1,6 @@
 #include "LevelLoader.h"
 #include "StringHelper.h"
-
+#include "sfml-tmxloader/MapLoader.h"
 
 using namespace qfcbase;
 
@@ -19,7 +19,7 @@ std::shared_ptr<LevelCollection> LevelLoader::LoadLevels(Game* game, std::string
 		
 		int id = next->IntAttribute("id");
 
-		std::shared_ptr<Level> level = LoadMap(id, std::string(next->Attribute("path")));
+		std::shared_ptr<Level> level = std::shared_ptr<Level>(LoadMap(game, id, std::string(next->Attribute("path"))));
 		level->BGM(next->Attribute("music"));
 		level->Title(next->Attribute("title"));
 
@@ -36,46 +36,17 @@ std::shared_ptr<LevelCollection> LevelLoader::LoadLevels(Game* game, std::string
 	return collection;
 }
 
-std::shared_ptr<Level> LevelLoader::LoadMap(int id, std::string tmxFile)
+Level* LevelLoader::LoadMap(Game* game, int id, std::string tmxFile)
 {
-	std::shared_ptr<Map> map = nullptr;
-	tinyxml2::XMLDocument doc;
-	doc.LoadFile(tmxFile.c_str());
+	tmx::MapLoader* map = new tmx::MapLoader(tmxFile.substr(0, tmxFile.find_last_of("\\/")));
+	map->AddSearchPath("Content/tilesets/"); // For tsx files.
+	map->AddSearchPath("Content/tiles/"); // For png files.
+	map->Load(tmxFile.substr(tmxFile.find_last_of("\\/"), tmxFile.length()));
+	Level* level = new Level(game, id, map);
 
-	// Create map
-	tinyxml2::XMLElement* mapElement = doc.FirstChildElement("map");
-	std::string name = (std::string) (*split(tmxFile, '/').end());
-	replace(name, std::string(".tmx"), std::string(""));
-	sf::Vector2i size = sf::Vector2i(mapElement->IntAttribute("width"), mapElement->IntAttribute("height"));
-	sf::Vector2i tileSize = sf::Vector2i(mapElement->IntAttribute("tilewidth"), mapElement->IntAttribute("tileheight"));
-
-	map = std::shared_ptr<Map>(new Map(name, size, tileSize));
-
-	// Tilesets
-	tinyxml2::XMLElement* next = mapElement->FirstChildElement("tileset");
-
-	while (next != nullptr)
-	{
-		std::shared_ptr<Tileset> tileset;
-		int firstgid = next->IntAttribute("firstgid"); // replace ("../","") ?
-
-		if (next->Attribute("source") == nullptr)
-		{
-			std::string tilename = next->Attribute("name");
-			sf::Vector2i tileSize = sf::Vector2i(next->IntAttribute("tilewidth"), next->IntAttribute("tileheight"));
-		}
-
-		std::string tilename = "";
-		next = next->NextSiblingElement("tileset");
-	}
-
-	return nullptr;
+	return level;
 }
 
-std::shared_ptr<Tileset> LevelLoader::LoadTileset(int firstgid, std::string tsxFile)
-{
-	return nullptr;
-}
 
 std::shared_ptr<Entity> LevelLoader::CreateEntity(EntityFactory* factory, int levelId, tinyxml2::XMLElement* node)
 {

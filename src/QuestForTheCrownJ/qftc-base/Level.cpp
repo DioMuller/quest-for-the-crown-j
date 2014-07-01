@@ -2,13 +2,15 @@
 
 using namespace qfcbase;
 
-Level::Level(Game* game, int id, Map* map, std::vector<Entity*> entities) : Scene(game)
+Level::Level(Game* game, int id, tmx::MapLoader* map, std::vector<Entity*> entities) : Scene(game)
 {
+	this->map = map;
 }
 
 
 Level::~Level()
 {
+	delete map;
 }
 
 
@@ -23,7 +25,7 @@ void Level::Update(double dt)
 void Level::Draw(sf::RenderWindow* renderer)
 {
 	// TODO: Replace camera vector.
-	map->Draw(renderer, sf::Vector2i(0,0));
+	renderer->draw(*map);
 	Scene::Draw(renderer);
 }
 

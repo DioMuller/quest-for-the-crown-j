@@ -41,9 +41,9 @@
   <PropertyGroup Label="UserMacros" />
   <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">
     <LinkIncremental>true</LinkIncremental>
-    <IncludePath>$(SolutionDir)..\..\references\SFML-2.1\include;$(IncludePath)</IncludePath>
-    <LibraryPath>$(SolutionDir)..\..\references\SFML-2.1\lib;$(LibraryPath)</LibraryPath>
-    <ExecutablePath>$(SolutionDir)..\..\references\SFML-2.1\bin;$(ExecutablePath)</ExecutablePath>
+    <IncludePath>$(SolutionDir)..\..\references\SFML-2.1\include;$(SolutionDir)..\..\references\zlib\include;$(IncludePath)</IncludePath>
+    <LibraryPath>$(SolutionDir)..\..\references\SFML-2.1\lib;$(SolutionDir)..\..\references\zlib\lib;$(LibraryPath)</LibraryPath>
+    <ExecutablePath>$(SolutionDir)..\..\references\SFML-2.1\bin;$(SolutionDir)..\..\references\zlib\bin;$(ExecutablePath)</ExecutablePath>
   </PropertyGroup>
   <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Release|Win32'">
     <LinkIncremental>false</LinkIncremental>

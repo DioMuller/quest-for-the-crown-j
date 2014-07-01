@@ -6,6 +6,7 @@
 #include "Controllable.h"
 #include "FollowBehavior.h"
 #include "KeyboardInput.h"
+#include "LevelLoader.h"
 #include "Hero.h"
 #include "Slime.h"
 
@@ -23,6 +24,7 @@ MainGame::MainGame()
 
 qfcbase::Scene* CreateScene(qfcbase::Game* game)
 {
+	/*
 	auto scene = new qfcbase::Scene(game);
 	auto hero = std::make_shared<Hero>();
 	hero->category = "GoodGuy";
@@ -31,8 +33,10 @@ qfcbase::Scene* CreateScene(qfcbase::Game* game)
 	auto enemy = std::make_shared<Slime>();
 	enemy->Sprite->Position = { 400, 400 };
 	enemy->AddBehavior(std::make_shared<FollowBehavior>(enemy, "GoodGuy", 5, 32 * 4));
-	scene->AddEntity(enemy);
-	return scene;
+	scene->AddEntity(enemy);*/
+
+	auto scene = qfcbase::LevelLoader::LoadMap(game, 1, "Content/maps/Overworld/Overworld01.tmx");
+	return &(*scene);
 }
 
 MainGame::~MainGame()

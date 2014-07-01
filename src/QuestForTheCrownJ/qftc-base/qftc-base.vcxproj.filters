@@ -28,8 +28,11 @@
     <Filter Include="Definitions">
       <UniqueIdentifier>{40603d33-b53d-4560-9ec7-4d325d1b92c0}</UniqueIdentifier>
     </Filter>
-    <Filter Include="Tiled\Maping">
-      <UniqueIdentifier>{c8883812-bedb-4c1e-bed9-12d8ff487f48}</UniqueIdentifier>
+    <Filter Include="Aditional\sfml-tmxloader">
+      <UniqueIdentifier>{b3a3e53f-c17e-4647-b396-0a6c252bd4cf}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Aditional\sfml-tmxloader\pugixml">
+      <UniqueIdentifier>{eef41796-149c-4843-9b52-de9b596236c1}</UniqueIdentifier>
     </Filter>
   </ItemGroup>
   <ItemGroup>
@@ -69,20 +72,33 @@
     <ClCompile Include="Level.cpp">
       <Filter>Tiled</Filter>
     </ClCompile>
-    <ClCompile Include="Layer.cpp">
-      <Filter>Tiled\Maping</Filter>
+    <ClCompile Include="sfml-tmxloader\DebugShape.cpp">
+      <Filter>Aditional\sfml-tmxloader</Filter>
     </ClCompile>
-    <ClCompile Include="Map.cpp">
-      <Filter>Tiled\Maping</Filter>
+    <ClCompile Include="sfml-tmxloader\MapLayer.cpp">
+      <Filter>Aditional\sfml-tmxloader</Filter>
     </ClCompile>
-    <ClCompile Include="Tile.cpp">
-      <Filter>Tiled\Maping</Filter>
+    <ClCompile Include="sfml-tmxloader\MapLoaderPrivate.cpp">
+      <Filter>Aditional\sfml-tmxloader</Filter>
     </ClCompile>
-    <ClCompile Include="Tileset.cpp">
-      <Filter>Tiled\Maping</Filter>
+    <ClCompile Include="sfml-tmxloader\MapLoaderPublic.cpp">
+      <Filter>Aditional\sfml-tmxloader</Filter>
     </ClCompile>
-    <ClCompile Include="LevelLoader.cpp" />
-    <ClCompile Include="EntityFactory.cpp" />
+    <ClCompile Include="sfml-tmxloader\MapObject.cpp">
+      <Filter>Aditional\sfml-tmxloader</Filter>
+    </ClCompile>
+    <ClCompile Include="sfml-tmxloader\QuadTreeNode.cpp">
+      <Filter>Aditional\sfml-tmxloader</Filter>
+    </ClCompile>
+    <ClCompile Include="sfml-tmxloader\pugixml\pugixml.cpp">
+      <Filter>Aditional\sfml-tmxloader\pugixml</Filter>
+    </ClCompile>
+    <ClCompile Include="EntityFactory.cpp">
+      <Filter>Tiled</Filter>
+    </ClCompile>
+    <ClCompile Include="LevelLoader.cpp">
+      <Filter>Tiled</Filter>
+    </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="Behavior.h">
@@ -133,20 +149,36 @@
     <ClInclude Include="LevelCollection.h">
       <Filter>Tiled</Filter>
     </ClInclude>
-    <ClInclude Include="Layer.h">
-      <Filter>Tiled\Maping</Filter>
+    <ClInclude Include="sfml-tmxloader\pugixml\pugiconfig.hpp">
+      <Filter>Aditional\sfml-tmxloader\pugixml</Filter>
     </ClInclude>
-    <ClInclude Include="Map.h">
-      <Filter>Tiled\Maping</Filter>
+    <ClInclude Include="sfml-tmxloader\pugixml\pugixml.hpp">
+      <Filter>Aditional\sfml-tmxloader\pugixml</Filter>
     </ClInclude>
-    <ClInclude Include="Tile.h">
-      <Filter>Tiled\Maping</Filter>
+    <ClInclude Include="sfml-tmxloader\DebugShape.h">
+      <Filter>Aditional\sfml-tmxloader</Filter>
     </ClInclude>
-    <ClInclude Include="Tileset.h">
-      <Filter>Tiled\Maping</Filter>
+    <ClInclude Include="sfml-tmxloader\Helpers.h">
+      <Filter>Aditional\sfml-tmxloader</Filter>
     </ClInclude>
-    <ClInclude Include="LevelLoader.h" />
-    <ClInclude Include="EntityFactory.h" />
+    <ClInclude Include="sfml-tmxloader\MapLayer.h">
+      <Filter>Aditional\sfml-tmxloader</Filter>
+    </ClInclude>
+    <ClInclude Include="sfml-tmxloader\MapLoader.h">
+      <Filter>Aditional\sfml-tmxloader</Filter>
+    </ClInclude>
+    <ClInclude Include="sfml-tmxloader\MapObject.h">
+      <Filter>Aditional\sfml-tmxloader</Filter>
+    </ClInclude>
+    <ClInclude Include="sfml-tmxloader\QuadTreeNode.h">
+      <Filter>Aditional\sfml-tmxloader</Filter>
+    </ClInclude>
+    <ClInclude Include="EntityFactory.h">
+      <Filter>Tiled</Filter>
+    </ClInclude>
+    <ClInclude Include="LevelLoader.h">
+      <Filter>Tiled</Filter>
+    </ClInclude>
   </ItemGroup>
   <ItemGroup>
     <None Include="..\..\..\references\SFML-2.1\bin\sfml-audio-d-2.dll">

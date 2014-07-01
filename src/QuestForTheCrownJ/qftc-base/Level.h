@@ -1,6 +1,6 @@
 #pragma once
 #include "Scene.h"
-#include "Map.h"
+#include "sfml-tmxloader/MapLoader.h"
 
 namespace qfcbase
 {
@@ -17,7 +17,7 @@ namespace qfcbase
 		NONE = -1
 	};
 
-	class Level : Scene
+	class Level : public Scene
 	{
 		/////////////////////////////////////
 		// Attributes
@@ -25,7 +25,7 @@ namespace qfcbase
 		private:
 			int id;
 			bool bgmStarted = false;
-			Map* map;
+			tmx::MapLoader* map;
 			int neighbors[NEIGHBOUR_COUNT];
 			std::vector<Entity*> players;
 			LevelCollection* collectionParent;
@@ -59,7 +59,7 @@ namespace qfcbase
 		// Constructors
 		/////////////////////////////////////
 		public:
-			Level(Game* game, int id, Map* map, std::vector<Entity*> entities = std::vector<Entity*>());
+			Level(Game* game, int id, tmx::MapLoader* map, std::vector<Entity*> entities = std::vector<Entity*>());
 			~Level();
 
 		/////////////////////////////////////

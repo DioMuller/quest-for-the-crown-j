@@ -41,9 +41,9 @@
   <PropertyGroup Label="UserMacros" />
   <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">
     <LinkIncremental>true</LinkIncremental>
-    <ExecutablePath>$(SolutionDir)..\..\references\SFML-2.1\bin;$(ExecutablePath)</ExecutablePath>
-    <IncludePath>$(SolutionDir)..\..\references\SFML-2.1\include;$(IncludePath)</IncludePath>
-    <LibraryPath>$(SolutionDir)..\..\references\SFML-2.1\lib;$(LibraryPath)</LibraryPath>
+    <ExecutablePath>$(SolutionDir)..\..\references\SFML-2.1\bin;$(SolutionDir)..\..\references\zlib\bin;$(ExecutablePath)</ExecutablePath>
+    <IncludePath>$(SolutionDir)..\..\references\SFML-2.1\include;$(SolutionDir)..\..\references\zlib\include;$(IncludePath)</IncludePath>
+    <LibraryPath>$(SolutionDir)..\..\references\SFML-2.1\lib;$(SolutionDir)..\..\references\zlib\lib;$(LibraryPath)</LibraryPath>
   </PropertyGroup>
   <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Release|Win32'">
     <LinkIncremental>false</LinkIncremental>
@@ -85,16 +85,19 @@
     <ClCompile Include="Entity.cpp" />
     <ClCompile Include="EntityFactory.cpp" />
     <ClCompile Include="Game.cpp" />
-    <ClCompile Include="Layer.cpp" />
     <ClCompile Include="Level.cpp" />
     <ClCompile Include="LevelCollection.cpp" />
     <ClCompile Include="LevelLoader.cpp" />
     <ClCompile Include="Log.cpp" />
-    <ClCompile Include="Map.cpp" />
     <ClCompile Include="Scene.cpp" />
+    <ClCompile Include="sfml-tmxloader\DebugShape.cpp" />
+    <ClCompile Include="sfml-tmxloader\MapLayer.cpp" />
+    <ClCompile Include="sfml-tmxloader\MapLoaderPrivate.cpp" />
+    <ClCompile Include="sfml-tmxloader\MapLoaderPublic.cpp" />
+    <ClCompile Include="sfml-tmxloader\MapObject.cpp" />
+    <ClCompile Include="sfml-tmxloader\pugixml\pugixml.cpp" />
+    <ClCompile Include="sfml-tmxloader\QuadTreeNode.cpp" />
     <ClCompile Include="StringHelper.cpp" />
-    <ClCompile Include="Tile.cpp" />
-    <ClCompile Include="Tileset.cpp" />
     <ClCompile Include="tinyxml2\tinyxml2.cpp" />
     <ClCompile Include="Window.cpp" />
   </ItemGroup>
@@ -108,17 +111,21 @@
     <ClInclude Include="BattleDefinitions.h" />
     <ClInclude Include="EntityFactory.h" />
     <ClInclude Include="Game.h" />
-    <ClInclude Include="Layer.h" />
     <ClInclude Include="Level.h" />
     <ClInclude Include="LevelCollection.h" />
     <ClInclude Include="LevelLoader.h" />
     <ClInclude Include="Log.h" />
-    <ClInclude Include="Map.h" />
     <ClInclude Include="SFHelper.h" />
     <ClInclude Include="Scene.h" />
+    <ClInclude Include="sfml-tmxloader\DebugShape.h" />
+    <ClInclude Include="sfml-tmxloader\Helpers.h" />
+    <ClInclude Include="sfml-tmxloader\MapLayer.h" />
+    <ClInclude Include="sfml-tmxloader\MapLoader.h" />
+    <ClInclude Include="sfml-tmxloader\MapObject.h" />
+    <ClInclude Include="sfml-tmxloader\pugixml\pugiconfig.hpp" />
+    <ClInclude Include="sfml-tmxloader\pugixml\pugixml.hpp" />
+    <ClInclude Include="sfml-tmxloader\QuadTreeNode.h" />
     <ClInclude Include="StringHelper.h" />
-    <ClInclude Include="Tile.h" />
-    <ClInclude Include="Tileset.h" />
     <ClInclude Include="tinyxml2\tinyxml2.h" />
     <ClInclude Include="Window.h" />
   </ItemGroup>

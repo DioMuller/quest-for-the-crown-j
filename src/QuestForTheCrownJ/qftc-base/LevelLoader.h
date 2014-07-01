@@ -14,8 +14,7 @@ namespace qfcbase
 		/////////////////////////////////////
 		public:
 			static std::shared_ptr<LevelCollection> LoadLevels(Game* game, std::string path);
-			static std::shared_ptr<Level> LoadMap(int id, std::string tmxFile);
-			static std::shared_ptr<Tileset> LoadTileset(int firstgid, std::string tsxFile);
+			static Level* LoadMap(Game* game, int id, std::string tmxFile);
 			static std::shared_ptr<Entity> CreateEntity(EntityFactory* factory, int levelId, tinyxml2::XMLElement* node);			
 	};
 }
