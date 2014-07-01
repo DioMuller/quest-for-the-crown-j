@@ -1,0 +1,3 @@
+[submodule "references/boost-1.55.0"]
+	path = references/boost-1.55.0
+	url = https://github.com/boostorg/boost.git

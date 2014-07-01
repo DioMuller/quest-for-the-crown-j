@@ -1,6 +1,5 @@
 #pragma once
 #include <string>
-#include <SFML/System/Vector2.hpp>
 #include "BattleDefinitions.h"
 #include "StructBase.h"
 
@@ -9,7 +8,7 @@ typedef struct s_client_position
 {
 	Header header;
 	EntityHeader entity;
-	sf::Vector2i position;
+	int x, y;
 } ClientCharacterPosition;
 
 // Sends character status on the server.

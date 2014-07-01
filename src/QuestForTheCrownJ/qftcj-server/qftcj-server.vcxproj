@@ -52,12 +52,13 @@
       <WarningLevel>Level3</WarningLevel>
       <Optimization>Disabled</Optimization>
       <PreprocessorDefinitions>WIN32;_DEBUG;_CONSOLE;_LIB;%(PreprocessorDefinitions)</PreprocessorDefinitions>
-      <AdditionalIncludeDirectories>$(SolutionDir)qftc-base;$(SolutionDir)qftc-netlib</AdditionalIncludeDirectories>
+      <AdditionalIncludeDirectories>$(SolutionDir)\..\..\..\references\SFML-2.1\include;$(SolutionDir)qftc-netlib;$(SolutionDir)qftc-base;$(SolutionDir)\..\..\..\references\boost-1.55.0;$(SolutionDir)\..\..\..\references\MySQL\Connector C++ 1.1.3\include;%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
     </ClCompile>
     <Link>
       <SubSystem>Console</SubSystem>
       <GenerateDebugInformation>true</GenerateDebugInformation>
-      <AdditionalDependencies>%(AdditionalDependencies)</AdditionalDependencies>
+      <AdditionalDependencies>ws2_32.lib;mysqlcppconn.lib;%(AdditionalDependencies)</AdditionalDependencies>
+      <AdditionalLibraryDirectories>$(SolutionDir)..\..\references\MySQL\MySQL\Connector C++ 1.1.3\lib\opt;D:\Projects\jvlppm\Pos\Jogos Multiplayer\quest-for-the-crown-j\references\MySQL\Connector C++ 1.1.3\lib\opt</AdditionalLibraryDirectories>
     </Link>
   </ItemDefinitionGroup>
   <ItemDefinitionGroup Condition="'$(Configuration)|$(Platform)'=='Release|Win32'">
