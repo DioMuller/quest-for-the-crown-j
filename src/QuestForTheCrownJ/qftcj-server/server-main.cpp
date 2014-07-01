@@ -4,13 +4,15 @@
 #include <iostream>
 #include <chrono>
 #include <thread>
+#include "Log.h"
 #include "Server.h"
 #include "Exceptions.h"
 using namespace qfcserver;
+using namespace qfcbase;
 
 int main(int argc, char* argv[])
 {
-	std::cout << "Initializing game server" << std::endl;
+	Log::Debug("Initializing game server");
 
 	try
 	{
@@ -23,18 +25,18 @@ int main(int argc, char* argv[])
 			}
 			catch (const SockBindError& error)
 			{
-				std::cout << "Error while opening port. Waiting 3 seconds" << std::endl;
+				Log::Debug("Error while opening port. Waiting 3 seconds\n");
 				std::this_thread::sleep_for(std::chrono::seconds(3));
 			}
 		}
 	}
 	catch (const SockError& error)
 	{
-		std::cout << error.what() << std::endl;
+		Log::Error(error.what());
 	}
 	catch (...)
 	{
-		std::cout << "Fatal error" << std::endl;
+		Log::Error("Fatal error");
 	}
 
 	return 0;
