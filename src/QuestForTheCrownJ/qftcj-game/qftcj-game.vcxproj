@@ -87,6 +87,7 @@
     <ClCompile Include="..\qftc-base\PlayerInput.cpp" />
     <ClCompile Include="Controllable.cpp" />
     <ClCompile Include="FollowBehavior.cpp" />
+    <ClCompile Include="GameEntityFactory.cpp" />
     <ClCompile Include="Hero.cpp" />
     <ClCompile Include="client-main.cpp" />
     <ClCompile Include="MainGame.cpp" />
@@ -97,6 +98,7 @@
     <ClInclude Include="..\qftc-base\PlayerInput.h" />
     <ClInclude Include="Controllable.h" />
     <ClInclude Include="FollowBehavior.h" />
+    <ClInclude Include="GameEntityFactory.h" />
     <ClInclude Include="Hero.h" />
     <ClInclude Include="MainGame.h" />
     <ClInclude Include="Slime.h" />

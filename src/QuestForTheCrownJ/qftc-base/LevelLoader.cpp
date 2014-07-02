@@ -1,8 +1,11 @@
 #include "LevelLoader.h"
 #include "StringHelper.h"
 #include "sfml-tmxloader/MapLoader.h"
+#include "Log.h"
 
 using namespace qfcbase;
+
+std::shared_ptr<EntityFactory> LevelLoader::factory = nullptr;
 
 std::shared_ptr<LevelCollection> LevelLoader::LoadLevels(Game* game, std::string path)
 {
@@ -44,11 +47,35 @@ Level* LevelLoader::LoadMap(Game* game, int id, std::string tmxFile)
 	map->Load(tmxFile.substr(tmxFile.find_last_of("\\/"), tmxFile.length()));
 	Level* level = new Level(game, id, map);
 
+	auto layers = map->GetLayers();
+
+	for (auto layer : layers)
+	{
+		if (layer.type == tmx::MapLayerType::ObjectGroup)
+		{
+			for (auto object : layer.objects)
+			{
+				std::shared_ptr<Entity> entity = CreateEntity(id, object);
+				if (entity != nullptr) level->AddEntity(entity);
+			}
+		}
+	}
+
 	return level;
 }
 
-
-std::shared_ptr<Entity> LevelLoader::CreateEntity(EntityFactory* factory, int levelId, tinyxml2::XMLElement* node)
+void LevelLoader::SetFactory(EntityFactory* factory)
 {
-	return nullptr;
+	LevelLoader::factory = std::shared_ptr<EntityFactory>(factory);
+}
+
+std::shared_ptr<Entity> LevelLoader::CreateEntity(int levelId, tmx::MapObject object)
+{
+	if (factory == nullptr)
+	{
+		Log::Warning("EntityFactory was not set. Entity " + object.GetName() + " could not be created.");
+		return nullptr;
+	}
+
+	return factory->GenerateEntity(object.GetType(), object);
 }

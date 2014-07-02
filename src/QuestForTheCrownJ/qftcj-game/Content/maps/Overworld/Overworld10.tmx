@@ -84,7 +84,6 @@
 </data>
  </layer>
  <objectgroup name="Objects" width="60" height="34">
-  <object name="Player" type="Player" x="960" y="640" width="32" height="32"/>
   <object name="29" type="Entrance" x="1024" y="418" width="32" height="32"/>
   <object name="Save" type="SavePoint" x="867" y="548" width="32" height="32"/>
   <object name="Sword" type="Item" x="1185" y="603" width="32" height="32"/>

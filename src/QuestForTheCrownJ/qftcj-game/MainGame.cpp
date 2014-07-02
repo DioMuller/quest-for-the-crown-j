@@ -9,6 +9,7 @@
 #include "LevelLoader.h"
 #include "Hero.h"
 #include "Slime.h"
+#include "GameEntityFactory.h"
 
 using namespace qfcgame;
 
@@ -34,7 +35,7 @@ qfcbase::Scene* CreateScene(qfcbase::Game* game)
 	enemy->Sprite->Position = { 400, 400 };
 	enemy->AddBehavior(std::make_shared<FollowBehavior>(enemy, "GoodGuy", 5, 32 * 4));
 	scene->AddEntity(enemy);*/
-
+	qfcbase::LevelLoader::SetFactory(new GameEntityFactory());
 	auto scene = qfcbase::LevelLoader::LoadMap(game, 1, "Content/maps/Overworld/Overworld01.tmx");
 	return &(*scene);
 }

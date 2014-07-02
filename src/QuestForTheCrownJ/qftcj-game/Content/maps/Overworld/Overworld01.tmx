@@ -98,5 +98,6 @@
   <object name="Slime" type="Enemy" x="1690" y="745" width="32" height="32"/>
   <object name="Slime" type="Enemy" x="1682" y="298" width="32" height="32"/>
   <object name="Slime" type="Enemy" x="1549" y="472" width="32" height="32"/>
+  <object name="Player" type="Player" x="323" y="256" width="32" height="32"/>
  </objectgroup>
 </map>

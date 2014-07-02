@@ -11,7 +11,7 @@ EntityFactory::~EntityFactory()
 {
 }
 
-std::shared_ptr<Entity> EntityFactory::GenerateEntity(std::string name)
+std::shared_ptr<Entity> EntityFactory::GenerateEntity(std::string name, tmx::MapObject object)
 {
 	return nullptr;
 }
