@@ -34,12 +34,13 @@ void Server::Run(int port)
 	char buffer[BUFFER_SIZE];
 	SOCKET listenSocket = Start(port);
 
-	sockaddr_in sender;
-	int sender_size = sizeof(sender);
 	int r;
 
 	while (true)
 	{
+		sockaddr_in sender;
+		int sender_size = sizeof(sender);
+
 		r = recvfrom(listenSocket, buffer, BUFFER_SIZE, NULL, (SOCKADDR*)&sender, &sender_size);
 		if (r < 0)
 		{
@@ -52,7 +53,19 @@ void Server::Run(int port)
 		{
 			case LAUNCHER_LOGIN_INFO:
 				auto login_info = (s_launcher_login_info*)&buffer;
-				Log::Message("Login: " + login_info->login);
+				std::stringstream logBuilder;
+				logBuilder << "Login: " << login_info->login << " (" << login_info->hashedPassword << ")";
+				Log::Message(logBuilder.str());
+				s_launcher_login_response resp;
+				ZeroMemory(&resp, sizeof(resp));
+				resp.authenticated = true;
+				r = sendto(listenSocket, (char*)&resp, sizeof(resp), NULL, (SOCKADDR*)&sender, sender_size);
+				if (r < 0)
+					Log::Error("Erro ao responder login");
+				if (resp.authenticated)
+					Log::Debug("Usuário autenticado");
+				else
+					Log::Debug("Usuário ou senha inválido(s)");
 				break;
 			/*case CLIENT_CHARACTER_POSITION:
 				auto client_char_pos = (s_client_position*)&buffer;

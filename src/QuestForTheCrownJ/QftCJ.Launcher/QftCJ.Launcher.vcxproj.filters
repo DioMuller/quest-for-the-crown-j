@@ -16,4 +16,7 @@
       <Filter>Forms</Filter>
     </ClInclude>
   </ItemGroup>
+  <ItemGroup>
+    <EmbeddedResource Include="Login.resx" />
+  </ItemGroup>
 </Project>

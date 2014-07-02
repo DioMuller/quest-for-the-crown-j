@@ -6,8 +6,8 @@
 typedef struct s_launcher_login_info
 {
 	Header header;
-	std::string login;
-	std::string hashedPassword;
+	char login[50];
+	char hashedPassword[260];
 } LauncherLoginInfo;
 
 // Login info (sent from server).
@@ -15,5 +15,5 @@ typedef struct s_launcher_login_response
 {
 	Header header;
 	bool authenticated;
-	std::string authKey;
+	char authKey[260];
 } LauncherLoginResponse;
