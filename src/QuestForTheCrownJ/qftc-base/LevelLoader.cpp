@@ -55,7 +55,7 @@ Level* LevelLoader::LoadMap(Game* game, int id, std::string tmxFile)
 		{
 			for (auto object : layer.objects)
 			{
-				std::shared_ptr<Entity> entity = CreateEntity(id, object);
+				std::shared_ptr<Entity> entity = CreateEntity(level, id, object);
 				if (entity != nullptr) level->AddEntity(entity);
 			}
 		}
@@ -69,7 +69,7 @@ void LevelLoader::SetFactory(EntityFactory* factory)
 	LevelLoader::factory = std::shared_ptr<EntityFactory>(factory);
 }
 
-std::shared_ptr<Entity> LevelLoader::CreateEntity(int levelId, tmx::MapObject object)
+std::shared_ptr<Entity> LevelLoader::CreateEntity(Scene* scene, int levelId, tmx::MapObject object)
 {
 	if (factory == nullptr)
 	{
@@ -77,5 +77,5 @@ std::shared_ptr<Entity> LevelLoader::CreateEntity(int levelId, tmx::MapObject ob
 		return nullptr;
 	}
 
-	return factory->GenerateEntity(object.GetType(), object);
+	return factory->GenerateEntity(scene, object.GetType(), object);
 }

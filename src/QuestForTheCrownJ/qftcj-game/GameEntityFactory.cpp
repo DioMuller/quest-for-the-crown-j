@@ -22,7 +22,7 @@ GameEntityFactory::~GameEntityFactory()
 /////////////////////////////////////
 // Methods
 /////////////////////////////////////
-std::shared_ptr<qfcbase::Entity> GameEntityFactory::GenerateEntity(std::string type, tmx::MapObject object)
+std::shared_ptr<qfcbase::Entity> GameEntityFactory::GenerateEntity(qfcbase::Scene* scene, std::string type, tmx::MapObject object)
 {
 	std::shared_ptr<qfcbase::Entity> entity;
 
@@ -31,12 +31,14 @@ std::shared_ptr<qfcbase::Entity> GameEntityFactory::GenerateEntity(std::string t
 		entity = std::shared_ptr<qfcbase::Entity>(new Slime());
 		entity->AddBehavior(std::make_shared<FollowBehavior>(entity, "GoodGuy", 5, 32 * 4));
 		entity->category = "BadGuy";
+		entity->scene = scene;
 	}
 	else if (type == "Player")
 	{
 		entity = std::shared_ptr<qfcbase::Entity>(new Hero());
 		entity->AddBehavior(std::make_shared<Controllable>(entity, std::make_shared<KeyboardInput>()));
 		entity->category = "GoodGuy";
+		entity->scene = scene;
 	}
 	else
 	{

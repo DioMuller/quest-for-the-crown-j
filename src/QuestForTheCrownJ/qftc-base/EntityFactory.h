@@ -2,6 +2,7 @@
 #include <memory>
 #include "sfml-tmxloader/MapObject.h"
 #include "Entity.h"
+#include "Scene.h"
 
 namespace qfcbase
 {
@@ -18,6 +19,6 @@ namespace qfcbase
 		// Methods
 		/////////////////////////////////////
 		public:
-			virtual std::shared_ptr<Entity> GenerateEntity(std::string name, tmx::MapObject object);
+			virtual std::shared_ptr<Entity> GenerateEntity(Scene* scene, std::string name, tmx::MapObject object);
 	};
 }

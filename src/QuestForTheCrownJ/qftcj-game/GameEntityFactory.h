@@ -16,6 +16,6 @@ namespace qfcgame
 		// Methods
 		/////////////////////////////////////
 		public:
-			std::shared_ptr<qfcbase::Entity> GenerateEntity(std::string type, tmx::MapObject object);
+			std::shared_ptr<qfcbase::Entity> GenerateEntity(qfcbase::Scene* scene, std::string type, tmx::MapObject object);
 	};
 }
