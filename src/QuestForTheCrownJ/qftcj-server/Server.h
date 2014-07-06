@@ -11,6 +11,7 @@ namespace qfcserver {
 			void Run(int port);
 
 		private:
-			SOCKET Start(int port);
+			SOCKET StartNetwork(int port);
+			void ListenMessages(int port);
 	};
 }
