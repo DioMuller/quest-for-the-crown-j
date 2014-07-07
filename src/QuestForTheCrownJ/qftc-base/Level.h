@@ -55,6 +55,11 @@ namespace qfcbase
 			{
 				return title;
 			}
+
+			tmx::MapLoader* Map()
+			{
+				return map;
+			}
 		/////////////////////////////////////
 		// Constructors
 		/////////////////////////////////////

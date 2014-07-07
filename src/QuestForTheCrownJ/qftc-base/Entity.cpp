@@ -1,4 +1,5 @@
 #include "Entity.h"
+#include "Level.h"
 #include "SFHelper.h"
 
 using namespace qfcbase;
@@ -80,6 +81,23 @@ void Entity::Walk(sf::Vector2f direction, double dt)
 bool Entity::ValidPosition(sf::Vector2f offset)
 {
 	auto area = SFHelper::translate(Sprite->GetArea(), offset);
+
+	/* Level Collision */
+	Level* level = (Level*)scene;
+
+	if ( level )
+	{
+		auto map = level->Map();
+
+		for (auto layer : map->GetLayers())
+		{
+			if (layer.type == tmx::MapLayerType::Layer)
+			{
+				auto x = layer.tiles[0].gridCoord;
+			}
+		}
+	}
+	/* End Level Collision */
 
 	auto entCollisions = scene->GetEntities([this, area](std::shared_ptr<Entity> e){
 		if (this == e.get())
