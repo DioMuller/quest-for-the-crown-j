@@ -8,4 +8,7 @@
     <ClInclude Include="Exceptions.h" />
     <ClInclude Include="Server.h" />
   </ItemGroup>
+  <ItemGroup>
+    <None Include="..\..\..\references\SQLite3\sqlite3.dll" />
+  </ItemGroup>
 </Project>
