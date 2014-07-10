@@ -9,5 +9,8 @@ namespace qfcgame
     public:
         Hero();
         ~Hero();
+
+	public:
+		void Draw(sf::RenderWindow* renderer);
     };
 }

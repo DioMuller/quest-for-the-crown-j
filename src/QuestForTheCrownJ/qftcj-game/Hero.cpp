@@ -29,3 +29,10 @@ qfcgame::Hero::Hero()
 qfcgame::Hero::~Hero()
 {
 }
+
+
+void qfcgame::Hero::Draw(sf::RenderWindow* renderer)
+{
+	renderer->setView(sf::View(Sprite->Position, ));
+	Entity::Draw(renderer);
+}
