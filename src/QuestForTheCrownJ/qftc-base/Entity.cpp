@@ -93,7 +93,7 @@ bool Entity::ValidPosition(sf::Vector2f offset)
 		{
 			if (layer.type == tmx::MapLayerType::Layer)
 			{
-				auto x = layer.tiles[0].gridCoord;
+				//TODO: Collision?
 			}
 		}
 	}

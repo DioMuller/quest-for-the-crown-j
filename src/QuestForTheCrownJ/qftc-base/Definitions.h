@@ -31,3 +31,7 @@
 #define propgetset(get_visibility, set_visibility, type, field, name) get_visibility: const type& Get##name() const { return this->field; } set_visibility: void Set##name(const type& field) { this->field = field; } public: getsetdecl(type, name)
 // create a field and expose it as a property
 #define autoprop(get_visibility, set_visibility, type, field, name) propgetset(get_visibility, set_visibility, type, field, name); private: type field
+
+// Mathematical Operations
+#define max(x,y) x > y ? x : y
+#define min(x,y) x < y ? x : y
