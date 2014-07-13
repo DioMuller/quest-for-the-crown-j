@@ -91,9 +91,21 @@ bool Entity::ValidPosition(sf::Vector2f offset)
 
 		for (auto layer : map->GetLayers())
 		{
-			if (layer.type == tmx::MapLayerType::Layer)
+			if (layer.name == "Collision")
 			{
 				//TODO: Collision?
+				for (auto object : layer.objects)
+				{
+					sf::Vector2f position = sf::Vector2f(area.left, area.top);
+					sf::Vector2f size = sf::Vector2f(area.width, area.height);
+
+					if (object.Contains(position) || object.Contains(position + size) ||
+						object.Contains(position + sf::Vector2f(size.x, 0)) ||
+						object.Contains(position + sf::Vector2f(0, size.y)))
+					{
+						return false;
+					}
+				}
 			}
 		}
 	}

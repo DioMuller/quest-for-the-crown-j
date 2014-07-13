@@ -1,12 +1,12 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <map version="1.0" orientation="orthogonal" width="60" height="34" tilewidth="32" tileheight="32">
- <tileset firstgid="1" source="../../tilesets/Dungeon 1.tsx"/>
- <tileset firstgid="91" source="../../tilesets/Dungeon 2.tsx"/>
- <tileset firstgid="235" source="../../tilesets/Dungeon 3.tsx"/>
- <tileset firstgid="352" source="../../tilesets/Dungeon 4.tsx"/>
- <tileset firstgid="523" source="../../tilesets/Overworld 1.tsx"/>
- <tileset firstgid="651" source="../../tilesets/Overworld 2.tsx"/>
- <tileset firstgid="787" source="../../tilesets/Overworld 3.tsx"/>
+ <tileset firstgid="1" source="../tilesets/Dungeon 1.tsx"/>
+ <tileset firstgid="91" source="../tilesets/Dungeon 2.tsx"/>
+ <tileset firstgid="235" source="../tilesets/Dungeon 3.tsx"/>
+ <tileset firstgid="352" source="../tilesets/Dungeon 4.tsx"/>
+ <tileset firstgid="523" source="../tilesets/Overworld 1.tsx"/>
+ <tileset firstgid="651" source="../tilesets/Overworld 2.tsx"/>
+ <tileset firstgid="787" source="../tilesets/Overworld 3.tsx"/>
  <layer name="Base" width="60" height="34">
   <data encoding="csv">
 355,355,355,355,355,355,355,355,355,355,355,355,355,355,355,355,355,355,355,355,355,355,355,355,355,355,355,355,355,0,355,355,355,355,355,355,355,355,355,355,355,355,355,355,355,355,355,355,355,355,355,355,355,355,355,355,355,355,355,355,

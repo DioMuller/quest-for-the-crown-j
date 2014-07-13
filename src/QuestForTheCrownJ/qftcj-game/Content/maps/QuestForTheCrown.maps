@@ -2,53 +2,18 @@
 <collection>
   <levels>
 	<!-- Overworld -->
-	<level id="1" neighbors="0,25,2,4" path="Content/maps/Overworld/Overworld01.tmx" music="Heroic Age" title="Hero Fields"/>
-  <level id="2" neighbors="1,26,3,5" path="Content/maps/Overworld/Overworld02.tmx"  music="Heroic Age" title="Hero Fields"/>
-  <level id="3" neighbors="2,0,0,7" path="Content/maps/Overworld/Overworld03.tmx"  music="Heroic Age" title="Stoneman Caves"/>
-	<level id="4" neighbors="0,1,5,6" path="Content/maps/Overworld/Overworld04.tmx" music="Heroic Age" title="Hero Fields"/>
-	<level id="5" neighbors="4,2,7,8" path="Content/maps/Overworld/Overworld05.tmx" music="Heroic Age" title="Fort Avalanche"/>
-	<level id="6" neighbors="0,4,8,0" path="Content/maps/Overworld/Overworld06.tmx" music="Heroic Age" title="Goldensand Beach"/>
-	<level id="7" neighbors="5,3,0,0" path="Content/maps/Overworld/Overworld07.tmx" music="Heroic Age" title="Stoneman Caves"/>
-	<level id="8" neighbors="6,5,9,0" path="Content/maps/Overworld/Overworld08.tmx" music="Heroic Age" title="Fort Avalanche"/>
-	<level id="9" neighbors="8,0,0,0" path="Content/maps/Overworld/Overworld09.tmx" music="Heroic Age" title="Fort Avalanche"/>
-	<level id="25" neighbors="0,0,0,1" path="Content/maps/Overworld/Overworld10.tmx" music="Easy Lemon" title="Hero Fields"/>
-	<level id="26" neighbors="0,27,0,2" path="Content/maps/Overworld/Overworld11.tmx" music="Heroic Age" title="Orc Forest"/>
-	<level id="27" neighbors="0,0,28,26" path="Content/maps/Overworld/Overworld12.tmx" music="Heroic Age" title="Orc Forest"/>
-	<level id="28" neighbors="27,0,0,0" path="Content/maps/Overworld/Overworld13.tmx" music="Heroic Age" title="Orc Forest"/>
-	<!-- Hero Shrine -->
-	<level id="29" neighbors="0,30,0,-1" path="Content/maps/HeroShrine/HeroShrine01.tmx" music="Five Armies" title="Hero Shrine"/>
-	<level id="30" neighbors="0,0,31,29" path="Content/maps/HeroShrine/HeroShrine02.tmx" music="Five Armies" title="Hero Shrine"/>
-	<level id="31" neighbors="30,32,0,0" path="Content/maps/HeroShrine/HeroShrine03.tmx" music="Five Armies" title="Hero Shrine"/>
-	<level id="32" neighbors="0,0,0,31" path="Content/maps/HeroShrine/HeroShrine04.tmx" music="Suvaco do Cristo" title="Hero Shrine"/>
-	<!-- Beach Cave -->
-	<level id="10" neighbors="0,11,0,-1" path="Content/maps/BeachCave/BeachCave01.tmx" music="Brittle Rille" title="Beach Cave"/>
-  <level id="11" neighbors="0,12,13,10" path="Content/maps/BeachCave/BeachCave02.tmx" music="Brittle Rille" title="Beach Cave"/>
-	<level id="12" neighbors="0,0,0,11" path="Content/maps/BeachCave/BeachCave03.tmx" music="Suvaco do Cristo" title="Beach Cave"/>
-	<level id="13" neighbors="11,14,0,0" path="Content/maps/BeachCave/BeachCave04.tmx" music="Brittle Rille" title="Beach Cave"/>
-	<level id="14" neighbors="0,15,0,13" path="Content/maps/BeachCave/BeachCave05.tmx" music="Brittle Rille" title="Beach Cave"/>
-	<level id="15" neighbors="0,0,0,14" path="Content/maps/BeachCave/BeachCave06.tmx" music="Suvaco do Cristo" title="Beach Cave"/>
-	<!-- Wizards Tomb -->
-	<level id="16" neighbors="0,17,0,-1" path="Content/maps/WizardsTomb/WizardsTomb01.tmx" music="Moonlight Hall" title="Wizard's Tomb"/>
-	<level id="17" neighbors="0,18,0,16" path="Content/maps/WizardsTomb/WizardsTomb02.tmx" music="Moonlight Hall" title="Wizard's Tomb"/>
-	<level id="18" neighbors="0,0,19,17" path="Content/maps/WizardsTomb/WizardsTomb03.tmx" music="Suvaco do Cristo" title="Wizard's Tomb"/>
-	<level id="19" neighbors="18,0,20,0" path="Content/maps/WizardsTomb/WizardsTomb04.tmx" music="Moonlight Hall" title="Wizard's Tomb"/>
-	<level id="20" neighbors="19,0,0,21" path="Content/maps/WizardsTomb/WizardsTomb05.tmx" music="Moonlight Hall" title="Wizard's Tomb"/>
-	<level id="21" neighbors="0,20,0,22" path="Content/maps/WizardsTomb/WizardsTomb06.tmx" music="Moonlight Hall" title="Wizard's Tomb"/>
-	<level id="22" neighbors="23,21,0,0" path="Content/maps/WizardsTomb/WizardsTomb07.tmx" music="Moonlight Hall" title="Wizard's Tomb"/>
-	<level id="23" neighbors="0,24,22,0" path="Content/maps/WizardsTomb/WizardsTomb08.tmx" music="Moonlight Hall" title="Wizard's Tomb"/>
-	<level id="24" neighbors="0,0,0,23" path="Content/maps/WizardsTomb/WizardsTomb09.tmx" music="Rising Game" title="Wizard's Tomb"/>
-	<!-- Haunted Forest -->
-	<level id="33" neighbors="34,37,35,-1" path="Content/maps/HauntedWoods/HauntedWoods01.tmx" music="Tenebrous Brothers Carnival - Act One" title="Haunted Woods"/>
-	<level id="34" neighbors="0,36,33,0" path="Content/maps/HauntedWoods/HauntedWoods02.tmx" music="Tenebrous Brothers Carnival - Act One" title="Haunted Woods"/>
-	<level id="35" neighbors="33,38,0,0" path="Content/maps/HauntedWoods/HauntedWoods03.tmx" music="Tenebrous Brothers Carnival - Act One" title="Haunted Woods"/>
-	<level id="36" neighbors="0,39,37,34" path="Content/maps/HauntedWoods/HauntedWoods04.tmx" music="Tenebrous Brothers Carnival - Act One" title="Haunted Woods"/>
-	<level id="37" neighbors="36,40,38,33" path="Content/maps/HauntedWoods/HauntedWoods05.tmx" music="Tenebrous Brothers Carnival - Act One" title="Haunted Woods"/>
-	<level id="38" neighbors="37,41,0,35" path="Content/maps/HauntedWoods/HauntedWoods06.tmx" music="Tenebrous Brothers Carnival - Act One" title="Haunted Woods"/>
-	<level id="39" neighbors="0,42,40,36" path="Content/maps/HauntedWoods/HauntedWoods07.tmx" music="Tenebrous Brothers Carnival - Act One" title="Haunted Woods"/>
-	<level id="40" neighbors="39,0,41,37" path="Content/maps/HauntedWoods/HauntedWoods08.tmx" music="Tenebrous Brothers Carnival - Act One" title="Haunted Woods"/>
-	<level id="41" neighbors="40,43,0,38" path="Content/maps/HauntedWoods/HauntedWoods09.tmx" music="Tenebrous Brothers Carnival - Act One" title="Haunted Woods"/>
-	<level id="42" neighbors="0,0,0,39" path="Content/maps/HauntedWoods/HauntedWoods10.tmx" music="Suvaco do Cristo" title="Haunted Woods"/>
-	<level id="43" neighbors="44,0,0,41" path="Content/maps/HauntedWoods/HauntedWoods11.tmx" music="Tenebrous Brothers Carnival - Act One" title="Haunted Woods"/>
-	<level id="44" neighbors="0,0,43,0" path="Content/maps/HauntedWoods/HauntedWoods12.tmx" music="Tenebrous Brothers Carnival - Act Two" title="Haunted Woods"/>
+	<level id="1" neighbors="0,25,2,4" path="Content/maps/Overworld01.tmx" music="Heroic Age" title="Hero Fields"/>
+  <level id="2" neighbors="1,26,3,5" path="Content/maps/Overworld02.tmx"  music="Heroic Age" title="Hero Fields"/>
+  <level id="3" neighbors="2,0,0,7" path="Content/maps/Overworld03.tmx"  music="Heroic Age" title="Stoneman Caves"/>
+	<level id="4" neighbors="0,1,5,6" path="Content/maps/Overworld04.tmx" music="Heroic Age" title="Hero Fields"/>
+	<level id="5" neighbors="4,2,7,8" path="Content/maps/Overworld05.tmx" music="Heroic Age" title="Fort Avalanche"/>
+	<level id="6" neighbors="0,4,8,0" path="Content/maps/Overworld06.tmx" music="Heroic Age" title="Goldensand Beach"/>
+	<level id="7" neighbors="5,3,0,0" path="Content/maps/Overworld07.tmx" music="Heroic Age" title="Stoneman Caves"/>
+	<level id="8" neighbors="6,5,9,0" path="Content/maps/Overworld08.tmx" music="Heroic Age" title="Fort Avalanche"/>
+	<level id="9" neighbors="8,0,0,0" path="Content/maps/Overworld09.tmx" music="Heroic Age" title="Fort Avalanche"/>
+	<level id="25" neighbors="0,0,0,1" path="Content/maps/Overworld10.tmx" music="Easy Lemon" title="Hero Fields"/>
+	<level id="26" neighbors="0,27,0,2" path="Content/maps/Overworld11.tmx" music="Heroic Age" title="Orc Forest"/>
+	<level id="27" neighbors="0,0,28,26" path="Content/maps/Overworld12.tmx" music="Heroic Age" title="Orc Forest"/>
+	<level id="28" neighbors="27,0,0,0" path="Content/maps/Overworld13.tmx" music="Heroic Age" title="Orc Forest"/>
   </levels>
 </collection>

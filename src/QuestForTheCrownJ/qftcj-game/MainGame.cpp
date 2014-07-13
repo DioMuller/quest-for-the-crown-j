@@ -36,7 +36,7 @@ qfcbase::Scene* CreateScene(qfcbase::Game* game)
 	enemy->AddBehavior(std::make_shared<FollowBehavior>(enemy, "GoodGuy", 5, 32 * 4));
 	scene->AddEntity(enemy);*/
 	qfcbase::LevelLoader::SetFactory(new GameEntityFactory());
-	auto scene = qfcbase::LevelLoader::LoadMap(game, 1, "Content/maps/Overworld/Overworld01.tmx");
+	auto scene = qfcbase::LevelLoader::LoadMap(game, 1, "Content/maps/Overworld01.tmx");
 	return &(*scene);
 }
 
