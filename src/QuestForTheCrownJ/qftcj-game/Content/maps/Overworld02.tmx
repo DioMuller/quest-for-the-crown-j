@@ -83,6 +83,16 @@
 1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,0,0,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1
 </data>
  </layer>
+ <objectgroup name="Collision" width="60" height="34">
+  <object x="-1" y="-5" width="1120" height="164"/>
+  <object x="289" y="126" width="830" height="162"/>
+  <object x="1183" y="-3" width="758" height="165"/>
+  <object x="1761" y="164" width="161" height="670"/>
+  <object x="2" y="865" width="123" height="192"/>
+  <object x="0" y="1054" width="961" height="38"/>
+  <object x="1024" y="1054" width="961" height="38"/>
+  <object x="1474" y="896" width="450" height="157"/>
+ </objectgroup>
  <objectgroup name="Objects" width="60" height="34">
   <object name="Slime" type="Enemy" x="336" y="912" width="32" height="32"/>
   <object name="Slime" type="Enemy" x="358" y="468" width="32" height="32"/>
