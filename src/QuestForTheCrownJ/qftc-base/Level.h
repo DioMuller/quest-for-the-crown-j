@@ -46,6 +46,16 @@ namespace qfcbase
 				return bgm;
 			}
 
+			void Id(int id)
+			{
+				this->id = id;
+			}
+
+			int Id()
+			{
+				return this->id;
+			}
+
 			void Title(std::string value)
 			{
 				title = value;
@@ -64,7 +74,7 @@ namespace qfcbase
 		// Constructors
 		/////////////////////////////////////
 		public:
-			Level(Game* game, int id, tmx::MapLoader* map, std::vector<Entity*> entities = std::vector<Entity*>());
+			Level(Game* game, int id, std::vector<Entity*> entities = std::vector<Entity*>());
 			~Level();
 
 		/////////////////////////////////////
@@ -73,9 +83,11 @@ namespace qfcbase
 		public:
 			void Update(double dt);
 			void Draw(sf::RenderWindow* renderer);
+
 			void GoToNeighbour(Entity* entity, Direction direction);
 			void GoToDungeon(Entity* entity, int dungeon);
 			void SetNeighbor(Direction direction, int neighborId);
+			void LoadMap(std::string tmxfile);			
 	};
 
 

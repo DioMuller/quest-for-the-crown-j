@@ -2,15 +2,15 @@
 
 using namespace qfcbase;
 
-Level::Level(Game* game, int id, tmx::MapLoader* map, std::vector<Entity*> entities) : Scene(game)
+Level::Level(Game* game, int id, std::vector<Entity*> entities) : Scene(game)
 {
-	this->map = map;
+	this->map = nullptr;
 }
 
 
 Level::~Level()
 {
-	delete map;
+	if(map) delete map;
 }
 
 
@@ -42,4 +42,14 @@ void Level::GoToDungeon(Entity* entity, int dungeon)
 void Level::SetNeighbor(Direction direction, int neighborId)
 {
 	this->neighbors[(int)direction] = neighborId;
+}
+
+void Level::LoadMap(std::string tmxFile)
+{
+	if (this->map) delete this->map;
+
+	this->map = new tmx::MapLoader(tmxFile.substr(0, tmxFile.find_last_of("\\/")));
+	this->map->AddSearchPath("Content/tilesets/"); // For tsx files.
+	this->map->AddSearchPath("Content/tiles/"); // For png files.
+	this->map->Load(tmxFile.substr(tmxFile.find_last_of("\\/"), tmxFile.length()));
 }

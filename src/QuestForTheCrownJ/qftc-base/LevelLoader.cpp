@@ -41,13 +41,10 @@ std::shared_ptr<LevelCollection> LevelLoader::LoadLevels(Game* game, std::string
 
 Level* LevelLoader::LoadMap(Game* game, int id, std::string tmxFile)
 {
-	tmx::MapLoader* map = new tmx::MapLoader(tmxFile.substr(0, tmxFile.find_last_of("\\/")));
-	map->AddSearchPath("Content/tilesets/"); // For tsx files.
-	map->AddSearchPath("Content/tiles/"); // For png files.
-	map->Load(tmxFile.substr(tmxFile.find_last_of("\\/"), tmxFile.length()));
-	Level* level = new Level(game, id, map);
+	Level* level = new Level(game, id);
+	level->LoadMap(tmxFile);
 
-	auto layers = map->GetLayers();
+	auto layers = level->Map()->GetLayers();
 
 	for (auto layer : layers)
 	{
