@@ -4,16 +4,16 @@
 	<!-- Overworld -->
 	<level id="1" neighbors="0,10,2,4" path="Content/maps/Overworld01.tmx" music="Heroic Age" title="Hero Fields"/>
   <level id="2" neighbors="1,11,3,5" path="Content/maps/Overworld02.tmx"  music="Heroic Age" title="Hero Fields"/>
-  <level id="3" neighbors="2,0,0,7" path="Content/maps/Overworld03.tmx"  music="Heroic Age" title="Stoneman Caves"/>
+  <level id="3" neighbors="2,0,0,7" path="Content/maps/Overworld03.tmx"  music="Rising Game" title="Stoneman Caves"/>
 	<level id="4" neighbors="0,1,5,6" path="Content/maps/Overworld04.tmx" music="Heroic Age" title="Hero Fields"/>
-	<level id="5" neighbors="4,2,7,8" path="Content/maps/Overworld05.tmx" music="Heroic Age" title="Fort Avalanche"/>
-	<level id="6" neighbors="0,4,8,0" path="Content/maps/Overworld06.tmx" music="Heroic Age" title="Goldensand Beach"/>
-	<level id="7" neighbors="5,3,0,0" path="Content/maps/Overworld07.tmx" music="Heroic Age" title="Stoneman Caves"/>
-	<level id="8" neighbors="6,5,9,0" path="Content/maps/Overworld08.tmx" music="Heroic Age" title="Fort Avalanche"/>
-	<level id="9" neighbors="8,0,0,0" path="Content/maps/Overworld09.tmx" music="Heroic Age" title="Fort Avalanche"/>
+	<level id="5" neighbors="4,2,7,8" path="Content/maps/Overworld05.tmx" music="Call to Adventure" title="Fort Avalanche"/>
+	<level id="6" neighbors="0,4,8,0" path="Content/maps/Overworld06.tmx" music="Suvaco do Cristo" title="Goldensand Beach"/>
+	<level id="7" neighbors="5,3,0,0" path="Content/maps/Overworld07.tmx" music="Rising Game" title="Stoneman Caves"/>
+	<level id="8" neighbors="6,5,9,0" path="Content/maps/Overworld08.tmx" music="Five Armies" title="Fort Avalanche"/>
+	<level id="9" neighbors="8,0,0,0" path="Content/maps/Overworld09.tmx" music="Moonlight Hall" title="Fort Avalanche"/>
 	<level id="10" neighbors="0,0,0,1" path="Content/maps/Overworld10.tmx" music="Easy Lemon" title="Hero Fields"/>
-	<level id="11" neighbors="0,12,0,2" path="Content/maps/Overworld11.tmx" music="Heroic Age" title="Orc Forest"/>
-	<level id="12" neighbors="0,0,13,11" path="Content/maps/Overworld12.tmx" music="Heroic Age" title="Orc Forest"/>
-	<level id="13" neighbors="12,0,0,0" path="Content/maps/Overworld13.tmx" music="Heroic Age" title="Orc Forest"/>
+	<level id="11" neighbors="0,12,0,2" path="Content/maps/Overworld11.tmx" music="Brittle Rille" title="Orc Forest"/>
+	<level id="12" neighbors="0,0,13,11" path="Content/maps/Overworld12.tmx" music="Tenebrous Brothers Carnival - Act One" title="Orc Forest"/>
+	<level id="13" neighbors="12,0,0,0" path="Content/maps/Overworld13.tmx" music="Tenebrous Brothers Carnival - Act Two" title="Orc Forest"/>
   </levels>
 </collection>

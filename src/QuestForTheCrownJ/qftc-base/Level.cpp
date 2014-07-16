@@ -1,6 +1,7 @@
 #include "Level.h"
 #include "LevelCollection.h"
 #include "LevelLoader.h"
+#include "AudioPlayer.h"
 
 using namespace qfcbase;
 
@@ -75,6 +76,8 @@ void Level::LoadMap(std::string tmxFile)
 		{
 			SetNeighbor((Direction)i, info->neighbours[i]);
 		}
+
+		AudioPlayer::PlayBGM(bgm);
 	}
 
 	auto layers = map->GetLayers();

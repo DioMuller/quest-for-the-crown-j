@@ -12,6 +12,7 @@ using namespace qfcgame;
 /////////////////////////////////////
 GameEntityFactory::GameEntityFactory() : EntityFactory()
 {
+	hasPlayer = false;
 }
 
 
@@ -33,12 +34,14 @@ std::shared_ptr<qfcbase::Entity> GameEntityFactory::GenerateEntity(qfcbase::Scen
 		entity->category = "BadGuy";
 		entity->scene = scene;
 	}
-	else if (type == "Player")
+	else if (type == "Player" && !hasPlayer)
 	{
 		entity = std::shared_ptr<qfcbase::Entity>(new Hero());
 		entity->AddBehavior(std::make_shared<Controllable>(entity, std::make_shared<KeyboardInput>()));
 		entity->category = "GoodGuy";
 		entity->scene = scene;
+
+		hasPlayer = true;
 	}
 	else
 	{

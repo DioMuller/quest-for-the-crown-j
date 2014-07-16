@@ -55,6 +55,7 @@ void AudioPlayer::PlayBGM(std::string name)
 		else
 		{
 			currentBgmName = name;
+			currentBgm.setLoop(true);
 			currentBgm.play();
 		}
 	}

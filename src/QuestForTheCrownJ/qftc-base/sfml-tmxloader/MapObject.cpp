@@ -159,8 +159,8 @@ void MapObject::CreateDebugShape(const sf::Color& colour)
 {
 	if(m_polypoints.size() == 0)
 	{
-		std::cerr << "Unable to create debug shape, object data missing." << std::endl;
-		std::cerr << "Check image file paths referenced by tmx file." << std::endl;
+		//std::cerr << "Unable to create debug shape, object data missing." << std::endl;
+		//std::cerr << "Check image file paths referenced by tmx file." << std::endl;
 		return;
 	}
 
@@ -225,8 +225,8 @@ void MapObject::CreateSegments()
 {
 	if(m_polypoints.size() == 0)
 	{
-		std::cerr << "Unable to object segments, object data missing." << std::endl;
-		std::cerr << "Check image file paths referenced by tmx file." << std::endl;
+		//std::cerr << "Unable to object segments, object data missing." << std::endl;
+		//std::cerr << "Check image file paths referenced by tmx file." << std::endl;
 		return;
 	}
 	
@@ -237,7 +237,7 @@ void MapObject::CreateSegments()
 	if(m_shape != Polyline) //close shape
 		m_polySegs.push_back(Segment(*(m_polypoints.end() - 1), *m_polypoints.begin()));
 
-	std::cerr << "Added " << m_polySegs.size() << " segments to Map Object" << std::endl;
+	//std::cerr << "Added " << m_polySegs.size() << " segments to Map Object" << std::endl;
 }
 
 bool MapObject::Convex() const
