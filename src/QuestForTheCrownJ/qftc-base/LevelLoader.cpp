@@ -40,20 +40,6 @@ Level* LevelLoader::LoadMap(Game* game, int id, std::string tmxFile)
 	Level* level = new Level(game, id);
 	level->LoadMap(tmxFile);
 
-	auto layers = level->Map()->GetLayers();
-
-	for (auto layer : layers)
-	{
-		if (layer.type == tmx::MapLayerType::ObjectGroup)
-		{
-			for (auto object : layer.objects)
-			{
-				std::shared_ptr<Entity> entity = CreateEntity(level, id, object);
-				if (entity != nullptr) level->AddEntity(entity);
-			}
-		}
-	}
-
 	return level;
 }
 

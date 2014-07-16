@@ -13,9 +13,10 @@ namespace qfcbase
 		/////////////////////////////////////
 		// Attributes
 		/////////////////////////////////////
-		private:
+		protected:
 			std::vector<std::shared_ptr<Entity>> entities;
 			std::stack<std::shared_ptr<Entity>> toRemove;
+			std::stack<std::shared_ptr<Entity>> toAdd;
 			Game* parent;
 
 		/////////////////////////////////////

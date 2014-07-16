@@ -1,5 +1,6 @@
 #pragma once
 #include "Scene.h"
+#include "EntityFactory.h"
 #include "sfml-tmxloader/MapLoader.h"
 
 namespace qfcbase
@@ -70,6 +71,7 @@ namespace qfcbase
 			{
 				return map;
 			}
+
 		/////////////////////////////////////
 		// Constructors
 		/////////////////////////////////////
@@ -86,7 +88,7 @@ namespace qfcbase
 
 			void GoToNeighbour(std::shared_ptr<Entity> entity, Direction direction);
 			void SetNeighbor(Direction direction, int neighborId);
-			void LoadMap(std::string tmxfile);			
+			void LoadMap(std::string tmxfile);
 	};
 
 

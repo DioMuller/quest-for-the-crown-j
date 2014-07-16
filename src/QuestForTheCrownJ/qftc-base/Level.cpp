@@ -1,5 +1,6 @@
 #include "Level.h"
 #include "LevelCollection.h"
+#include "LevelLoader.h"
 
 using namespace qfcbase;
 
@@ -38,6 +39,7 @@ void Level::GoToNeighbour(std::shared_ptr<Entity> entity, Direction direction)
 	else if (direction == Direction::SOUTH) entity->Sprite->Position = sf::Vector2f(entity->Sprite->Position.x, entity->Sprite->Area.height);
 
 	LoadMap(LevelCollection::GetNeighbour(id, direction));
+	this->AddEntity(entity); // Since all entities are removed.
 }
 
 void Level::SetNeighbor(Direction direction, int neighborId)
@@ -56,6 +58,11 @@ void Level::LoadMap(std::string tmxFile)
 	this->map->AddSearchPath("Content/tiles/"); // For png files.
 	this->map->Load(tmxFile.substr(tmxFile.find_last_of("\\/"), tmxFile.length()));
 
+	for (auto entity : entities)
+	{
+		RemoveEntity(entity);
+	}
+
 	LevelInfo* info = LevelCollection::GetLevel(tmxFile);
 
 	if (info)
@@ -67,6 +74,20 @@ void Level::LoadMap(std::string tmxFile)
 		for (int i = 0; i < 4; i++)
 		{
 			SetNeighbor((Direction)i, info->neighbours[i]);
+		}
+	}
+
+	auto layers = map->GetLayers();
+
+	for (auto layer : layers)
+	{
+		if (layer.type == tmx::MapLayerType::ObjectGroup)
+		{
+			for (auto object : layer.objects)
+			{
+				std::shared_ptr<Entity> entity = LevelLoader::CreateEntity(this, id, object);
+				if (entity != nullptr) AddEntity(entity);
+			}
 		}
 	}
 }

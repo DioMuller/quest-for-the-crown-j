@@ -32,6 +32,15 @@ void Scene::Update(double dt)
 		if (position != entities.end()) entities.erase(position);
 	}
 
+	// Add entities to be added
+	while (!toAdd.empty())
+	{
+		auto e = toAdd.top();
+		toAdd.pop();
+
+		entities.push_back(e);
+	}
+
 	// Updates entities.
 	for (const auto& e : entities)
 	{
@@ -57,7 +66,7 @@ void Scene::Draw(sf::RenderWindow* renderer)
 void Scene::AddEntity(std::shared_ptr<Entity> e)
 {
 	e->scene = this;
-	entities.push_back(e);
+	toAdd.push(e);
 }
 
 void Scene::RemoveEntity(std::shared_ptr<Entity> e)
