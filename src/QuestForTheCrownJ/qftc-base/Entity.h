@@ -61,6 +61,11 @@ namespace qfcbase
 
 			void AddBehavior(std::shared_ptr<Behavior> b);
 			void Walk(sf::Vector2f direction, double dt);
+
+			qfcbase::Scene* Scene()
+			{
+				return scene;
+			}
 		private:
 			bool ValidPosition(sf::Vector2f offset);
 

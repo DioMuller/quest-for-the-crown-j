@@ -5,11 +5,14 @@
 
 namespace qfcbase
 {
-	typedef struct s_waypoint
+	typedef struct LevelInfo
 	{
 		int levelId;
-		sf::Vector2i position;
-	} Waypoint;
+		std::string mapFile;
+		std::string music;
+		std::string title;
+		int neighbours[4];
+	};
 
 	class LevelCollection
 	{
@@ -17,19 +20,15 @@ namespace qfcbase
 		// Attributes
 		/////////////////////////////////////
 		private:
-			std::vector<std::shared_ptr<Level>> levels;
+			static std::vector<LevelInfo*> levels;
 
 		/////////////////////////////////////
 		// Constructors
 		/////////////////////////////////////
 		public:
-			LevelCollection();
-			~LevelCollection();
-
-		/////////////////////////////////////
-		// Constructors
-		/////////////////////////////////////
-		public:
-			void AddLevel(std::shared_ptr<Level> level);
+			static void AddLevel(int id, std::string level, std::string music, std::string title, int neighbours[4]);
+			static LevelInfo* GetLevel(int id);
+			static LevelInfo* GetLevel(std::string mapfile);
+			static std::string GetNeighbour(int level, Direction direction);
 	};
 }

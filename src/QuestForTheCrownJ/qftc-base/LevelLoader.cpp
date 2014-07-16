@@ -7,9 +7,8 @@ using namespace qfcbase;
 
 std::shared_ptr<EntityFactory> LevelLoader::factory = nullptr;
 
-std::shared_ptr<LevelCollection> LevelLoader::LoadLevels(Game* game, std::string path)
+void LevelLoader::LoadLevels(std::string path)
 {
-	std::shared_ptr<LevelCollection> collection(new LevelCollection());
 	tinyxml2::XMLDocument doc;
 	doc.LoadFile(path.c_str());
 
@@ -19,24 +18,21 @@ std::shared_ptr<LevelCollection> LevelLoader::LoadLevels(Game* game, std::string
 
 	while( next != nullptr )
 	{
-		
 		int id = next->IntAttribute("id");
-
-		std::shared_ptr<Level> level = std::shared_ptr<Level>(LoadMap(game, id, std::string(next->Attribute("path"))));
-		level->BGM(next->Attribute("music"));
-		level->Title(next->Attribute("title"));
+		std::string path = next->Attribute("path");
+		std::string bgm = next->Attribute("music");
+		std::string title = next->Attribute("title");
 
 		auto splitedNeighbours = split(std::string(next->Attribute("neighbors")), ',');
+		int neigh[4];
 		for (int i = 0; i < NEIGHBOUR_COUNT; i++)
 		{
-			level->SetNeighbor((Direction) i, std::stoi(splitedNeighbours[i]));
+			neigh[(Direction)i] = std::stoi(splitedNeighbours[i]);
 		}
 
-		collection->AddLevel(level);
+		LevelCollection::AddLevel(id, path, bgm, title, neigh);
 		next = next->NextSiblingElement("level");
 	}
-
-	return collection;
 }
 
 Level* LevelLoader::LoadMap(Game* game, int id, std::string tmxFile)

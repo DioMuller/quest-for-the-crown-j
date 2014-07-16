@@ -74,7 +74,7 @@ namespace qfcbase
 		// Constructors
 		/////////////////////////////////////
 		public:
-			Level(Game* game, int id, std::vector<Entity*> entities = std::vector<Entity*>());
+			Level(Game* game, int id);
 			~Level();
 
 		/////////////////////////////////////
@@ -84,8 +84,7 @@ namespace qfcbase
 			void Update(double dt);
 			void Draw(sf::RenderWindow* renderer);
 
-			void GoToNeighbour(Entity* entity, Direction direction);
-			void GoToDungeon(Entity* entity, int dungeon);
+			void GoToNeighbour(std::shared_ptr<Entity> entity, Direction direction);
 			void SetNeighbor(Direction direction, int neighborId);
 			void LoadMap(std::string tmxfile);			
 	};

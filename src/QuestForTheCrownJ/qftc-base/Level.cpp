@@ -1,8 +1,9 @@
 #include "Level.h"
+#include "LevelCollection.h"
 
 using namespace qfcbase;
 
-Level::Level(Game* game, int id, std::vector<Entity*> entities) : Scene(game)
+Level::Level(Game* game, int id) : Scene(game)
 {
 	this->map = nullptr;
 }
@@ -29,14 +30,14 @@ void Level::Draw(sf::RenderWindow* renderer)
 	Scene::Draw(renderer);
 }
 
-void Level::GoToNeighbour(Entity* entity, Direction direction)
+void Level::GoToNeighbour(std::shared_ptr<Entity> entity, Direction direction)
 {
+	if (direction == Direction::EAST) entity->Sprite->Position = sf::Vector2f(entity->Sprite->Area.width, entity->Sprite->Position.y);
+	else if (direction == Direction::WEST) entity->Sprite->Position = sf::Vector2f(map->GetMapSize().x - entity->Sprite->Area.width, entity->Sprite->Position.y);
+	else if (direction == Direction::NORTH) entity->Sprite->Position = sf::Vector2f(entity->Sprite->Position.x, map->GetMapSize().y - entity->Sprite->Area.height);
+	else if (direction == Direction::SOUTH) entity->Sprite->Position = sf::Vector2f(entity->Sprite->Position.x, entity->Sprite->Area.height);
 
-}
-
-void Level::GoToDungeon(Entity* entity, int dungeon)
-{
-
+	LoadMap(LevelCollection::GetNeighbour(id, direction));
 }
 
 void Level::SetNeighbor(Direction direction, int neighborId)
@@ -46,10 +47,26 @@ void Level::SetNeighbor(Direction direction, int neighborId)
 
 void Level::LoadMap(std::string tmxFile)
 {
+	if (tmxFile == "") return;
+
 	if (this->map) delete this->map;
 
 	this->map = new tmx::MapLoader(tmxFile.substr(0, tmxFile.find_last_of("\\/")));
 	this->map->AddSearchPath("Content/tilesets/"); // For tsx files.
 	this->map->AddSearchPath("Content/tiles/"); // For png files.
 	this->map->Load(tmxFile.substr(tmxFile.find_last_of("\\/"), tmxFile.length()));
+
+	LevelInfo* info = LevelCollection::GetLevel(tmxFile);
+
+	if (info)
+	{
+		this->id = info->levelId;
+		this->bgm = info->music;
+		this->title = info->title;
+
+		for (int i = 0; i < 4; i++)
+		{
+			SetNeighbor((Direction)i, info->neighbours[i]);
+		}
+	}
 }
