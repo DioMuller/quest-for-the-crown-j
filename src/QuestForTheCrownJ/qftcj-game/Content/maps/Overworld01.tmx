@@ -99,14 +99,12 @@
   <object name="Slime" type="Enemy" x="1682" y="298" width="32" height="32"/>
   <object name="Slime" type="Enemy" x="1549" y="472" width="32" height="32"/>
   <object name="Player" type="Player" x="323" y="256" width="32" height="32"/>
-  <object x="1760" y="671" width="33" height="36"/>
  </objectgroup>
  <objectgroup name="Collision" width="60" height="34">
   <object x="2" y="-4" width="128" height="1104"/>
   <object x="96" y="-20" width="992" height="213"/>
   <object x="1218" y="-31" width="716" height="194"/>
   <object x="1633" y="895" width="294" height="204"/>
-  <object x="1215" y="798" width="33" height="36"/>
   <object x="1150" y="224" width="33" height="34"/>
   <object x="572" y="959" width="36" height="33"/>
   <object x="544" y="575" width="31" height="36"/>
@@ -117,5 +115,7 @@
   <object x="547" y="351" width="31" height="34"/>
   <object x="483" y="283" width="30" height="40"/>
   <object x="383" y="382" width="34" height="36"/>
+  <object x="1759" y="673" width="33" height="34"/>
+  <object x="1216" y="800" width="33" height="34"/>
  </objectgroup>
 </map>

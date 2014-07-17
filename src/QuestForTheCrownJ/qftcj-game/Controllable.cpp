@@ -25,10 +25,10 @@ void qfcgame::Controllable::Update(double dt)
 		{
 			qfcbase::Direction direction = qfcbase::Direction::NONE;
 
-			if (parent->Sprite->Position.x < 0) direction = qfcbase::Direction::WEST;
-			if (parent->Sprite->Position.x > scene->Map()->GetMapSize().x) direction = qfcbase::Direction::EAST;
-			if (parent->Sprite->Position.y < 0) direction = qfcbase::Direction::NORTH;
-			if (parent->Sprite->Position.y > scene->Map()->GetMapSize().y) direction = qfcbase::Direction::SOUTH;
+			if (parent->Sprite->Center.x < 0) direction = qfcbase::Direction::WEST;
+			if (parent->Sprite->Center.x >(scene->Map()->GetMapSize().x)) direction = qfcbase::Direction::EAST;
+			if (parent->Sprite->Center.y < 0) direction = qfcbase::Direction::NORTH;
+			if (parent->Sprite->Center.y >(scene->Map()->GetMapSize().y)) direction = qfcbase::Direction::SOUTH;
 
 			if (direction != qfcbase::Direction::NONE)
 			{

@@ -58,8 +58,8 @@ bool MapLoader::Load(const std::string& map)
 	pugi::xml_parse_result result = mapDoc.load_file(mapPath.c_str());
 	if(!result)
 	{
-		//std::cerr << "Failed to open " << map << std::endl;
-		//std::cerr << "Reason: " << result.description() << std::endl;
+		std::cerr << "Failed to open " << map << std::endl;
+		std::cerr << "Reason: " << result.description() << std::endl;
 		return m_mapLoaded = false;
 	}
 
@@ -67,7 +67,7 @@ bool MapLoader::Load(const std::string& map)
 	pugi::xml_node mapNode = mapDoc.child("map");
 	if(!mapNode)
 	{
-		//std::cerr << "Map node not found. Map " << map << " not loaded." << std::endl;
+		std::cerr << "Map node not found. Map " << map << " not loaded." << std::endl;
 		return m_mapLoaded = false;
 	}
 	if(!(m_mapLoaded = m_ParseMapNode(mapNode))) return false;
@@ -103,14 +103,14 @@ bool MapLoader::Load(const std::string& map)
 				return false;
 			}
 		}
-		////std::cerr << name << std::endl;
+		//std::cerr << name << std::endl;
 		currentNode = currentNode.next_sibling();
 	}
 
 	m_CreateDebugGrid();
 
-	//std::cerr << "Parsed " << m_layers.size() << " layers." << std::endl;
-	//std::cerr << "Loaded " << map << " successfully." << std::endl;
+	std::cerr << "Parsed " << m_layers.size() << " layers." << std::endl;
+	std::cerr << "Loaded " << map << " successfully." << std::endl;
 
 	return m_mapLoaded = true;
 }

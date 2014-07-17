@@ -1,6 +1,7 @@
 #include "Hero.h"
 #include "AnimatedSprite.h"
 #include "Container.h"
+#include "Level.h"
 #include <math.h>
 
 qfcgame::Hero::Hero()
@@ -36,13 +37,13 @@ void qfcgame::Hero::Draw(sf::RenderWindow* renderer)
 {
 	sf::Vector2f cameraPosition = Sprite->Position;
 	sf::Vector2f screenSize = sf::Vector2f(renderer->getSize().x, renderer->getSize().y);
-	
-	//TODO: Change fixed map size?
+	sf::Vector2u mapSize = ((qfcbase::Level*) scene)->Map()->GetMapSize();
+
 	// Not on the same line because... It won't work. Not sure why.
 	cameraPosition.x = max(cameraPosition.x, screenSize.x / 2);
-	cameraPosition.x = min(cameraPosition.x, 1920 - screenSize.x /2);
+	cameraPosition.x = min(cameraPosition.x, mapSize.x - screenSize.x /2);
 	cameraPosition.y = max(cameraPosition.y, screenSize.y / 2);
-	cameraPosition.y = min(cameraPosition.y, 1080 - screenSize.y / 2);
+	cameraPosition.y = min(cameraPosition.y, mapSize.y - screenSize.y / 2);
 
 	renderer->setView(sf::View(cameraPosition, screenSize ));
 	Entity::Draw(renderer);
