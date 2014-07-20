@@ -1,18 +1,23 @@
 #pragma once
 #include "Game.h"
 #include "StructBase.h"
+#include "ClientChannel.h"
 namespace qfcgame
 {
 	class MainGame : public qfcbase::Game
 	{
+		private:
+			qfcnet::ClientChannel clientChannel;
+
 		/////////////////////////////////////
 		// Constructors
 		/////////////////////////////////////
 		public:
-			MainGame();
+			MainGame(std::string auth_token);
 			~MainGame();
 
-			void LoadScene(const PlayerInfo& player_info, std::vector<EntityInfo> entities_info);
+			void RefreshSceneFromServer();
+			void SetEntities(std::vector<std::shared_ptr<qfcbase::Entity>> entities);
 
 		/////////////////////////////////////
 		// Methods

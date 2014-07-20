@@ -1,6 +1,9 @@
 #include "ClientChannel.h"
 using namespace qfcnet;
+
 #include <exception>
+#include "Hero.h"
+#include "Slime.h"
 
 ClientChannel::ClientChannel(std::string serverAddress, int port)
 	: server_socket(0)
@@ -22,17 +25,37 @@ ClientChannel::~ClientChannel()
 	WSACleanup();
 }
 
-std::string ClientChannel::Login(std::string user, std::string password)
+void ClientChannel::Login(std::string user, std::string password)
 {
-	return "stub";
+	// TODO: Login
 }
 
-PlayerInfo ClientChannel::GetPlayerInfo(std::string auth_token)
+PlayerInfo ClientChannel::GetPlayerInfo()
 {
 	return PlayerInfo();
 }
 
-std::vector<EntityInfo> ClientChannel::GetEntities(std::string screen_name)
+std::vector<std::shared_ptr<qfcbase::Entity>> ClientChannel::GetEntities(std::string screen_name)
 {
-	return std::vector<EntityInfo>();
+	return std::vector<std::shared_ptr<qfcbase::Entity>>();
+}
+
+std::shared_ptr<qfcbase::Entity> ClientChannel::CreateEntity(EntityInfo info)
+{
+	std::shared_ptr<qfcbase::Entity> entity;
+
+	switch (info.type)
+	{
+	case EntityType::ENTITY_HERO:
+		entity = std::make_shared<qfcbase::Hero>();
+		break;
+	case EntityType::ENTITY_SLIME:
+		entity = std::make_shared<qfcbase::Slime>();
+		break;
+	}
+
+	if (entity)
+		entity->Sprite->Position = sf::Vector2f(info.x, info.y);
+
+	return entity;
 }

@@ -10,8 +10,9 @@ namespace qfcbase
 		////////////////////////////////////////
 		// Attributes
 		////////////////////////////////////////
-		private:
+		protected:
 			Scene* currentScene;
+		private:
 			std::stack<Scene*> pastScenes;
 			bool endScene;
 			bool sceneStacked;

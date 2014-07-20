@@ -13,13 +13,16 @@
 
 using namespace qfcgame;
 
-MainGame::MainGame()
+MainGame::MainGame(std::string auth_token)
+	: clientChannel("localhost", 12345)
 {
+	clientChannel.AuthToken = auth_token;
+
 	qfcbase::AudioPlayer::SetMusicPath("Content/bgm/");
 	qfcbase::AudioPlayer::SetSoundPath("Content/sound/");
 }
 
-void MainGame::LoadScene(const PlayerInfo& player_info, std::vector<EntityInfo> entities_info)
+void MainGame::RefreshSceneFromServer()
 {
 	/*
 	auto scene = new qfcbase::Scene(game);
@@ -31,15 +34,25 @@ void MainGame::LoadScene(const PlayerInfo& player_info, std::vector<EntityInfo> 
 	enemy->Sprite->Position = { 400, 400 };
 	enemy->AddBehavior(std::make_shared<FollowBehavior>(enemy, "GoodGuy", 5, 32 * 4));
 	scene->AddEntity(enemy);*/
+
+	auto player = clientChannel.GetPlayerInfo();
+	auto entities = clientChannel.GetEntities(player.map_name);
+
 	qfcbase::LevelLoader::LoadLevels("Content/maps/QuestForTheCrown.maps");
 
-	auto scene = qfcbase::LevelLoader::LoadMap(this, 1, "Content/maps/" + player_info.map_name + ".tmx");
-	// TODO: create entities
+	auto scene = qfcbase::LevelLoader::LoadMap(this, 1, "Content/maps/" + player.map_name + ".tmx");
 	Game::LoadScene(scene, false);
+	SetEntities(entities);
 }
 
 MainGame::~MainGame()
 {
+}
+
+void MainGame::SetEntities(std::vector<std::shared_ptr<qfcbase::Entity>> entities)
+{
+	for (auto entity : entities)
+		currentScene->AddEntity(entity);
 }
 
 void MainGame::Update(double dt)

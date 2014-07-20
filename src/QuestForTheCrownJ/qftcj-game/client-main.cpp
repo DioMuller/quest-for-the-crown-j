@@ -4,6 +4,7 @@
 #include <chrono>
 #include <thread>
 #include <iostream>
+#include "ClientChannel.h"
 
 int main(int argc, char* argv[])
 {
@@ -11,17 +12,18 @@ int main(int argc, char* argv[])
 	std::cerr.rdbuf(0);
 	sf::err().rdbuf(0);
 
-	// id = arg[1]
+	if (argc <= 1)
+	{
+		std::cout << "Use the Launcher to play the game\n";
+		return 1;
+	}
 
-	std::string auth_token; // = arg[1]
-	PlayerInfo player; // = clientChannel.GetPlayerInfo(auth_token)
-	std::vector<EntityInfo> entities; // = clientChannel.GetEntities(auth_token, player.map_name)
+	std::string auth_token = argv[1];
 
 	qfcbase::Window window({ 800, 600 }, "Quest for the Crown J");
-	qfcgame::MainGame* game = new qfcgame::MainGame();
+	qfcgame::MainGame* game = new qfcgame::MainGame(auth_token);
 
-	game->LoadScene(player, entities);
-
+	game->RefreshSceneFromServer();
 	window.Run(game);
 
 	return 0;

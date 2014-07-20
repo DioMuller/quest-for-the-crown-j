@@ -1,6 +1,5 @@
 #include "Slime.h"
 
-
 qfcbase::Slime::Slime()
 {
 	Speed = 1 * 32;

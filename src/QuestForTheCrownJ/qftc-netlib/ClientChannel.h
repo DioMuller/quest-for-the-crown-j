@@ -3,6 +3,8 @@
 #include <string>
 #include <vector>
 #include "StructBase.h"
+#include "Entity.h"
+#include "Definitions.h"
 
 namespace qfcnet
 {
@@ -12,11 +14,16 @@ namespace qfcnet
 		ClientChannel(std::string serverAddress, int port);
 		~ClientChannel();
 
-		std::string Login(std::string user, std::string password);
-		PlayerInfo GetPlayerInfo(std::string auth_token);
-		std::vector<EntityInfo> GetEntities(std::string screen_name);
+		void Login(std::string user, std::string password);
+
+		PlayerInfo GetPlayerInfo();
+		std::vector<std::shared_ptr<qfcbase::Entity>> GetEntities(std::string screen_name);
+
+		std::shared_ptr<qfcbase::Entity> CreateEntity(EntityInfo info);
 
 	private:
 		SOCKET server_socket;
+
+		autoprop(public, public, std::string, auth_token, AuthToken);
 	};
 }
