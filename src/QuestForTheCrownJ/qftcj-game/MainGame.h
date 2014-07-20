@@ -17,7 +17,7 @@ namespace qfcgame
 			~MainGame();
 
 			void RefreshSceneFromServer();
-			void SetEntities(std::vector<std::shared_ptr<qfcbase::Entity>> entities);
+			void SetEntities(std::vector<EntityInfo> entities);
 
 		/////////////////////////////////////
 		// Methods

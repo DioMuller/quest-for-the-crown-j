@@ -16,7 +16,7 @@ using namespace qfcgame;
 MainGame::MainGame(std::string auth_token)
 	: clientChannel("localhost", 12345)
 {
-	clientChannel.AuthToken = auth_token;
+	clientChannel.auth_token = auth_token;
 
 	qfcbase::AudioPlayer::SetMusicPath("Content/bgm/");
 	qfcbase::AudioPlayer::SetSoundPath("Content/sound/");
@@ -49,10 +49,32 @@ MainGame::~MainGame()
 {
 }
 
-void MainGame::SetEntities(std::vector<std::shared_ptr<qfcbase::Entity>> entities)
+std::shared_ptr<qfcbase::Entity> CreateEntity(EntityInfo info);
+
+void MainGame::SetEntities(std::vector<EntityInfo> entities)
 {
 	for (auto entity : entities)
-		currentScene->AddEntity(entity);
+		currentScene->AddEntity(CreateEntity(entity));
+}
+
+std::shared_ptr<qfcbase::Entity> CreateEntity(EntityInfo info)
+{
+	std::shared_ptr<qfcbase::Entity> entity;
+
+	switch (info.type)
+	{
+	case EntityType::ENTITY_HERO:
+		entity = std::make_shared<qfcbase::Hero>();
+		break;
+	case EntityType::ENTITY_SLIME:
+		entity = std::make_shared<qfcbase::Slime>();
+		break;
+	}
+
+	if (entity)
+		entity->Sprite->Position = sf::Vector2f(info.x, info.y);
+
+	return entity;
 }
 
 void MainGame::Update(double dt)

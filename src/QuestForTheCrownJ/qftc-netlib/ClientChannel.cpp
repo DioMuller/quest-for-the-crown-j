@@ -1,11 +1,13 @@
 #include "ClientChannel.h"
 using namespace qfcnet;
 
+#include <memory>
 #include <exception>
 #include "Hero.h"
 #include "Slime.h"
+#include "AuthStructs.h"
 
-ClientChannel::ClientChannel(std::string serverAddress, int port)
+ClientChannel::ClientChannel(std::string serverIPAddress, int port)
 	: server_socket(0)
 {
 	WSADATA wsaData;
@@ -16,6 +18,13 @@ ClientChannel::ClientChannel(std::string serverAddress, int port)
 		throw std::exception("Não foi possível encontrar uma dll WinSock que possa ser utilizada.");
 
 	server_socket = socket(AF_INET, SOCK_STREAM, IPPROTO_TCP);
+
+	ZeroMemory(&server_addr, sizeof(server_addr));
+
+	server_addr.sin_addr.s_addr = inet_addr(serverIPAddress.c_str());
+	server_addr.sin_family = AF_INET;
+	server_addr.sin_port = htons(port);
+	server_addr_size = sizeof(server_addr);
 }
 
 ClientChannel::~ClientChannel()
@@ -27,7 +36,30 @@ ClientChannel::~ClientChannel()
 
 void ClientChannel::Login(std::string user, std::string password)
 {
-	// TODO: Login
+	s_launcher_login_info login;
+	login.header.type = PacketType::LAUNCHER_LOGIN_INFO;
+	strcpy(login.login, user.c_str());
+	strcpy(login.hashedPassword, password.c_str());
+
+	int r = sendto(server_socket, (char*)&login, sizeof(login), 0, (SOCKADDR*)&server_addr, server_addr_size);
+	if (r <= 0)
+		throw std::exception("Send error");
+
+	s_launcher_login_response response;
+	ZeroMemory(&response, sizeof(response));
+
+	r = recv(server_socket, (char*)&response, sizeof(response), 0);
+
+	if (r <= 0)
+		throw std::exception("Receive error");
+
+	if (r != sizeof(response))
+		throw std::exception("Invalid response");
+
+	if (!response.authenticated)
+		throw std::exception("Invalid username or password");
+
+	auth_token = response.authKey;
 }
 
 PlayerInfo ClientChannel::GetPlayerInfo()
@@ -35,27 +67,7 @@ PlayerInfo ClientChannel::GetPlayerInfo()
 	return PlayerInfo();
 }
 
-std::vector<std::shared_ptr<qfcbase::Entity>> ClientChannel::GetEntities(std::string screen_name)
+std::vector<EntityInfo> ClientChannel::GetEntities(std::string screen_name)
 {
-	return std::vector<std::shared_ptr<qfcbase::Entity>>();
-}
-
-std::shared_ptr<qfcbase::Entity> ClientChannel::CreateEntity(EntityInfo info)
-{
-	std::shared_ptr<qfcbase::Entity> entity;
-
-	switch (info.type)
-	{
-	case EntityType::ENTITY_HERO:
-		entity = std::make_shared<qfcbase::Hero>();
-		break;
-	case EntityType::ENTITY_SLIME:
-		entity = std::make_shared<qfcbase::Slime>();
-		break;
-	}
-
-	if (entity)
-		entity->Sprite->Position = sf::Vector2f(info.x, info.y);
-
-	return entity;
+	return std::vector<EntityInfo>();
 }
