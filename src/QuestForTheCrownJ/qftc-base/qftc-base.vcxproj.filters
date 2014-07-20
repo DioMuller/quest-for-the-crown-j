@@ -34,6 +34,9 @@
     <Filter Include="Aditional\sfml-tmxloader\pugixml">
       <UniqueIdentifier>{eef41796-149c-4843-9b52-de9b596236c1}</UniqueIdentifier>
     </Filter>
+    <Filter Include="Scenes">
+      <UniqueIdentifier>{1f562299-b1c7-4278-b36a-da557d8b72f1}</UniqueIdentifier>
+    </Filter>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="Behavior.cpp">
@@ -69,9 +72,6 @@
     <ClCompile Include="LevelCollection.cpp">
       <Filter>Tiled</Filter>
     </ClCompile>
-    <ClCompile Include="Level.cpp">
-      <Filter>Tiled</Filter>
-    </ClCompile>
     <ClCompile Include="sfml-tmxloader\DebugShape.cpp">
       <Filter>Aditional\sfml-tmxloader</Filter>
     </ClCompile>
@@ -98,6 +98,12 @@
     </ClCompile>
     <ClCompile Include="LevelLoader.cpp">
       <Filter>Tiled</Filter>
+    </ClCompile>
+    <ClCompile Include="Level.cpp">
+      <Filter>Scenes</Filter>
+    </ClCompile>
+    <ClCompile Include="BattleScene.cpp">
+      <Filter>Scenes</Filter>
     </ClCompile>
   </ItemGroup>
   <ItemGroup>
@@ -130,9 +136,6 @@
     </ClInclude>
     <ClInclude Include="Container.h">
       <Filter>Core</Filter>
-    </ClInclude>
-    <ClInclude Include="Level.h">
-      <Filter>Tiled</Filter>
     </ClInclude>
     <ClInclude Include="AudioPlayer.h">
       <Filter>Audio</Filter>
@@ -178,6 +181,12 @@
     </ClInclude>
     <ClInclude Include="LevelLoader.h">
       <Filter>Tiled</Filter>
+    </ClInclude>
+    <ClInclude Include="Level.h">
+      <Filter>Scenes</Filter>
+    </ClInclude>
+    <ClInclude Include="BattleScene.h">
+      <Filter>Scenes</Filter>
     </ClInclude>
   </ItemGroup>
   <ItemGroup>
