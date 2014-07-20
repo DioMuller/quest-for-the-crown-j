@@ -81,6 +81,7 @@
   </ItemDefinitionGroup>
   <ItemGroup>
     <ClInclude Include="AuthStructs.h" />
+    <ClInclude Include="ClientChannel.h" />
     <ClInclude Include="ClientStructs.h" />
     <ClInclude Include="Hash.h" />
     <ClInclude Include="ServerStructs.h" />
@@ -88,6 +89,7 @@
     <ClInclude Include="StructBase.h" />
   </ItemGroup>
   <ItemGroup>
+    <ClCompile Include="ClientChannel.cpp" />
     <ClCompile Include="Hash.cpp" />
     <ClCompile Include="SHA1.cpp" />
   </ItemGroup>

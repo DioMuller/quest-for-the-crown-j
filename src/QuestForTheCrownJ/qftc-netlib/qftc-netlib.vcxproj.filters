@@ -30,6 +30,7 @@
     <ClInclude Include="ServerStructs.h">
       <Filter>Structs</Filter>
     </ClInclude>
+    <ClInclude Include="ClientChannel.h" />
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="Hash.cpp">
@@ -38,5 +39,6 @@
     <ClCompile Include="SHA1.cpp">
       <Filter>Crypto</Filter>
     </ClCompile>
+    <ClCompile Include="ClientChannel.cpp" />
   </ItemGroup>
 </Project>
