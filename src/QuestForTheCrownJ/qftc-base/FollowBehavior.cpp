@@ -3,17 +3,17 @@
 #include "SFHelper.h"
 #include <algorithm>
 
-qfcgame::FollowBehavior::FollowBehavior(std::weak_ptr<qfcbase::Entity> parent, std::string targetCategory, float desiredDistance, float viewDistance)
+qfcbase::FollowBehavior::FollowBehavior(std::weak_ptr<qfcbase::Entity> parent, std::string targetCategory, float desiredDistance, float viewDistance)
 	: qfcbase::Behavior(parent), targetCategory(targetCategory), desiredDistance(desiredDistance), viewDistance(viewDistance)
 {
 }
 
 
-qfcgame::FollowBehavior::~FollowBehavior()
+qfcbase::FollowBehavior::~FollowBehavior()
 {
 }
 
-void qfcgame::FollowBehavior::Update(double dt)
+void qfcbase::FollowBehavior::Update(double dt)
 {
 	auto parent = Parent.lock();
 	if (!parent) return;

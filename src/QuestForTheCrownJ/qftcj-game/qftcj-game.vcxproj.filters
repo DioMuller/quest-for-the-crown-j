@@ -10,22 +10,10 @@
     <ClCompile Include="..\qftc-base\PlayerInput.cpp">
       <Filter>Core\Input</Filter>
     </ClCompile>
-    <ClCompile Include="Hero.cpp">
-      <Filter>Entities</Filter>
-    </ClCompile>
     <ClCompile Include="Controllable.cpp">
       <Filter>Behaviors</Filter>
     </ClCompile>
     <ClCompile Include="client-main.cpp" />
-    <ClCompile Include="Slime.cpp">
-      <Filter>Entities</Filter>
-    </ClCompile>
-    <ClCompile Include="FollowBehavior.cpp">
-      <Filter>Behaviors</Filter>
-    </ClCompile>
-    <ClCompile Include="GameEntityFactory.cpp">
-      <Filter>Entities\Factory</Filter>
-    </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <Filter Include="Core">
@@ -34,14 +22,8 @@
     <Filter Include="Core\Input">
       <UniqueIdentifier>{533bf80f-1fe0-43db-bcee-b92aaeefc0fb}</UniqueIdentifier>
     </Filter>
-    <Filter Include="Entities">
-      <UniqueIdentifier>{43c904ac-2519-43f8-82a1-6f4dd5f56f0f}</UniqueIdentifier>
-    </Filter>
     <Filter Include="Behaviors">
       <UniqueIdentifier>{b470c142-1151-4360-989b-331ece890e22}</UniqueIdentifier>
-    </Filter>
-    <Filter Include="Entities\Factory">
-      <UniqueIdentifier>{bf8a1722-594c-4254-bb76-6198cd77baa6}</UniqueIdentifier>
     </Filter>
   </ItemGroup>
   <ItemGroup>
@@ -54,20 +36,8 @@
     <ClInclude Include="..\qftc-base\PlayerInput.h">
       <Filter>Core\Input</Filter>
     </ClInclude>
-    <ClInclude Include="Hero.h">
-      <Filter>Entities</Filter>
-    </ClInclude>
     <ClInclude Include="Controllable.h">
       <Filter>Behaviors</Filter>
-    </ClInclude>
-    <ClInclude Include="Slime.h">
-      <Filter>Entities</Filter>
-    </ClInclude>
-    <ClInclude Include="FollowBehavior.h">
-      <Filter>Behaviors</Filter>
-    </ClInclude>
-    <ClInclude Include="GameEntityFactory.h">
-      <Filter>Entities\Factory</Filter>
     </ClInclude>
   </ItemGroup>
 </Project>

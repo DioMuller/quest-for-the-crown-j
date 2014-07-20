@@ -4,7 +4,7 @@
 #include "Level.h"
 #include <math.h>
 
-qfcgame::Hero::Hero()
+qfcbase::Hero::Hero()
 {
 	Speed = 5 * 32;
 	const double walkFrameDuration = 0.1;
@@ -28,12 +28,12 @@ qfcgame::Hero::Hero()
 }
 
 
-qfcgame::Hero::~Hero()
+qfcbase::Hero::~Hero()
 {
 }
 
 
-void qfcgame::Hero::Draw(sf::RenderWindow* renderer)
+void qfcbase::Hero::Draw(sf::RenderWindow* renderer)
 {
 	sf::Vector2f cameraPosition = Sprite->Position;
 	sf::Vector2f screenSize = sf::Vector2f(renderer->getSize().x, renderer->getSize().y);

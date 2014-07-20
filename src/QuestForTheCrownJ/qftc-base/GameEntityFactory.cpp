@@ -1,11 +1,10 @@
 #include "GameEntityFactory.h"
 #include "Hero.h"
 #include "Slime.h"
-#include "Controllable.h"
 #include "KeyboardInput.h"
 #include "FollowBehavior.h"
 
-using namespace qfcgame;
+using namespace qfcbase;
 
 /////////////////////////////////////
 // Constructors
@@ -37,7 +36,6 @@ std::shared_ptr<qfcbase::Entity> GameEntityFactory::GenerateEntity(qfcbase::Scen
 	else if (type == "Player" && !hasPlayer)
 	{
 		entity = std::shared_ptr<qfcbase::Entity>(new Hero());
-		entity->AddBehavior(std::make_shared<Controllable>(entity, std::make_shared<KeyboardInput>()));
 		entity->category = "GoodGuy";
 		entity->scene = scene;
 

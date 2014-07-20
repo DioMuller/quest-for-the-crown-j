@@ -1,7 +1,7 @@
 ﻿
 Microsoft Visual Studio Solution File, Format Version 12.00
 # Visual Studio 2013
-VisualStudioVersion = 12.0.30501.0
+VisualStudioVersion = 12.0.30324.0
 MinimumVisualStudioVersion = 10.0.40219.1
 Project("{8BC9CEB8-8B4A-11D0-8D11-00A0C91BC942}") = "qftcj-game", "qftcj-game\qftcj-game.vcxproj", "{F1AE15DC-DBE0-4ABC-B257-F0C50C8DC960}"
 EndProject
@@ -55,5 +55,8 @@ Global
 		{7A267AC5-D2EF-40CE-BCD7-596FBF51DB99} = {DC1293DA-1087-49AC-B7D2-4C3F52BE876A}
 		{24310B83-3336-4082-9700-1B56FB23DBA5} = {8DE8860F-2779-42A2-8C0B-E1AB7B9A5DCC}
 		{59146722-5A3E-4F77-A63F-CF6E61D471C2} = {899B5D48-4D79-484A-B87F-95B11EAC7E8E}
+	EndGlobalSection
+	GlobalSection(Performance) = preSolution
+		HasPerformanceSessions = true
 	EndGlobalSection
 EndGlobal

@@ -9,7 +9,6 @@
 #include "LevelLoader.h"
 #include "Hero.h"
 #include "Slime.h"
-#include "GameEntityFactory.h"
 
 using namespace qfcgame;
 
@@ -19,11 +18,9 @@ MainGame::MainGame()
 {
 	qfcbase::AudioPlayer::SetMusicPath("Content/bgm/");
 	qfcbase::AudioPlayer::SetSoundPath("Content/sound/");
-
-	LoadScene(CreateScene(this), false);
 }
 
-qfcbase::Scene* CreateScene(qfcbase::Game* game)
+qfcbase::Scene* CreateScene(qfcbase::Game* game, std::string mapName)
 {
 	/*
 	auto scene = new qfcbase::Scene(game);
@@ -35,9 +32,9 @@ qfcbase::Scene* CreateScene(qfcbase::Game* game)
 	enemy->Sprite->Position = { 400, 400 };
 	enemy->AddBehavior(std::make_shared<FollowBehavior>(enemy, "GoodGuy", 5, 32 * 4));
 	scene->AddEntity(enemy);*/
-	qfcbase::LevelLoader::SetFactory(new GameEntityFactory());
 	qfcbase::LevelLoader::LoadLevels("Content/maps/QuestForTheCrown.maps");
-	auto scene = qfcbase::LevelLoader::LoadMap(game, 1, "Content/maps/Overworld01.tmx");
+
+	auto scene = qfcbase::LevelLoader::LoadMap(game, 1, "Content/maps/" + mapName + ".tmx");
 	return &(*scene);
 }
 

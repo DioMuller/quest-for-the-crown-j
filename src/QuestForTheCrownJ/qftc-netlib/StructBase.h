@@ -1,4 +1,5 @@
 #pragma once
+#include <vector>
 
 enum PacketType
 {
@@ -26,3 +27,23 @@ typedef struct s_entity_header
 {
 	int entityId;
 } EntityHeader;
+
+typedef struct
+{
+	std::string auth_token;
+	std::string map_name;
+	EntityInfo entity;
+} PlayerInfo;
+
+enum EntityType
+{
+	ENTITY_HERO,
+	ENTITY_SLIME
+};
+
+typedef struct
+{
+	//unsigned int uid;
+	EntityType type;
+	int x, y;
+} EntityInfo;

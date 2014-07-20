@@ -34,6 +34,15 @@
     <Filter Include="Aditional\sfml-tmxloader\pugixml">
       <UniqueIdentifier>{eef41796-149c-4843-9b52-de9b596236c1}</UniqueIdentifier>
     </Filter>
+    <Filter Include="Entities">
+      <UniqueIdentifier>{f959ac8a-3045-4f9e-8b61-49b92849f4ca}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Entities\Factory">
+      <UniqueIdentifier>{fd9b49d6-4c93-4397-bd5f-75c58002aa2d}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Behaviors">
+      <UniqueIdentifier>{37e4831a-c899-41af-a230-1b1d79630273}</UniqueIdentifier>
+    </Filter>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="Behavior.cpp">
@@ -98,6 +107,18 @@
     </ClCompile>
     <ClCompile Include="LevelLoader.cpp">
       <Filter>Tiled</Filter>
+    </ClCompile>
+    <ClCompile Include="GameEntityFactory.cpp">
+      <Filter>Entities\Factory</Filter>
+    </ClCompile>
+    <ClCompile Include="Hero.cpp">
+      <Filter>Entities</Filter>
+    </ClCompile>
+    <ClCompile Include="Slime.cpp">
+      <Filter>Entities</Filter>
+    </ClCompile>
+    <ClCompile Include="FollowBehavior.cpp">
+      <Filter>Behaviors</Filter>
     </ClCompile>
   </ItemGroup>
   <ItemGroup>
@@ -178,6 +199,18 @@
     </ClInclude>
     <ClInclude Include="LevelLoader.h">
       <Filter>Tiled</Filter>
+    </ClInclude>
+    <ClInclude Include="GameEntityFactory.h">
+      <Filter>Entities\Factory</Filter>
+    </ClInclude>
+    <ClInclude Include="Hero.h">
+      <Filter>Entities</Filter>
+    </ClInclude>
+    <ClInclude Include="Slime.h">
+      <Filter>Entities</Filter>
+    </ClInclude>
+    <ClInclude Include="FollowBehavior.h">
+      <Filter>Behaviors</Filter>
     </ClInclude>
   </ItemGroup>
   <ItemGroup>

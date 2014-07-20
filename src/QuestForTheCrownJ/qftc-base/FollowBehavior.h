@@ -2,7 +2,7 @@
 #include "Behavior.h"
 #include <string>
 
-namespace qfcgame
+namespace qfcbase
 {
 	class FollowBehavior :
 		public qfcbase::Behavior

@@ -1,7 +1,7 @@
 #pragma once
 #include "Entity.h"
 
-namespace qfcgame
+namespace qfcbase
 {
 	class Slime :
 		public qfcbase::Entity

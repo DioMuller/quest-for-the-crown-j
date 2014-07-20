@@ -1,7 +1,7 @@
 #pragma once
 #include "EntityFactory.h"
 
-namespace qfcgame
+namespace qfcbase
 {
 	class GameEntityFactory : public qfcbase::EntityFactory
 	{
@@ -21,6 +21,6 @@ namespace qfcgame
 		// Methods
 		/////////////////////////////////////
 		public:
-			std::shared_ptr<qfcbase::Entity> GenerateEntity(qfcbase::Scene* scene, std::string type, tmx::MapObject object);
+			virtual std::shared_ptr<qfcbase::Entity> GenerateEntity(qfcbase::Scene* scene, std::string type, tmx::MapObject object);
 	};
 }

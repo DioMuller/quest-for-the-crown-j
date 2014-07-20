@@ -1,7 +1,7 @@
 #include "Slime.h"
 
 
-qfcgame::Slime::Slime()
+qfcbase::Slime::Slime()
 {
 	Speed = 1 * 32;
 	const double stoppedFrameDuration = 0.3;
@@ -23,6 +23,6 @@ qfcgame::Slime::Slime()
 }
 
 
-qfcgame::Slime::~Slime()
+qfcbase::Slime::~Slime()
 {
 }

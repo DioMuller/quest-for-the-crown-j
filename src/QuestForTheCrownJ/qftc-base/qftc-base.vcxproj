@@ -84,7 +84,10 @@
     <ClCompile Include="Behavior.cpp" />
     <ClCompile Include="Entity.cpp" />
     <ClCompile Include="EntityFactory.cpp" />
+    <ClCompile Include="FollowBehavior.cpp" />
     <ClCompile Include="Game.cpp" />
+    <ClCompile Include="GameEntityFactory.cpp" />
+    <ClCompile Include="Hero.cpp" />
     <ClCompile Include="Level.cpp" />
     <ClCompile Include="LevelCollection.cpp" />
     <ClCompile Include="LevelLoader.cpp" />
@@ -97,6 +100,7 @@
     <ClCompile Include="sfml-tmxloader\MapObject.cpp" />
     <ClCompile Include="sfml-tmxloader\pugixml\pugixml.cpp" />
     <ClCompile Include="sfml-tmxloader\QuadTreeNode.cpp" />
+    <ClCompile Include="Slime.cpp" />
     <ClCompile Include="StringHelper.cpp" />
     <ClCompile Include="tinyxml2\tinyxml2.cpp" />
     <ClCompile Include="Window.cpp" />
@@ -110,7 +114,10 @@
     <ClInclude Include="Entity.h" />
     <ClInclude Include="BattleDefinitions.h" />
     <ClInclude Include="EntityFactory.h" />
+    <ClInclude Include="FollowBehavior.h" />
     <ClInclude Include="Game.h" />
+    <ClInclude Include="GameEntityFactory.h" />
+    <ClInclude Include="Hero.h" />
     <ClInclude Include="Level.h" />
     <ClInclude Include="LevelCollection.h" />
     <ClInclude Include="LevelLoader.h" />
@@ -125,6 +132,7 @@
     <ClInclude Include="sfml-tmxloader\pugixml\pugiconfig.hpp" />
     <ClInclude Include="sfml-tmxloader\pugixml\pugixml.hpp" />
     <ClInclude Include="sfml-tmxloader\QuadTreeNode.h" />
+    <ClInclude Include="Slime.h" />
     <ClInclude Include="StringHelper.h" />
     <ClInclude Include="tinyxml2\tinyxml2.h" />
     <ClInclude Include="Window.h" />
