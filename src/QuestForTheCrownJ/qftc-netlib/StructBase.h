@@ -28,22 +28,21 @@ typedef struct s_entity_header
 	int entityId;
 } EntityHeader;
 
-typedef struct
-{
-	std::string auth_token;
-	std::string map_name;
-	EntityInfo entity;
-} PlayerInfo;
-
 enum EntityType
 {
 	ENTITY_HERO,
 	ENTITY_SLIME
 };
 
-typedef struct
+typedef struct s_entity_info
 {
-	//unsigned int uid;
+	unsigned int uid;
 	EntityType type;
 	int x, y;
 } EntityInfo;
+
+typedef struct s_player_info
+{
+	std::string map_name;
+	EntityInfo entity;
+} PlayerInfo;

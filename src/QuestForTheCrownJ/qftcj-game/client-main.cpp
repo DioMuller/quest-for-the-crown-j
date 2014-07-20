@@ -5,7 +5,6 @@
 #include <thread>
 #include <iostream>
 
-
 int main(int argc, char* argv[])
 {
 	// Disables SFML errors messages, since we don't want all the "Could not load image" errors.
@@ -14,12 +13,14 @@ int main(int argc, char* argv[])
 
 	// id = arg[1]
 
-	// request playerMap
+	std::string auth_token; // = arg[1]
+	PlayerInfo player; // = clientChannel.GetPlayerInfo(auth_token)
+	std::vector<EntityInfo> entities; // = clientChannel.GetEntities(auth_token, player.map_name)
 
 	qfcbase::Window window({ 800, 600 }, "Quest for the Crown J");
 	qfcgame::MainGame* game = new qfcgame::MainGame();
 
-	game->LoadScene(game->CreateScene(game), false);
+	game->LoadScene(player, entities);
 
 	window.Run(game);
 

@@ -1,6 +1,5 @@
 #include "ClientChannel.h"
 using namespace qfcnet;
-#include <WinSock2.h>
 #include <exception>
 
 ClientChannel::ClientChannel(std::string serverAddress, int port)
@@ -23,12 +22,17 @@ ClientChannel::~ClientChannel()
 	WSACleanup();
 }
 
-PlayerInfo ClientChannel::Login(std::string user, std::string password)
+std::string ClientChannel::Login(std::string user, std::string password)
 {
+	return "stub";
+}
 
+PlayerInfo ClientChannel::GetPlayerInfo(std::string auth_token)
+{
+	return PlayerInfo();
 }
 
 std::vector<EntityInfo> ClientChannel::GetEntities(std::string screen_name)
 {
-
+	return std::vector<EntityInfo>();
 }

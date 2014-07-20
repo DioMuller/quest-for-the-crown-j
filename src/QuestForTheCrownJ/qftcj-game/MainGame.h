@@ -1,5 +1,6 @@
 #pragma once
 #include "Game.h"
+#include "StructBase.h"
 namespace qfcgame
 {
 	class MainGame : public qfcbase::Game
@@ -10,6 +11,8 @@ namespace qfcgame
 		public:
 			MainGame();
 			~MainGame();
+
+			void LoadScene(const PlayerInfo& player_info, std::vector<EntityInfo> entities_info);
 
 		/////////////////////////////////////
 		// Methods

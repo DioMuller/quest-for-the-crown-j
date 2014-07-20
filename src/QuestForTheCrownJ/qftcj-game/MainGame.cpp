@@ -9,10 +9,9 @@
 #include "LevelLoader.h"
 #include "Hero.h"
 #include "Slime.h"
+#include "StructBase.h"
 
 using namespace qfcgame;
-
-qfcbase::Scene* CreateScene(qfcbase::Game* game);
 
 MainGame::MainGame()
 {
@@ -20,7 +19,7 @@ MainGame::MainGame()
 	qfcbase::AudioPlayer::SetSoundPath("Content/sound/");
 }
 
-qfcbase::Scene* CreateScene(qfcbase::Game* game, std::string mapName)
+void MainGame::LoadScene(const PlayerInfo& player_info, std::vector<EntityInfo> entities_info)
 {
 	/*
 	auto scene = new qfcbase::Scene(game);
@@ -34,8 +33,9 @@ qfcbase::Scene* CreateScene(qfcbase::Game* game, std::string mapName)
 	scene->AddEntity(enemy);*/
 	qfcbase::LevelLoader::LoadLevels("Content/maps/QuestForTheCrown.maps");
 
-	auto scene = qfcbase::LevelLoader::LoadMap(game, 1, "Content/maps/" + mapName + ".tmx");
-	return &(*scene);
+	auto scene = qfcbase::LevelLoader::LoadMap(this, 1, "Content/maps/" + player_info.map_name + ".tmx");
+	// TODO: create entities
+	Game::LoadScene(scene, false);
 }
 
 MainGame::~MainGame()
