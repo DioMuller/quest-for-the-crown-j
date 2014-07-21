@@ -38,5 +38,8 @@ namespace qfcbase
 
 			std::vector<std::shared_ptr<Entity>> GetEntities(std::string category);
 			std::vector<std::shared_ptr<Entity>> GetEntities(std::function<bool(const std::shared_ptr<Entity>&)> predicate);
+			void LoadScene(Scene* scene);
+			void UnloadScene();
+			Game* GetParent();
 	};
 }

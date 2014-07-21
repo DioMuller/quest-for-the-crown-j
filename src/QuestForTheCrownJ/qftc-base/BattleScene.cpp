@@ -5,6 +5,7 @@ using namespace qfcbase;
 
 BattleScene::BattleScene(Game* parent) : Scene(parent)
 {
+	time = 0.0;
 }
 
 

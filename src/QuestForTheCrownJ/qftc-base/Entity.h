@@ -61,6 +61,7 @@ namespace qfcbase
 
 			void AddBehavior(std::shared_ptr<Behavior> b);
 			void Walk(sf::Vector2f direction, double dt);
+			virtual void CollideWith(std::shared_ptr<Entity> e);
 
 			qfcbase::Scene* Scene()
 			{

@@ -117,5 +117,12 @@ bool Entity::ValidPosition(sf::Vector2f offset)
 		return  e->Sprite->GetArea().intersects(area);
 	});
 
+	for (auto e : entCollisions)
+	{
+		this->CollideWith(e);
+	}
+
 	return entCollisions.size() <= 0;
 }
+
+void Entity::CollideWith(std::shared_ptr<Entity> e) {}

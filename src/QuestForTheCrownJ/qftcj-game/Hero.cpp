@@ -2,6 +2,7 @@
 #include "AnimatedSprite.h"
 #include "Container.h"
 #include "Level.h"
+#include "BattleScene.h"
 #include <math.h>
 
 qfcgame::Hero::Hero()
@@ -47,4 +48,13 @@ void qfcgame::Hero::Draw(sf::RenderWindow* renderer)
 
 	renderer->setView(sf::View(cameraPosition, screenSize ));
 	Entity::Draw(renderer);
+}
+
+void qfcgame::Hero::CollideWith(std::shared_ptr<Entity> e) 
+{
+	if (e->category == "Enemy")
+	{
+		this->scene->RemoveEntity(e);
+		this->scene->LoadScene(new qfcbase::BattleScene(this->scene->GetParent()));
+	}
 }
