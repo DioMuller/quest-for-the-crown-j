@@ -1,11 +1,15 @@
 #pragma once
 #include "Scene.h"
+#include <SFML/Graphics/Text.hpp>
+
 namespace qfcbase
 {
 	class BattleScene : public Scene
 	{
 		private:
 			double time;
+			sf::Font font;
+			sf::Text text;
 
 		/////////////////////////////////////
 		// Constructors
