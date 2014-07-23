@@ -30,6 +30,12 @@ void BattleScene::Update(double dt)
 
 void BattleScene::Draw(sf::RenderWindow* renderer)
 {
+	// Camera
+	sf::Vector2f screenSize = sf::Vector2f(renderer->getSize().x, renderer->getSize().y);
+	sf::Vector2f cameraPosition = sf::Vector2f(screenSize.x / 2, screenSize.y / 2);
+	renderer->setView(sf::View(cameraPosition, screenSize));
+
+	// Text
 	std::ostringstream strs;
 	strs << "Battle Time " << (int) time;
 	std::string str = strs.str();
