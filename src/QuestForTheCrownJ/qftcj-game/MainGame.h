@@ -1,7 +1,10 @@
 #pragma once
+#include <ppltasks.h>
 #include "Game.h"
 #include "StructBase.h"
 #include "ClientChannel.h"
+#include <pplcancellation_token.h>
+
 namespace qfcgame
 {
 	class MainGame : public qfcbase::Game

@@ -43,6 +43,6 @@ typedef struct s_entity_info
 
 typedef struct s_player_info
 {
-	std::string map_name;
+	char map_name[255];
 	EntityInfo entity;
 } PlayerInfo;

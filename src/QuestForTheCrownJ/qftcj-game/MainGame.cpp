@@ -13,10 +13,34 @@
 
 using namespace qfcgame;
 
+std::shared_ptr<qfcbase::Entity> CreateEntity(EntityInfo info)
+{
+	std::shared_ptr<qfcbase::Entity> entity;
+
+	switch (info.type)
+	{
+	case EntityType::ENTITY_HERO:
+		entity = std::make_shared<qfcbase::Hero>();
+		break;
+	case EntityType::ENTITY_SLIME:
+		entity = std::make_shared<qfcbase::Slime>();
+		break;
+	}
+
+	if (entity)
+		entity->Sprite->Position = sf::Vector2f(info.x, info.y);
+
+	return entity;
+}
+
 MainGame::MainGame(std::string auth_token)
 	: clientChannel("localhost", 12345)
 {
 	clientChannel.auth_token = auth_token;
+	clientChannel.onEntity = [this](EntityInfo entityInfo) {
+		auto entity = CreateEntity(entityInfo);
+		currentScene->AddEntity(entity);
+	};
 
 	qfcbase::AudioPlayer::SetMusicPath("Content/bgm/");
 	qfcbase::AudioPlayer::SetSoundPath("Content/sound/");
@@ -36,45 +60,16 @@ void MainGame::RefreshSceneFromServer()
 	scene->AddEntity(enemy);*/
 
 	auto player = clientChannel.GetPlayerInfo();
-	auto entities = clientChannel.GetEntities(player.map_name);
 
 	qfcbase::LevelLoader::LoadLevels("Content/maps/QuestForTheCrown.maps");
 
-	auto scene = qfcbase::LevelLoader::LoadMap(this, 1, "Content/maps/" + player.map_name + ".tmx");
+	auto scene = qfcbase::LevelLoader::LoadMap(this, 1, (std::string)"Content/maps/" + player.map_name + ".tmx");
 	Game::LoadScene(scene, false);
-	SetEntities(entities);
+	clientChannel.GetEntities(player.map_name);
 }
 
 MainGame::~MainGame()
 {
-}
-
-std::shared_ptr<qfcbase::Entity> CreateEntity(EntityInfo info);
-
-void MainGame::SetEntities(std::vector<EntityInfo> entities)
-{
-	for (auto entity : entities)
-		currentScene->AddEntity(CreateEntity(entity));
-}
-
-std::shared_ptr<qfcbase::Entity> CreateEntity(EntityInfo info)
-{
-	std::shared_ptr<qfcbase::Entity> entity;
-
-	switch (info.type)
-	{
-	case EntityType::ENTITY_HERO:
-		entity = std::make_shared<qfcbase::Hero>();
-		break;
-	case EntityType::ENTITY_SLIME:
-		entity = std::make_shared<qfcbase::Slime>();
-		break;
-	}
-
-	if (entity)
-		entity->Sprite->Position = sf::Vector2f(info.x, info.y);
-
-	return entity;
 }
 
 void MainGame::Update(double dt)

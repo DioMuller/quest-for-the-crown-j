@@ -8,6 +8,7 @@
 
 #include "AuthStructs.h"
 #include "ClientStructs.h"
+#include "Definitions.h"
 
 using namespace qfcserver;
 using namespace qfcbase;
@@ -33,7 +34,34 @@ Server::~Server()
 void Server::Run(int port)
 {
 	std::thread network([this, port](){ListenMessages(port); });
+	std::thread update([this](){UpdateLoop(); });
 	network.join();
+	update.join();
+}
+
+void Server::UpdateLoop()
+{
+	//Initial update duration = 1 frame.
+	double delta = SECONDS_PER_FRAME;
+
+	while (true)
+	{
+		std::chrono::time_point<std::chrono::system_clock> start, end;
+		start = std::chrono::system_clock::now();
+
+		// foreach player screen
+		//screen->Update(delta);
+
+		end = std::chrono::system_clock::now();
+
+		delta = ((double)std::chrono::duration_cast<std::chrono::microseconds>(end - start).count()) / (1000.0 * 1000.0);
+
+		if (delta < SECONDS_PER_FRAME)
+		{
+			std::this_thread::sleep_for(std::chrono::microseconds((long long)((SECONDS_PER_FRAME - delta) * (1000 * 1000))));
+			delta = SECONDS_PER_FRAME;
+		}
+	}
 }
 
 SOCKET Server::StartNetwork(int port)
@@ -60,6 +88,24 @@ SOCKET Server::StartNetwork(int port)
 	return listenSocket;
 }
 
+void HandleLoginInfo(SOCKET listenSocket, sockaddr_in& sender, int sender_size, s_launcher_login_info* login_info)
+{
+	std::stringstream logBuilder;
+	logBuilder << "Login: " << login_info->login << " (" << login_info->hashedPassword << ")";
+	Log::Message(logBuilder.str());
+	s_launcher_login_response resp;
+	ZeroMemory(&resp, sizeof(resp));
+	resp.authenticated = true;
+	int r = sendto(listenSocket, (char*)&resp, sizeof(resp), NULL, (SOCKADDR*)&sender, sender_size);
+
+	if (r < 0)
+		Log::Error("Erro ao responder login");
+	if (resp.authenticated)
+		Log::Debug("Usuário autenticado");
+	else
+		Log::Debug("Usuário ou senha inválido(s)");
+}
+
 void Server::ListenMessages(int port)
 {
 	char buffer[BUFFER_SIZE];
@@ -84,19 +130,7 @@ void Server::ListenMessages(int port)
 		{
 		case LAUNCHER_LOGIN_INFO:
 			auto login_info = (s_launcher_login_info*)&buffer;
-			std::stringstream logBuilder;
-			logBuilder << "Login: " << login_info->login << " (" << login_info->hashedPassword << ")";
-			Log::Message(logBuilder.str());
-			s_launcher_login_response resp;
-			ZeroMemory(&resp, sizeof(resp));
-			resp.authenticated = true;
-			r = sendto(listenSocket, (char*)&resp, sizeof(resp), NULL, (SOCKADDR*)&sender, sender_size);
-			if (r < 0)
-				Log::Error("Erro ao responder login");
-			if (resp.authenticated)
-				Log::Debug("Usuário autenticado");
-			else
-				Log::Debug("Usuário ou senha inválido(s)");
+			HandleLoginInfo(listenSocket, sender, sender_size, login_info);
 			break;
 			/*case CLIENT_CHARACTER_POSITION:
 			auto client_char_pos = (s_client_position*)&buffer;

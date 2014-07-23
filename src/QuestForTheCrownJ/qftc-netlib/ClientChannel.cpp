@@ -6,6 +6,9 @@ using namespace qfcnet;
 #include "Hero.h"
 #include "Slime.h"
 #include "AuthStructs.h"
+#include "Log.h"
+
+#define BUFFER_SIZE 2000
 
 ClientChannel::ClientChannel(std::string serverIPAddress, int port)
 	: server_socket(0)
@@ -17,7 +20,7 @@ ClientChannel::ClientChannel(std::string serverIPAddress, int port)
 		HIBYTE(wsaData.wVersion) != 2)
 		throw std::exception("Não foi possível encontrar uma dll WinSock que possa ser utilizada.");
 
-	server_socket = socket(AF_INET, SOCK_STREAM, IPPROTO_TCP);
+	server_socket = socket(AF_INET, SOCK_DGRAM, IPPROTO_UDP);
 
 	ZeroMemory(&server_addr, sizeof(server_addr));
 
@@ -25,15 +28,53 @@ ClientChannel::ClientChannel(std::string serverIPAddress, int port)
 	server_addr.sin_family = AF_INET;
 	server_addr.sin_port = htons(port);
 	server_addr_size = sizeof(server_addr);
+
+	listen_thread = std::thread([this](){
+		Listen(cancellation_source.get_token());
+	});
 }
 
 ClientChannel::~ClientChannel()
 {
+	cancellation_source.cancel();
+
 	if (server_socket)
 		closesocket(server_socket);
+
 	WSACleanup();
 }
 
+void qfcnet::ClientChannel::Listen(concurrency::cancellation_token cancellation)
+{
+	cancellation.register_callback([this]() {
+		closesocket(server_socket);
+	});
+
+	char buffer[BUFFER_SIZE];
+	int r;
+	while (!cancellation.is_canceled())
+	{
+		r = recvfrom(server_socket, (char*)&buffer, sizeof(buffer), 0, (SOCKADDR*)&server_addr, &server_addr_size);
+		if (cancellation.is_canceled())
+			return;
+
+		Header* header = (Header*)&buffer;
+		switch (header->type)
+		{
+		case PacketType::CLIENT_CHARACTER_POSITION:
+			if (onEntity)
+			{
+
+			}
+			break;
+		default:
+			qfcbase::Log::Debug("Unknown message type: " + header->type);
+			break;
+		}
+	}
+}
+
+#pragma region Requests
 void ClientChannel::Login(std::string user, std::string password)
 {
 	s_launcher_login_info login;
@@ -48,7 +89,7 @@ void ClientChannel::Login(std::string user, std::string password)
 	s_launcher_login_response response;
 	ZeroMemory(&response, sizeof(response));
 
-	r = recv(server_socket, (char*)&response, sizeof(response), 0);
+	r = recvfrom(server_socket, (char*)&response, sizeof(response), 0, (SOCKADDR*)&server_addr, &server_addr_size);
 
 	if (r <= 0)
 		throw std::exception("Receive error");
@@ -67,7 +108,8 @@ PlayerInfo ClientChannel::GetPlayerInfo()
 	return PlayerInfo();
 }
 
-std::vector<EntityInfo> ClientChannel::GetEntities(std::string screen_name)
+void ClientChannel::GetEntities(std::string screen_name)
 {
-	return std::vector<EntityInfo>();
+	
 }
+#pragma endregion Requests

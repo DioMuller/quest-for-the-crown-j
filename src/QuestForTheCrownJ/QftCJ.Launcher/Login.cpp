@@ -2,7 +2,6 @@
 #include "AuthStructs.h"
 #include <WinSock2.h>
 #include <msclr/marshal_cppstd.h>
-#include "ClientChannel.h"
 using namespace System::Runtime::InteropServices;
 
 bool QftCJLauncher::Login::NetLogin(std::string userName, std::string hashedPassword)
