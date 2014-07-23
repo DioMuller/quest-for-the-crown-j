@@ -11,7 +11,7 @@ using namespace qfcnet;
 #define BUFFER_SIZE 2000
 
 ClientChannel::ClientChannel(std::string serverIPAddress, int port)
-	: server_socket(0)
+	: stop_listen(false), server_socket(0)
 {
 	WSADATA wsaData;
 	int r = WSAStartup(MAKEWORD(2, 2), &wsaData);
@@ -30,13 +30,13 @@ ClientChannel::ClientChannel(std::string serverIPAddress, int port)
 	server_addr_size = sizeof(server_addr);
 
 	listen_thread = std::thread([this](){
-		Listen(cancellation_source.get_token());
+		Listen();
 	});
 }
 
 ClientChannel::~ClientChannel()
 {
-	cancellation_source.cancel();
+	stop_listen = true;
 
 	if (server_socket)
 		closesocket(server_socket);
@@ -44,18 +44,14 @@ ClientChannel::~ClientChannel()
 	WSACleanup();
 }
 
-void qfcnet::ClientChannel::Listen(concurrency::cancellation_token cancellation)
+void qfcnet::ClientChannel::Listen()
 {
-	cancellation.register_callback([this]() {
-		closesocket(server_socket);
-	});
-
 	char buffer[BUFFER_SIZE];
 	int r;
-	while (!cancellation.is_canceled())
+	while (!stop_listen)
 	{
 		r = recvfrom(server_socket, (char*)&buffer, sizeof(buffer), 0, (SOCKADDR*)&server_addr, &server_addr_size);
-		if (cancellation.is_canceled())
+		if (stop_listen)
 			return;
 
 		Header* header = (Header*)&buffer;
@@ -103,9 +99,9 @@ void ClientChannel::Login(std::string user, std::string password)
 	auth_token = response.authKey;
 }
 
-PlayerInfo ClientChannel::GetPlayerInfo()
+ServerPlayerInfo ClientChannel::GetPlayerInfo()
 {
-	return PlayerInfo();
+	return ServerPlayerInfo();
 }
 
 void ClientChannel::GetEntities(std::string screen_name)

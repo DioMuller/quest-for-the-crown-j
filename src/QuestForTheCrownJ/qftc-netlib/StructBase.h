@@ -17,6 +17,12 @@ enum PacketType
 	SERVER_BATTLE_TURN
 };
 
+enum EntityType
+{
+	ENTITY_HERO,
+	ENTITY_SLIME
+};
+
 // Base header methods.
 typedef struct s_header
 {
@@ -26,23 +32,5 @@ typedef struct s_header
 typedef struct s_entity_header
 {
 	int entityId;
-} EntityHeader;
-
-enum EntityType
-{
-	ENTITY_HERO,
-	ENTITY_SLIME
-};
-
-typedef struct s_entity_info
-{
-	unsigned int uid;
 	EntityType type;
-	int x, y;
-} EntityInfo;
-
-typedef struct s_player_info
-{
-	char map_name[255];
-	EntityInfo entity;
-} PlayerInfo;
+} EntityHeader;

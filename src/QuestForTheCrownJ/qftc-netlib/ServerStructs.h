@@ -16,7 +16,15 @@ typedef struct s_server_entity_position
 	Header header;
 	EntityHeader entity;
 	sf::Vector2i position;
-} ServerEntityPosition;
+} ServerEntityInfo;
+
+typedef struct s_player_info
+{
+	Header header;
+	char map_name[255];
+	EntityHeader entity;
+	sf::Vector2i position;
+} ServerPlayerInfo;
 
 typedef struct s_server_map_transition
 {

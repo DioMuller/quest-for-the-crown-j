@@ -13,11 +13,11 @@
 
 using namespace qfcgame;
 
-std::shared_ptr<qfcbase::Entity> CreateEntity(EntityInfo info)
+std::shared_ptr<qfcbase::Entity> CreateEntity(ServerEntityInfo info)
 {
 	std::shared_ptr<qfcbase::Entity> entity;
 
-	switch (info.type)
+	switch (info.entity.type)
 	{
 	case EntityType::ENTITY_HERO:
 		entity = std::make_shared<qfcbase::Hero>();
@@ -28,7 +28,7 @@ std::shared_ptr<qfcbase::Entity> CreateEntity(EntityInfo info)
 	}
 
 	if (entity)
-		entity->Sprite->Position = sf::Vector2f(info.x, info.y);
+		entity->Sprite->Position = sf::Vector2f(info.position.x, info.position.y);
 
 	return entity;
 }
@@ -37,7 +37,7 @@ MainGame::MainGame(std::string auth_token)
 	: clientChannel("localhost", 12345)
 {
 	clientChannel.auth_token = auth_token;
-	clientChannel.onEntity = [this](EntityInfo entityInfo) {
+	clientChannel.onEntity = [this](ServerEntityInfo entityInfo) {
 		auto entity = CreateEntity(entityInfo);
 		currentScene->AddEntity(entity);
 	};

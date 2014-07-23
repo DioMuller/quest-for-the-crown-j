@@ -1,13 +1,14 @@
 #pragma once
-#include <ppltasks.h>
 #include <functional>
 #include <WinSock2.h>
 #include <string>
 #include <vector>
 #include <memory>
 #include "StructBase.h"
-#include <pplcancellation_token.h>
+#ifndef _M_CEE
 #include <thread>
+#endif
+#include "ServerStructs.h"
 
 namespace qfcnet
 {
@@ -15,7 +16,7 @@ namespace qfcnet
 	{
 	public:
 		std::string auth_token;
-		std::function<void(EntityInfo)> onEntity;
+		std::function<void(ServerEntityInfo)> onEntity;
 
 	public:
 		ClientChannel(std::string serverAddress, int port);
@@ -23,17 +24,19 @@ namespace qfcnet
 
 		void Login(std::string user, std::string password);
 
-		PlayerInfo GetPlayerInfo();
+		ServerPlayerInfo GetPlayerInfo();
 		void GetEntities(std::string screen_name);
 
 	private:
-		void Listen(concurrency::cancellation_token);
+#ifndef _M_CEE
+		void Listen();
 
 		std::thread listen_thread;
-		concurrency::cancellation_token_source cancellation_source;
+		bool stop_listen;
 
 		SOCKET server_socket;
 		sockaddr_in server_addr;
 		int server_addr_size;
+#endif
 	};
 }

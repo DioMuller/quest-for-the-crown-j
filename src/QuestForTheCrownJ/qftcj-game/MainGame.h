@@ -1,9 +1,7 @@
 #pragma once
-#include <ppltasks.h>
 #include "Game.h"
 #include "StructBase.h"
 #include "ClientChannel.h"
-#include <pplcancellation_token.h>
 
 namespace qfcgame
 {
@@ -20,7 +18,7 @@ namespace qfcgame
 			~MainGame();
 
 			void RefreshSceneFromServer();
-			void SetEntities(std::vector<EntityInfo> entities);
+			void SetEntities(std::vector<ServerEntityInfo> entities);
 
 		/////////////////////////////////////
 		// Methods
