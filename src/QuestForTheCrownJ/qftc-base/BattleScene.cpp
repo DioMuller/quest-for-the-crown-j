@@ -1,5 +1,6 @@
 #include "BattleScene.h"
 #include "Game.h"
+#include "AudioPlayer.h"
 #include <string>
 #include <sstream>
 
@@ -13,6 +14,8 @@ BattleScene::BattleScene(Game* parent) : Scene(parent)
 	text = sf::Text("Battle!", font);
 	text.setCharacterSize(12);
 	text.setPosition(10, 10);
+
+	AudioPlayer::PlayBGM("Firebrand");
 }
 
 

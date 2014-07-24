@@ -48,5 +48,6 @@ void Game::UnstackScene()
 		delete currentScene;
 		currentScene = (Scene*)pastScenes.top();
 		pastScenes.pop();
+		currentScene->OnResume();
 	}
 }

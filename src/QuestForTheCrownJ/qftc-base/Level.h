@@ -89,6 +89,7 @@ namespace qfcbase
 			void GoToNeighbour(std::shared_ptr<Entity> entity, Direction direction);
 			void SetNeighbor(Direction direction, int neighborId);
 			void LoadMap(std::string tmxfile);
+			void OnResume();
 	};
 
 

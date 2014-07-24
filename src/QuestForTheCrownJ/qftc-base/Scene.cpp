@@ -100,3 +100,5 @@ Game* Scene::GetParent()
 {
 	return parent;
 }
+
+void Scene::OnResume() { }

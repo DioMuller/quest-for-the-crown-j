@@ -41,5 +41,6 @@ namespace qfcbase
 			void LoadScene(Scene* scene);
 			void UnloadScene();
 			Game* GetParent();
+			virtual void OnResume();
 	};
 }
