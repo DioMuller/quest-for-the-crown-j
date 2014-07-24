@@ -1,13 +1,15 @@
 #pragma once
+
 #include <functional>
 #include <WinSock2.h>
 #include <string>
 #include <vector>
 #include <memory>
-#include "StructBase.h"
-#ifndef _M_CEE
+#ifndef _M_CEE // clr enabled projects don't support thread.
 #include <thread>
 #endif
+
+#include "StructBase.h"
 #include "ServerStructs.h"
 
 namespace qfcnet
@@ -16,7 +18,7 @@ namespace qfcnet
 	{
 	public:
 		std::string auth_token;
-		std::function<void(ServerEntityInfo)> onEntity;
+		std::function<void(const ServerEntityInfo&)> onEntity;
 
 	public:
 		ClientChannel(std::string serverAddress, int port);

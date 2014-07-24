@@ -84,6 +84,8 @@
     <ClInclude Include="ClientChannel.h" />
     <ClInclude Include="ClientStructs.h" />
     <ClInclude Include="Hash.h" />
+    <ClInclude Include="NetDefinitions.h" />
+    <ClInclude Include="ServerChannel.h" />
     <ClInclude Include="ServerStructs.h" />
     <ClInclude Include="SHA1.h" />
     <ClInclude Include="StructBase.h" />
@@ -91,6 +93,7 @@
   <ItemGroup>
     <ClCompile Include="ClientChannel.cpp" />
     <ClCompile Include="Hash.cpp" />
+    <ClCompile Include="ServerChannel.cpp" />
     <ClCompile Include="SHA1.cpp" />
   </ItemGroup>
   <ItemGroup>

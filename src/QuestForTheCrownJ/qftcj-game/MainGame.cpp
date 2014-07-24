@@ -13,7 +13,7 @@
 
 using namespace qfcgame;
 
-std::shared_ptr<qfcbase::Entity> CreateEntity(ServerEntityInfo info)
+std::shared_ptr<qfcbase::Entity> CreateEntity(const ServerEntityInfo& info)
 {
 	std::shared_ptr<qfcbase::Entity> entity;
 
@@ -37,7 +37,7 @@ MainGame::MainGame(std::string auth_token)
 	: clientChannel("localhost", 12345)
 {
 	clientChannel.auth_token = auth_token;
-	clientChannel.onEntity = [this](ServerEntityInfo entityInfo) {
+	clientChannel.onEntity = [this](const ServerEntityInfo& entityInfo) {
 		auto entity = CreateEntity(entityInfo);
 		currentScene->AddEntity(entity);
 	};

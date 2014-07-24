@@ -11,7 +11,7 @@ SERVER_BATTLE_START,
 SERVER_BATTLE_TURN
 */
 
-typedef struct s_server_entity_position
+typedef struct s_server_entity_info
 {
 	Header header;
 	EntityHeader entity;

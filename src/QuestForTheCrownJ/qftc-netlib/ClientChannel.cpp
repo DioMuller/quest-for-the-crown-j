@@ -1,14 +1,16 @@
 #include "ClientChannel.h"
-using namespace qfcnet;
 
 #include <memory>
 #include <exception>
+
+#include "NetDefinitions.h"
+#include "Log.h"
 #include "Hero.h"
 #include "Slime.h"
 #include "AuthStructs.h"
-#include "Log.h"
 
-#define BUFFER_SIZE 2000
+using namespace qfcnet;
+using namespace qfcbase;
 
 ClientChannel::ClientChannel(std::string serverIPAddress, int port)
 	: stop_listen(false), server_socket(0)
@@ -18,7 +20,7 @@ ClientChannel::ClientChannel(std::string serverIPAddress, int port)
 
 	if (LOBYTE(wsaData.wVersion) != 2 ||
 		HIBYTE(wsaData.wVersion) != 2)
-		throw std::exception("Não foi possível encontrar uma dll WinSock que possa ser utilizada.");
+		throw std::exception("Invalid WinSock version.");
 
 	server_socket = socket(AF_INET, SOCK_DGRAM, IPPROTO_UDP);
 
@@ -46,25 +48,43 @@ ClientChannel::~ClientChannel()
 
 void qfcnet::ClientChannel::Listen()
 {
-	char buffer[BUFFER_SIZE];
-	int r;
+	char buffer[NET_BUFFER_SIZE];
+	int size;
 	while (!stop_listen)
 	{
-		r = recvfrom(server_socket, (char*)&buffer, sizeof(buffer), 0, (SOCKADDR*)&server_addr, &server_addr_size);
+		size = recvfrom(server_socket, (char*)&buffer, NET_BUFFER_SIZE - 1, 0, (SOCKADDR*)&server_addr, &server_addr_size);
 		if (stop_listen)
 			return;
+
+		if (size < 0)
+		{
+			Log::Error("Error on receive");
+			continue;
+		}
+
+		buffer[size] = '\0';
 
 		Header* header = (Header*)&buffer;
 		switch (header->type)
 		{
-		case PacketType::CLIENT_CHARACTER_POSITION:
-			if (onEntity)
+		case PacketType::SERVER_ENTITY_INFO:
+			if (size != sizeof(ServerEntityInfo))
 			{
-
+				Log::Error("Invalid packet size for SERVER_ENTITY_INFO: " + size);
+				continue;
+			}
+			if (!onEntity)
+			{
+				Log::Debug("No handler for SERVER_ENTITY_INFO");
+				continue;
+			}
+			else {
+				auto info = (ServerEntityInfo*)&buffer;
+				onEntity(*info);
 			}
 			break;
 		default:
-			qfcbase::Log::Debug("Unknown message type: " + header->type);
+			Log::Debug("Unknown message type: " + header->type);
 			break;
 		}
 	}

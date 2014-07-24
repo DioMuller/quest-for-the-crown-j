@@ -10,6 +10,9 @@
     <Filter Include="Definitions">
       <UniqueIdentifier>{09c08c5c-284d-4b2c-a8c6-3dc30d161efe}</UniqueIdentifier>
     </Filter>
+    <Filter Include="Channels">
+      <UniqueIdentifier>{47be7b80-0b6b-40bf-92ec-5de49c28c920}</UniqueIdentifier>
+    </Filter>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="StructBase.h">
@@ -30,7 +33,15 @@
     <ClInclude Include="ServerStructs.h">
       <Filter>Structs</Filter>
     </ClInclude>
-    <ClInclude Include="ClientChannel.h" />
+    <ClInclude Include="ClientChannel.h">
+      <Filter>Channels</Filter>
+    </ClInclude>
+    <ClInclude Include="ServerChannel.h">
+      <Filter>Channels</Filter>
+    </ClInclude>
+    <ClInclude Include="NetDefinitions.h">
+      <Filter>Definitions</Filter>
+    </ClInclude>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="Hash.cpp">
@@ -39,6 +50,11 @@
     <ClCompile Include="SHA1.cpp">
       <Filter>Crypto</Filter>
     </ClCompile>
-    <ClCompile Include="ClientChannel.cpp" />
+    <ClCompile Include="ClientChannel.cpp">
+      <Filter>Channels</Filter>
+    </ClCompile>
+    <ClCompile Include="ServerChannel.cpp">
+      <Filter>Channels</Filter>
+    </ClCompile>
   </ItemGroup>
 </Project>
