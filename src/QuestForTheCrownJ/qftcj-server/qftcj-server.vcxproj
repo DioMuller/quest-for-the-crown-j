@@ -92,7 +92,6 @@
     </ProjectReference>
   </ItemGroup>
   <ItemGroup>
-    <ClInclude Include="Exceptions.h" />
     <ClInclude Include="Server.h" />
   </ItemGroup>
   <ItemGroup>

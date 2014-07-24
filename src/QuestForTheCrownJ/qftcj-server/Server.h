@@ -1,18 +1,21 @@
 #pragma once
 #include <WinSock2.h>
 
+#include "ServerChannel.h"
+
 namespace qfcserver {
 	class Server
 	{
 		public:
-			Server();
+			Server(int port);
 			~Server();
 
-			void Run(int port);
+			void Run();
 
 		private:
-			SOCKET StartNetwork(int port);
-			void ListenMessages(int port);
+			qfcnet::ServerChannel channel;
 			void UpdateLoop();
+
+			LauncherLoginResponse HandleLoginInfo(const LauncherLoginInfo& login_info);
 	};
 }
