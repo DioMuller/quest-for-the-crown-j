@@ -1,6 +1,7 @@
 #pragma once
 #include <WinSock2.h>
 
+#include "sqlite3.h"
 #include "ServerChannel.h"
 
 namespace qfcserver {
@@ -13,6 +14,7 @@ namespace qfcserver {
 			void Run();
 
 		private:
+			sqlite3* db;
 			qfcnet::ServerChannel channel;
 			void UpdateLoop();
 

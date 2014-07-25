@@ -3,11 +3,28 @@
   <ItemGroup>
     <ClCompile Include="server-main.cpp" />
     <ClCompile Include="Server.cpp" />
+    <ClCompile Include="sqlite3.c">
+      <Filter>References\SQLite3</Filter>
+    </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="Server.h" />
+    <ClInclude Include="sqlite3.h">
+      <Filter>References\SQLite3</Filter>
+    </ClInclude>
+    <ClInclude Include="sqlite3ext.h">
+      <Filter>References\SQLite3</Filter>
+    </ClInclude>
   </ItemGroup>
   <ItemGroup>
-    <None Include="..\..\..\references\SQLite3\sqlite3.dll" />
+    <None Include="database.sqlite" />
+  </ItemGroup>
+  <ItemGroup>
+    <Filter Include="References">
+      <UniqueIdentifier>{7ee9dbd1-5862-4976-a270-3d4077836f67}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="References\SQLite3">
+      <UniqueIdentifier>{b8edd6d0-68c5-4e3d-bc33-4a4cc2e84171}</UniqueIdentifier>
+    </Filter>
   </ItemGroup>
 </Project>
