@@ -13,14 +13,14 @@ namespace qfcnet
 		std::function<LauncherLoginResponse(const LauncherLoginInfo&)> handleLoginInfo;
 
 	public:
-		ServerChannel();
+		ServerChannel(int port);
 		~ServerChannel();
-
-		std::future<void> ListenAsync(int port);
-		void Listen(int port);
 
 	private:
 		bool stop_listen;
+		std::thread listen_thread;
 		SOCKET channel_socket;
+
+		void Listen(int port);
 	};
 }

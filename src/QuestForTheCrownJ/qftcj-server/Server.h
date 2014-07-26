@@ -8,10 +8,10 @@ namespace qfcserver {
 	class Server
 	{
 		public:
-			Server();
+			Server(int port);
 			~Server();
 
-			void Run(int port);
+			void Run();
 
 		private:
 			sqlite3* db;

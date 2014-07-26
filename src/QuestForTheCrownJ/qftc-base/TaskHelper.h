@@ -1,41 +1,16 @@
 #pragma once
 
 template <typename T, typename TF>
-void on_promise(bool async, std::promise<T>& promise, TF f)
+std::thread async_promise(std::promise<T>& promise, TF f)
 {
-	if (async)
-	{
-		std::thread([&]() {
-			on_promise(false, promise, f);
-		}).detach();
-		return;
-	}
-
-	try
-	{
-		f();
-	}
-	catch (std::exception& ex)
-	{
-		try {
-			promise.set_exception(std::current_exception());
-		}
-		catch (...) { }
-	}
+	return std::thread([&]() {
+		sync_promise(promise, f);
+	});
 }
 
-
 template <typename T, typename TF>
-void set_promise(bool async, std::promise<T>& promise, TF f)
+void sync_promise(std::promise<T>& promise, TF f)
 {
-	if (async)
-	{
-		std::thread([&]() {
-			set_promise(false, promise, f);
-		}).detach();
-		return;
-	}
-
 	try
 	{
 		T res = f();
@@ -48,5 +23,29 @@ void set_promise(bool async, std::promise<T>& promise, TF f)
 		try {
 			promise.set_exception(std::current_exception());
 		} catch (...) { }
+	}
+}
+
+template <typename T, typename TF>
+std::thread async_on_promise(std::promise<T>& promise, TF f)
+{
+	return std::thread([&]() {
+		sync_on_promise(promise, f);
+	});
+}
+
+template <typename T, typename TF>
+void sync_on_promise(std::promise<T>& promise, TF f)
+{
+	try
+	{
+		f();
+	}
+	catch (std::exception& ex)
+	{
+		try {
+			promise.set_exception(std::current_exception());
+		}
+		catch (...) {}
 	}
 }

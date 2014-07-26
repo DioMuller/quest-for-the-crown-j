@@ -102,18 +102,20 @@ void qfcnet::ClientChannel::Listen()
 #pragma region Requests
 std::future<std::string> ClientChannel::Login(std::string user, std::string password)
 {
+	std::thread async_request_login;
 	std::promise<std::string> login_promise;
 
 	on_login_response = [&](s_launcher_login_response response) {
-		set_promise(false, login_promise, [&](){
+		sync_promise(login_promise, [&](){
 			on_login_response = nullptr;
+			async_request_login.join();
 			if (!response.authenticated)
 				throw std::exception("Invalid username or password");
 			return std::string(response.authKey);
 		});
 	};
 
-	on_promise(true, login_promise, [&]() {
+	async_request_login = async_on_promise(login_promise, [&]() {
 		s_launcher_login_info login_request;
 		login_request.header.type = PacketType::LAUNCHER_LOGIN_INFO;
 		strcpy_s(login_request.login, sizeof(login_request.login), user.c_str());

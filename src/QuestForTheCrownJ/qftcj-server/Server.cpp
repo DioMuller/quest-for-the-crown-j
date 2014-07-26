@@ -18,8 +18,8 @@
 using namespace qfcserver;
 using namespace qfcbase;
 
-Server::Server()
-	: channel()
+Server::Server(int port)
+	: channel(port)
 {
 	if (sqlite3_open("database.sqlite", &db))
 		throw std::exception(("Can't open database.sqlite: " + (std::string)sqlite3_errmsg(db)).c_str());
@@ -35,12 +35,9 @@ Server::~Server()
 }
 
 
-void Server::Run(int port)
+void Server::Run()
 {
-	//UpdateLoop();
-	auto network = channel.ListenAsync(port);
-	network.wait();
-	network.get();
+	UpdateLoop();
 }
 
 void Server::UpdateLoop()

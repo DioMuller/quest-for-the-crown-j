@@ -11,7 +11,7 @@
 using namespace qfcbase;
 using namespace qfcnet;
 
-ServerChannel::ServerChannel()
+ServerChannel::ServerChannel(int port)
 	: stop_listen(false)
 {
 	WSADATA wsaData;
@@ -24,6 +24,8 @@ ServerChannel::ServerChannel()
 	channel_socket = socket(AF_INET, SOCK_DGRAM, IPPROTO_UDP);
 	if (channel_socket == INVALID_SOCKET)
 		throw std::exception(("Error while creating channel_socket: " + std::to_string(WSAGetLastError())).c_str());
+
+	listen_thread = std::thread(&ServerChannel::Listen, this, port);
 }
 
 ServerChannel::~ServerChannel()
@@ -33,14 +35,10 @@ ServerChannel::~ServerChannel()
 	if (channel_socket)
 		closesocket(channel_socket);
 
-	WSACleanup();
-}
+	if (listen_thread.joinable())
+		listen_thread.join();
 
-std::future<void> ServerChannel::ListenAsync(int port)
-{
-	std::promise<void> listen;
-	on_promise(true, listen, [&] { Listen(port); });
-	return listen.get_future();
+	WSACleanup();
 }
 
 void ServerChannel::Listen(int port)
