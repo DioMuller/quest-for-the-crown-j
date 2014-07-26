@@ -19,8 +19,8 @@ int main(int argc, char* argv[])
 	{
 		try
 		{
-			Server server(12345);
-			server.Run();
+			Server server;
+			server.Run(12345);
 			break;
 		}
 		catch (const std::exception& error)

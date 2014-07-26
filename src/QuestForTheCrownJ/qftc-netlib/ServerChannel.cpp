@@ -10,7 +10,7 @@
 using namespace qfcbase;
 using namespace qfcnet;
 
-ServerChannel::ServerChannel(int port)
+ServerChannel::ServerChannel()
 	: stop_listen(false)
 {
 	WSADATA wsaData;
@@ -20,21 +20,9 @@ ServerChannel::ServerChannel(int port)
 		HIBYTE(wsaData.wVersion) != 2)
 		throw std::exception("Invalid WinSock version.");
 
-	sockaddr_in serverAddress;
-	serverAddress.sin_addr.s_addr = INADDR_ANY;
-	serverAddress.sin_family = AF_INET;
-	serverAddress.sin_port = htons(port);
-
-	if (bind(server_socket, (SOCKADDR*)&serverAddress, sizeof(serverAddress)) == SOCKET_ERROR)
-	{
-		std::stringstream errorBuilder;
-		errorBuilder << "Failed to bind socket to port " << port << ". " << WSAGetLastError();
-		throw std::exception(errorBuilder.str().c_str());
-	}
-
-	listen_thread = std::thread([this](){
-		Listen();
-	});
+	server_socket = socket(AF_INET, SOCK_DGRAM, IPPROTO_UDP);
+	if (server_socket == INVALID_SOCKET)
+		throw std::exception(("Error while creating server_socket: " + std::to_string(WSAGetLastError())).c_str());
 }
 
 ServerChannel::~ServerChannel()
@@ -47,8 +35,20 @@ ServerChannel::~ServerChannel()
 	WSACleanup();
 }
 
-void qfcnet::ServerChannel::Listen()
+void qfcnet::ServerChannel::Listen(int port)
 {
+	sockaddr_in serverAddress;
+	serverAddress.sin_addr.s_addr = INADDR_ANY;
+	serverAddress.sin_family = AF_INET;
+	serverAddress.sin_port = htons(port);
+
+	if (bind(server_socket, (SOCKADDR*)&serverAddress, sizeof(serverAddress)) == SOCKET_ERROR)
+	{
+		std::stringstream errorBuilder;
+		errorBuilder << "Failed to bind socket to port " << port << ". " << WSAGetLastError();
+		throw std::exception(errorBuilder.str().c_str());
+	}
+
 	char buffer[NET_BUFFER_SIZE];
 	int size;
 

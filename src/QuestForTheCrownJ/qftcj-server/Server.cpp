@@ -6,6 +6,7 @@
 #include <chrono>
 #include <iomanip>
 #include <ctime>
+#include <future>
 
 #include "Log.h"
 #include "StructBase.h"
@@ -17,11 +18,11 @@
 using namespace qfcserver;
 using namespace qfcbase;
 
-Server::Server(int port)
-	: channel(port)
+Server::Server()
+	: channel()
 {
-	if (!sqlite3_open("database.sqlite", &db))
-		throw std::exception("Can't open database.sqlite");
+	if (sqlite3_open("database.sqlite", &db))
+		throw std::exception(("Can't open database.sqlite: " + (std::string)sqlite3_errmsg(db)).c_str());
 
 	channel.handleLoginInfo = [this](const LauncherLoginInfo& info){
 		return HandleLoginInfo(info);
@@ -34,9 +35,14 @@ Server::~Server()
 }
 
 
-void Server::Run()
+void Server::Run(int port)
 {
-	UpdateLoop();
+	//UpdateLoop();
+	auto network = std::async(std::launch::async, [&]() {
+		channel.Listen(port);
+	});
+
+	network.get();
 }
 
 void Server::UpdateLoop()
