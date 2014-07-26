@@ -212,6 +212,9 @@
     <ClInclude Include="FollowBehavior.h">
       <Filter>Behaviors</Filter>
     </ClInclude>
+    <ClInclude Include="TaskHelper.h">
+      <Filter>Helper</Filter>
+    </ClInclude>
   </ItemGroup>
   <ItemGroup>
     <None Include="..\..\..\references\SFML-2.1\bin\sfml-audio-d-2.dll">

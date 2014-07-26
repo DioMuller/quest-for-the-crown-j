@@ -6,6 +6,7 @@
 #include "Log.h"
 #include "NetDefinitions.h"
 #include "AuthStructs.h"
+#include "TaskHelper.h"
 
 using namespace qfcbase;
 using namespace qfcnet;
@@ -38,17 +39,7 @@ ServerChannel::~ServerChannel()
 std::future<void> ServerChannel::ListenAsync(int port)
 {
 	std::promise<void> listen;
-	std::thread([&] {
-		try
-		{
-			Listen(port);
-			listen.set_value();
-		}
-		catch (std::exception& ex)
-		{
-			listen.set_exception(std::current_exception());
-		}
-	}).detach();
+	on_promise(true, listen, [&] { Listen(port); });
 	return listen.get_future();
 }
 

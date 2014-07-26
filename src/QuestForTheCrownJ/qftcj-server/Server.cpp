@@ -100,7 +100,7 @@ LauncherLoginResponse Server::HandleLoginInfo(const LauncherLoginInfo& login_inf
 
 	sqlite3_exec(db, getUserSql.str(), [&](int argc, char** argv, char** azColName) {
 		user_exists = true;
-		if (login_info.hashedPassword == argv[2])
+		if (strcmp(login_info.hashedPassword, argv[2]) == 0)
 			resp.authenticated = true;
 	});
 
@@ -111,8 +111,8 @@ LauncherLoginResponse Server::HandleLoginInfo(const LauncherLoginInfo& login_inf
 		auto playerId = sqlite3_last_insert_rowid(db);
 
 		std::stringstream createUserSql;
-		createUserSql << "INSERT INTO users(login, password, player_id) VALUES(\'" << login_info.login << "\', \'" << login_info.hashedPassword << "\', \'" << playerId << "\')";
-		sqlite3_exec(db, getUserSql.str(), nullptr);
+		createUserSql << "INSERT INTO users(login, password, player_id) VALUES(\'" << login_info.login << "\', \'" << login_info.hashedPassword << "\', " << playerId << ")";
+		sqlite3_exec(db, createUserSql.str(), nullptr);
 		resp.authenticated = true;
 	}
 
@@ -122,7 +122,7 @@ LauncherLoginResponse Server::HandleLoginInfo(const LauncherLoginInfo& login_inf
 		auto in_time_t = std::chrono::system_clock::to_time_t(now);
 
 		std::stringstream hashSeed;
-		hashSeed << login_info.login << login_info.hashedPassword << std::put_time(std::localtime(&in_time_t), "%Y-%m-%d %X");
+		hashSeed << login_info.login << login_info.hashedPassword << std::put_time(std::localtime(&in_time_t), "%Y-%m-%d %H-%M-%S");
 
 		SHA1 userAuthCode;
 		userAuthCode.update(hashSeed);

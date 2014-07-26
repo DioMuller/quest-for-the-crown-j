@@ -6,6 +6,7 @@
 #include "Log.h"
 #include "Hero.h"
 #include "Slime.h"
+#include "TaskHelper.h"
 
 using namespace qfcnet;
 using namespace qfcbase;
@@ -68,12 +69,12 @@ void qfcnet::ClientChannel::Listen()
 		switch (header->type)
 		{
 		case PacketType::LAUNCHER_LOGIN_RESPONSE:
-			if (!get_login_response)
+			if (!on_login_response)
 			{
 				Log::Error("Unexpected LAUNCHER_LOGIN_RESPONSE");
 				continue;
 			}
-			get_login_response->set_value(*(s_launcher_login_response*)(&buffer));
+			on_login_response(*(s_launcher_login_response*)(&buffer));
 			break;
 		case PacketType::SERVER_ENTITY_INFO:
 			if (size != sizeof(ServerEntityInfo))
@@ -99,26 +100,31 @@ void qfcnet::ClientChannel::Listen()
 }
 
 #pragma region Requests
-void ClientChannel::Login(std::string user, std::string password)
+std::future<std::string> ClientChannel::Login(std::string user, std::string password)
 {
-	s_launcher_login_info login;
-	login.header.type = PacketType::LAUNCHER_LOGIN_INFO;
-	strcpy_s(login.login, sizeof(login.login), user.c_str());
-	strcpy_s(login.hashedPassword, sizeof(login.hashedPassword), password.c_str());
+	std::promise<std::string> login_promise;
 
-	get_login_response = std::make_shared<std::promise<s_launcher_login_response>>();
+	on_login_response = [&](s_launcher_login_response response) {
+		set_promise(false, login_promise, [&](){
+			on_login_response = nullptr;
+			if (!response.authenticated)
+				throw std::exception("Invalid username or password");
+			return std::string(response.authKey);
+		});
+	};
 
-	int r = sendto(channel_socket, (char*)&login, sizeof(login), 0, (SOCKADDR*)&server_addr, server_addr_size);
-	if (r <= 0)
-		throw std::exception(("Send error: " + std::to_string(WSAGetLastError())).c_str());
+	on_promise(true, login_promise, [&]() {
+		s_launcher_login_info login_request;
+		login_request.header.type = PacketType::LAUNCHER_LOGIN_INFO;
+		strcpy_s(login_request.login, sizeof(login_request.login), user.c_str());
+		strcpy_s(login_request.hashedPassword, sizeof(login_request.hashedPassword), password.c_str());
 
-	auto response = get_login_response->get_future().get();
-	get_login_response = nullptr;
+		int r = sendto(channel_socket, (char*)&login_request, sizeof(login_request), 0, (SOCKADDR*)&server_addr, server_addr_size);
+		if (r <= 0)
+			throw std::exception(("Send error: " + std::to_string(WSAGetLastError())).c_str());
+	});
 
-	if (!response.authenticated)
-		throw std::exception("Invalid username or password");
-
-	auth_token = response.authKey;
+	return login_promise.get_future();
 }
 
 ServerPlayerInfo ClientChannel::GetPlayerInfo()
