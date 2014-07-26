@@ -38,10 +38,8 @@ Server::~Server()
 void Server::Run(int port)
 {
 	//UpdateLoop();
-	auto network = std::async(std::launch::async, [&]() {
-		channel.Listen(port);
-	});
-
+	auto network = channel.ListenAsync(port);
+	network.wait();
 	network.get();
 }
 

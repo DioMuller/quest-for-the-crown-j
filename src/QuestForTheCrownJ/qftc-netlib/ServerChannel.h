@@ -1,7 +1,7 @@
 #pragma once
 
 #include <WinSock2.h>
-#include <thread>
+#include <future>
 
 #include "AuthStructs.h"
 
@@ -16,11 +16,11 @@ namespace qfcnet
 		ServerChannel();
 		~ServerChannel();
 
+		std::future<void> ListenAsync(int port);
 		void Listen(int port);
 
 	private:
 		bool stop_listen;
-
-		SOCKET server_socket;
+		SOCKET channel_socket;
 	};
 }

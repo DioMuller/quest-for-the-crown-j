@@ -20,29 +20,46 @@ ServerChannel::ServerChannel()
 		HIBYTE(wsaData.wVersion) != 2)
 		throw std::exception("Invalid WinSock version.");
 
-	server_socket = socket(AF_INET, SOCK_DGRAM, IPPROTO_UDP);
-	if (server_socket == INVALID_SOCKET)
-		throw std::exception(("Error while creating server_socket: " + std::to_string(WSAGetLastError())).c_str());
+	channel_socket = socket(AF_INET, SOCK_DGRAM, IPPROTO_UDP);
+	if (channel_socket == INVALID_SOCKET)
+		throw std::exception(("Error while creating channel_socket: " + std::to_string(WSAGetLastError())).c_str());
 }
 
 ServerChannel::~ServerChannel()
 {
 	stop_listen = true;
 
-	if (server_socket)
-		closesocket(server_socket);
+	if (channel_socket)
+		closesocket(channel_socket);
 
 	WSACleanup();
 }
 
-void qfcnet::ServerChannel::Listen(int port)
+std::future<void> ServerChannel::ListenAsync(int port)
+{
+	std::promise<void> listen;
+	std::thread([&] {
+		try
+		{
+			Listen(port);
+			listen.set_value();
+		}
+		catch (std::exception& ex)
+		{
+			listen.set_exception(std::current_exception());
+		}
+	}).detach();
+	return listen.get_future();
+}
+
+void ServerChannel::Listen(int port)
 {
 	sockaddr_in serverAddress;
 	serverAddress.sin_addr.s_addr = INADDR_ANY;
 	serverAddress.sin_family = AF_INET;
 	serverAddress.sin_port = htons(port);
 
-	if (bind(server_socket, (SOCKADDR*)&serverAddress, sizeof(serverAddress)) == SOCKET_ERROR)
+	if (bind(channel_socket, (SOCKADDR*)&serverAddress, sizeof(serverAddress)) == SOCKET_ERROR)
 	{
 		std::stringstream errorBuilder;
 		errorBuilder << "Failed to bind socket to port " << port << ". " << WSAGetLastError();
@@ -57,7 +74,7 @@ void qfcnet::ServerChannel::Listen(int port)
 		sockaddr_in sender;
 		int sender_size = sizeof(sender);
 
-		size = recvfrom(server_socket, buffer, NET_BUFFER_SIZE - 1, 0, (SOCKADDR*)&sender, &sender_size);
+		size = recvfrom(channel_socket, buffer, NET_BUFFER_SIZE - 1, 0, (SOCKADDR*)&sender, &sender_size);
 		if (stop_listen)
 			return;
 
@@ -88,7 +105,7 @@ void qfcnet::ServerChannel::Listen(int port)
 				auto resp = handleLoginInfo(*login_info);
 				resp.header.type = PacketType::LAUNCHER_LOGIN_RESPONSE;
 
-				size = sendto(server_socket, (char*)&resp, sizeof(resp), 0, (SOCKADDR*)&sender, sender_size);
+				size = sendto(channel_socket, (char*)&resp, sizeof(resp), 0, (SOCKADDR*)&sender, sender_size);
 				if (size != sizeof(resp))
 				{
 					Log::Error("Error while sending LAUNCHER_LOGIN_INFO response.");

@@ -1,8 +1,11 @@
 #include "Login.h"
-#include "AuthStructs.h"
+
 #include <WinSock2.h>
 #include <msclr/marshal_cppstd.h>
+
+#include "AuthStructs.h"
 #include "ClientChannel.h"
+
 using namespace System::Runtime::InteropServices;
 
 bool QftCJLauncher::Login::NetLogin(std::string userName, std::string hashedPassword)
@@ -10,18 +13,24 @@ bool QftCJLauncher::Login::NetLogin(std::string userName, std::string hashedPass
 	IntPtr ipNativePtr = Marshal::StringToHGlobalAnsi(tbServerAddress->Text);
 	char* ipAddress = static_cast<char*>(ipNativePtr.ToPointer());
 
+	qfcnet::ClientChannel* channel;
 	try
 	{
-		qfcnet::ClientChannel channel = qfcnet::ClientChannel(ipAddress, 12345);
-		channel.Login(userName, hashedPassword);
-		AuthCode = gcnew System::String(channel.auth_token.c_str());
+		channel = new qfcnet::ClientChannel(ipAddress, 12345);
+
+		channel->Login(userName, hashedPassword);
+		AuthCode = gcnew System::String(channel->auth_token.c_str());
 	}
 	catch (const std::exception& ex)
 	{
 		lblStatus->Text = gcnew System::String(ex.what());
+		return false;
+	}
+	finally
+	{
+		//delete channel; crash when using promises
 	}
 
-	
 	return true;
 }
 

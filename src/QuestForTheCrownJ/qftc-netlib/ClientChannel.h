@@ -5,10 +5,12 @@
 #include <string>
 #include <vector>
 #include <memory>
-#ifndef _M_CEE // clr enabled projects don't support thread.
+#ifndef _M_CEE
+#include <future>
 #include <thread>
 #endif
 
+#include "AuthStructs.h"
 #include "StructBase.h"
 #include "ServerStructs.h"
 
@@ -21,8 +23,12 @@ namespace qfcnet
 		std::function<void(const ServerEntityInfo&)> onEntity;
 
 	public:
+		ClientChannel();
 		ClientChannel(std::string serverAddress, int port);
+
 		~ClientChannel();
+
+		void Listen();
 
 		void Login(std::string user, std::string password);
 
@@ -30,15 +36,17 @@ namespace qfcnet
 		void GetEntities(std::string screen_name);
 
 	private:
-#ifndef _M_CEE
-		void Listen();
 
-		std::thread listen_thread;
 		bool stop_listen;
+		SOCKET channel_socket;
 
-		SOCKET server_socket;
 		sockaddr_in server_addr;
 		int server_addr_size;
+
+#ifndef _M_CEE
+		std::thread listen_thread;
+		// TODO: remove promise, incompatible with clr.
+		std::shared_ptr<std::promise<s_launcher_login_response>> get_login_response;
 #endif
 	};
 }

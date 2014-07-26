@@ -1,19 +1,17 @@
 #include "ClientChannel.h"
 
-#include <memory>
 #include <exception>
 
 #include "NetDefinitions.h"
 #include "Log.h"
 #include "Hero.h"
 #include "Slime.h"
-#include "AuthStructs.h"
 
 using namespace qfcnet;
 using namespace qfcbase;
 
-ClientChannel::ClientChannel(std::string serverIPAddress, int port)
-	: stop_listen(false), server_socket(0)
+ClientChannel::ClientChannel(std::string serverAddress, int port)
+	: stop_listen(false), channel_socket(0)
 {
 	WSADATA wsaData;
 	int r = WSAStartup(MAKEWORD(2, 2), &wsaData);
@@ -22,27 +20,29 @@ ClientChannel::ClientChannel(std::string serverIPAddress, int port)
 		HIBYTE(wsaData.wVersion) != 2)
 		throw std::exception("Invalid WinSock version.");
 
-	server_socket = socket(AF_INET, SOCK_DGRAM, IPPROTO_UDP);
+	channel_socket = socket(AF_INET, SOCK_DGRAM, IPPROTO_UDP);
+	if (channel_socket == INVALID_SOCKET)
+		throw std::exception(("Error while creating channel_socket: " + std::to_string(WSAGetLastError())).c_str());
 
 	ZeroMemory(&server_addr, sizeof(server_addr));
-
-	server_addr.sin_addr.s_addr = inet_addr(serverIPAddress.c_str());
+	server_addr.sin_addr.s_addr = inet_addr(serverAddress.c_str());
 	server_addr.sin_family = AF_INET;
 	server_addr.sin_port = htons(port);
 	server_addr_size = sizeof(server_addr);
 
-	listen_thread = std::thread([this](){
-		Listen();
-	});
+	listen_thread = std::thread(&ClientChannel::Listen, this);
 }
+
 
 ClientChannel::~ClientChannel()
 {
 	stop_listen = true;
 
-	if (server_socket)
-		closesocket(server_socket);
+	if (channel_socket)
+		closesocket(channel_socket);
 
+	if (listen_thread.joinable())
+		listen_thread.join();
 	WSACleanup();
 }
 
@@ -52,7 +52,7 @@ void qfcnet::ClientChannel::Listen()
 	int size;
 	while (!stop_listen)
 	{
-		size = recvfrom(server_socket, (char*)&buffer, NET_BUFFER_SIZE - 1, 0, (SOCKADDR*)&server_addr, &server_addr_size);
+		size = recvfrom(channel_socket, (char*)&buffer, NET_BUFFER_SIZE - 1, 0, (SOCKADDR*)&server_addr, &server_addr_size);
 		if (stop_listen)
 			return;
 
@@ -67,6 +67,14 @@ void qfcnet::ClientChannel::Listen()
 		Header* header = (Header*)&buffer;
 		switch (header->type)
 		{
+		case PacketType::LAUNCHER_LOGIN_RESPONSE:
+			if (!get_login_response)
+			{
+				Log::Error("Unexpected LAUNCHER_LOGIN_RESPONSE");
+				continue;
+			}
+			get_login_response->set_value(*(s_launcher_login_response*)(&buffer));
+			break;
 		case PacketType::SERVER_ENTITY_INFO:
 			if (size != sizeof(ServerEntityInfo))
 			{
@@ -95,23 +103,17 @@ void ClientChannel::Login(std::string user, std::string password)
 {
 	s_launcher_login_info login;
 	login.header.type = PacketType::LAUNCHER_LOGIN_INFO;
-	strcpy(login.login, user.c_str());
-	strcpy(login.hashedPassword, password.c_str());
+	strcpy_s(login.login, sizeof(login.login), user.c_str());
+	strcpy_s(login.hashedPassword, sizeof(login.hashedPassword), password.c_str());
 
-	int r = sendto(server_socket, (char*)&login, sizeof(login), 0, (SOCKADDR*)&server_addr, server_addr_size);
+	get_login_response = std::make_shared<std::promise<s_launcher_login_response>>();
+
+	int r = sendto(channel_socket, (char*)&login, sizeof(login), 0, (SOCKADDR*)&server_addr, server_addr_size);
 	if (r <= 0)
-		throw std::exception("Send error");
+		throw std::exception(("Send error: " + std::to_string(WSAGetLastError())).c_str());
 
-	s_launcher_login_response response;
-	ZeroMemory(&response, sizeof(response));
-
-	r = recvfrom(server_socket, (char*)&response, sizeof(response), 0, (SOCKADDR*)&server_addr, &server_addr_size);
-
-	if (r <= 0)
-		throw std::exception("Receive error");
-
-	if (r != sizeof(response))
-		throw std::exception("Invalid response");
+	auto response = get_login_response->get_future().get();
+	get_login_response = nullptr;
 
 	if (!response.authenticated)
 		throw std::exception("Invalid username or password");
