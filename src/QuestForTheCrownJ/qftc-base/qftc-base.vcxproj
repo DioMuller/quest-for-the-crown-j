@@ -81,6 +81,7 @@
   <ItemGroup>
     <ClCompile Include="AnimatedSprite.cpp" />
     <ClCompile Include="AudioPlayer.cpp" />
+    <ClCompile Include="BattleEntity.cpp" />
     <ClCompile Include="BattleScene.cpp" />
     <ClCompile Include="Behavior.cpp" />
     <ClCompile Include="Entity.cpp" />
@@ -109,6 +110,7 @@
   <ItemGroup>
     <ClInclude Include="AnimatedSprite.h" />
     <ClInclude Include="AudioPlayer.h" />
+    <ClInclude Include="BattleEntity.h" />
     <ClInclude Include="BattleScene.h" />
     <ClInclude Include="Behavior.h" />
     <ClInclude Include="Container.h" />

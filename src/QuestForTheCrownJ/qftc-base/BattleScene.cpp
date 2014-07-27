@@ -14,6 +14,7 @@ BattleScene::BattleScene(Game* parent) : Scene(parent)
 	text = sf::Text("Battle!", font);
 	text.setCharacterSize(12);
 	text.setPosition(10, 10);
+	currentTurn = 0;
 
 	AudioPlayer::PlayBGM("Firebrand");
 }

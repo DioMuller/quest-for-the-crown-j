@@ -22,6 +22,9 @@ int main(int argc, char* argv[])
 	qfcbase::Window window({ 800, 600 }, "Quest for the Crown J");
 	qfcgame::MainGame* game = new qfcgame::MainGame();
 
+	// Loads Level INFO.
+	qfcbase::LevelLoader::LoadLevels("Content/maps/QuestForTheCrown.maps");
+
 	if (argc <= 1)
 	{
 		SetupSinglePlayer(game);
