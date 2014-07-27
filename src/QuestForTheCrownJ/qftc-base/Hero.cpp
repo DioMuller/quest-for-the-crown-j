@@ -27,6 +27,22 @@ Hero::Hero()
 	sprite->CurrentAnimation = "stopped_down";
 	Sprite = sprite;
 
+	this->status.base_hp = 50;
+	this->status.base_mp = 10;
+	this->status.base_attack = 5;
+	this->status.base_defense = 5;
+	this->status.base_magic = 5;
+	this->status.base_defense_magic = 5;
+	this->status.base_speed = 5;
+
+	this->status.mul_hp = 10;
+	this->status.mul_mp = 2;
+	this->status.mul_attack = 1;
+	this->status.mul_defense = 1;
+	this->status.mul_magic = 1;
+	this->status.mul_defense_magic = 1;
+	this->status.mul_speed = 1;
+
 	sprite->Padding = sf::FloatRect(22, 32, 22, 2);
 }
 
@@ -59,7 +75,8 @@ void Hero::CollideWith(std::shared_ptr<Entity> e)
 		this->scene->RemoveEntity(e);
 		auto battle = new qfcbase::BattleScene(this->scene->GetParent());
 
-		if (battle->PlayerJoin(std::shared_ptr<Entity>(this)))
+		if ( battle->PlayerJoin(std::shared_ptr<Entity>(this)) &&
+			 battle->AddMonster(e) )
 			this->scene->LoadScene(battle);
 		else
 			delete battle;

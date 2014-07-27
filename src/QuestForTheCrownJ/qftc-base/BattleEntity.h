@@ -28,6 +28,7 @@ namespace qfcbase
 			~BattleEntity();
 
 		public:
+			void DrawEntity(sf::RenderWindow* renderer, sf::Vector2f position);
 			void DrawInfo(sf::RenderWindow* renderer, sf::Vector2f position);
 	};
 }

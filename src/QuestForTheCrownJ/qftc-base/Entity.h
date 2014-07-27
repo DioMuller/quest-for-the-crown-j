@@ -11,8 +11,8 @@ namespace qfcbase
 	typedef struct struct_status
 	{
 		int level = 1;
-		int hp = 1;
-		int mp = 1;
+		int hp = 10;
+		int mp = 5;
 
 #ifndef CREATE_STATUS
 #define CREATE_STATUS(type, field, prop) type base_##field = 0, mul_##field = 1; type Get##prop() { return (base_##field + mul_##field * level); } getdecl(type, prop)

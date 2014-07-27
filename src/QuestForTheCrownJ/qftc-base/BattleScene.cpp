@@ -56,11 +56,17 @@ void BattleScene::Draw(sf::RenderWindow* renderer)
 	{
 		players[i]->DrawInfo(renderer, sf::Vector2f(10.0f + (i * 200.0f), 500.0f));
 	}
+
+	//	Enemy Sprite
+	for (int i = 0; i < players.size(); i++)
+	{
+		enemies[i]->DrawEntity(renderer, sf::Vector2f(350.0f + (i * 30.0f), 300.0f));
+	}
 }
 
 bool BattleScene::PlayerJoin(std::shared_ptr<Entity> hero)
 {
-	if (players.size() > 4) return false;
+	if (players.size() > MAX_BATTLE_PLAYERS) return false;
 	
 	players.push_back(std::shared_ptr<BattleEntity>(new BattleEntity(hero)));
 	return true;
@@ -68,7 +74,7 @@ bool BattleScene::PlayerJoin(std::shared_ptr<Entity> hero)
 
 bool BattleScene::AddMonster(std::shared_ptr<Entity> monster)
 {
-	if (enemies.size() > 4) return false;
+	if (enemies.size() > MAX_BATTLE_ENEMIES) return false;
 
 	enemies.push_back(std::shared_ptr<BattleEntity>(new BattleEntity(monster)));
 	return true;

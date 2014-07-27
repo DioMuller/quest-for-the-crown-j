@@ -3,6 +3,9 @@
 #include "BattleEntity.h"
 #include <SFML/Graphics/Text.hpp>
 
+#define MAX_BATTLE_PLAYERS 4
+#define MAX_BATTLE_ENEMIES 1
+
 namespace qfcbase
 {
 	class BattleScene : public Scene

@@ -19,6 +19,14 @@ BattleEntity::~BattleEntity()
 {
 }
 
+void BattleEntity::DrawEntity(sf::RenderWindow* renderer, sf::Vector2f position)
+{
+	sf::Vector2f pos = parent->Sprite->Position;
+	parent->Sprite->SetPosition(position);
+	parent->Sprite->Draw(renderer);
+	parent->Sprite->SetPosition(pos);
+}
+
 void BattleEntity::DrawInfo(sf::RenderWindow* renderer, sf::Vector2f position)
 {
 	text.setPosition(position);
