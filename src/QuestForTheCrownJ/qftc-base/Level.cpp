@@ -94,3 +94,8 @@ void Level::LoadMap(std::string tmxFile)
 		}
 	}
 }
+
+void Level::OnResume()
+{
+	AudioPlayer::PlayBGM(bgm);
+}

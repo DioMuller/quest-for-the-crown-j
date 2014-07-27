@@ -85,3 +85,20 @@ std::vector<std::shared_ptr<Entity>> Scene::GetEntities(std::function<bool(const
 	auto it = std::copy_if(entities.begin(), entities.end(), std::back_inserter(bar), predicate);
 	return bar;
 }
+
+void Scene::LoadScene(Scene* scene)
+{
+	parent->LoadScene(scene, true);
+}
+
+void Scene::UnloadScene()
+{
+	parent->UnstackScene();
+}
+
+Game* Scene::GetParent()
+{
+	return parent;
+}
+
+void Scene::OnResume() { }

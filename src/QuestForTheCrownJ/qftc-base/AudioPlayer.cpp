@@ -47,7 +47,7 @@ void AudioPlayer::PlayBGM(std::string name)
 		currentBgm.stop();
 		// TODO: Check if I need to unload?
 
-		if (!currentBgm.openFromFile(bgmPath + name + ".wav"))
+		if (!currentBgm.openFromFile(bgmPath + name + ".ogg"))
 		{
 			currentBgmName = "";
 			Log::Error("Could not open music file: " + name);

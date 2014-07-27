@@ -43,7 +43,11 @@ void Game::LoadScene(Scene* s, bool stack)
 
 void Game::UnstackScene()
 {
-	delete currentScene;
-	currentScene = (Scene*)pastScenes.top();
-	pastScenes.pop();
+	if (pastScenes.size() > 0)
+	{
+		delete currentScene;
+		currentScene = (Scene*)pastScenes.top();
+		pastScenes.pop();
+		currentScene->OnResume();
+	}
 }

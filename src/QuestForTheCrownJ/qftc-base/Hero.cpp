@@ -2,14 +2,17 @@
 #include "AnimatedSprite.h"
 #include "Container.h"
 #include "Level.h"
+#include "BattleScene.h"
 #include <math.h>
 
-qfcbase::Hero::Hero()
+using namespace qfcbase;
+
+Hero::Hero()
 {
 	Speed = 5 * 32;
 	const double walkFrameDuration = 0.1;
 
-	auto sprite = std::make_shared<qfcbase::AnimatedSprite>("Content/sprites/characters/main.png", sf::Vector2i(64, 64));
+	auto sprite = std::make_shared<AnimatedSprite>("Content/sprites/characters/main.png", sf::Vector2i(64, 64));
 	sprite->AddAnimation("stopped_up", { { 0, 0 }, { 0, 0 }, walkFrameDuration });
 	sprite->AddAnimation("stopped_down", { { 0, 2 }, { 0, 2 }, walkFrameDuration });
 	sprite->AddAnimation("stopped_left", { { 0, 1 }, { 0, 1 }, walkFrameDuration });
@@ -28,12 +31,12 @@ qfcbase::Hero::Hero()
 }
 
 
-qfcbase::Hero::~Hero()
+Hero::~Hero()
 {
 }
 
 
-void qfcbase::Hero::Draw(sf::RenderWindow* renderer)
+void Hero::Draw(sf::RenderWindow* renderer)
 {
 	sf::Vector2f cameraPosition = Sprite->Position;
 	sf::Vector2f screenSize = sf::Vector2f(renderer->getSize().x, renderer->getSize().y);
@@ -47,4 +50,13 @@ void qfcbase::Hero::Draw(sf::RenderWindow* renderer)
 
 	renderer->setView(sf::View(cameraPosition, screenSize ));
 	Entity::Draw(renderer);
+}
+
+void Hero::CollideWith(std::shared_ptr<Entity> e)
+{
+	if (e->category == "Enemy")
+	{
+		this->scene->RemoveEntity(e);
+		this->scene->LoadScene(new qfcbase::BattleScene(this->scene->GetParent()));
+	}
 }
