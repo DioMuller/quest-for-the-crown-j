@@ -6,7 +6,6 @@
 #include "Log.h"
 #include "NetDefinitions.h"
 #include "AuthStructs.h"
-#include "TaskHelper.h"
 
 using namespace qfcbase;
 using namespace qfcnet;
@@ -75,7 +74,7 @@ void ServerChannel::Listen(int port)
 
 		buffer[size] = '\0';
 
-		Header* header = (Header*)&buffer;
+		Header* header = (Header*)buffer;
 		switch (header->type)
 		{
 		case PacketType::LAUNCHER_LOGIN_INFO:
@@ -90,8 +89,8 @@ void ServerChannel::Listen(int port)
 				continue;
 			}
 			else {
-				auto login_info = (LauncherLoginInfo*)&buffer;
-				auto resp = handleLoginInfo(*login_info);
+				auto data = (LauncherLoginInfo*)buffer;
+				auto resp = handleLoginInfo(*data);
 				resp.header.type = PacketType::LAUNCHER_LOGIN_RESPONSE;
 
 				size = sendto(channel_socket, (char*)&resp, sizeof(resp), 0, (SOCKADDR*)&sender, sender_size);
@@ -102,26 +101,51 @@ void ServerChannel::Listen(int port)
 				}
 			}
 			break;
+		case PacketType::CLIENT_REQUEST_PLAYER_INFO:
+			if (size != sizeof(RequestPlayerInfo))
+			{
+				Log::Error("Invalid packet size for CLIENT_REQUEST_PLAYER_INFO: " + size);
+				continue;
+			}
+			if (!handleRequestPlayer)
+			{
+				Log::Debug("No handler for CLIENT_REQUEST_PLAYER_INFO");
+				continue;
+			}
+			else {
+				auto data = (RequestPlayerInfo*)buffer;
+				auto resp = handleRequestPlayer(*data);
+				if (!resp) continue;
+				resp->header.type = PacketType::SERVER_PLAYER_INFO;
+
+				size = sendto(channel_socket, (char*)resp.get(), sizeof(ServerPlayerInfo), 0, (SOCKADDR*)&sender, sender_size);
+				if (size != sizeof(ServerPlayerInfo))
+				{
+					Log::Error("Error while sending CLIENT_REQUEST_PLAYER_INFO response.");
+					continue;
+				}
+			}
+			break;
 		default:
-			Log::Debug("Unknown message type: " + header->type);
+			Log::Debug(std::string("Unknown message type: ") + std::to_string(header->type));
 			break;
 		/*case PacketType::CLIENT_CHARACTER_POSITION:
-			auto client_char_pos = (s_client_position*)&buffer;
+			auto client_char_pos = (s_client_position*)buffer;
 			break;
 		case PacketType::CLIENT_CHARACTER_STATUS:
-			auto client_char_status = (s_client_character_status*)&buffer;
+			auto client_char_status = (s_client_character_status*)buffer;
 			break;
 		case PacketType::CLIENT_CHARACTER_ITEM:
-			auto client_char_item = (s_client_character_item*)&buffer;
+			auto client_char_item = (s_client_character_item*)buffer;
 			break;
 		case PacketType::CLIENT_BATTLE_BEGIN:
-			auto client_char_battle_begin = (s_client_character_battle_begin*)&buffer;
+			auto client_char_battle_begin = (s_client_character_battle_begin*)buffer;
 			break;
 		case PacketType::CLIENT_BATTLE_NEXT_TURN:
-			auto client_character_next_turn = (s_client_character_next_turn*)&buffer;
+			auto client_character_next_turn = (s_client_character_next_turn*)buffer;
 			break;
 		case PacketType::CLIENT_BATTLE_COMMAND:
-			auto client_character_command = (s_client_character_command*)&buffer;
+			auto client_character_command = (s_client_character_command*)buffer;
 			break;*/
 		}
 	}

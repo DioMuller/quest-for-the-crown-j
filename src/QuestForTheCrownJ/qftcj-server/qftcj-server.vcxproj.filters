@@ -15,6 +15,7 @@
     <ClInclude Include="sqlite3ext.h">
       <Filter>References\SQLite3</Filter>
     </ClInclude>
+    <ClInclude Include="ServerStructs.h" />
   </ItemGroup>
   <ItemGroup>
     <None Include="database.sqlite" />

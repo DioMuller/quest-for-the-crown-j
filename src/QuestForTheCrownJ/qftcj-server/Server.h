@@ -3,6 +3,7 @@
 
 #include "sqlite3.h"
 #include "ServerChannel.h"
+#include "ServerStructs.h"
 
 namespace qfcserver {
 	class Server
@@ -19,5 +20,8 @@ namespace qfcserver {
 			void UpdateLoop();
 
 			LauncherLoginResponse HandleLoginInfo(const LauncherLoginInfo& login_info);
+			std::shared_ptr<qfcbase::Entity> CreatePlayerEntity(std::string map_name, int x, int y);
+			std::shared_ptr<ServerPlayerInfo> HandleRequestPlayerInfo(const RequestPlayerInfo& data);
+			std::map<std::string, LoggedUser> logged_users;
 	};
 }

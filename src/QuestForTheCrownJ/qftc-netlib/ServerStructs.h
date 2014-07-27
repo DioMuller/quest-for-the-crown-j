@@ -18,7 +18,7 @@ typedef struct s_server_entity_info
 	sf::Vector2i position;
 } ServerEntityInfo;
 
-typedef struct s_player_info
+typedef struct s_server_player_info
 {
 	Header header;
 	char map_name[255];

@@ -4,6 +4,8 @@
 #include <future>
 
 #include "AuthStructs.h"
+#include "ClientStructs.h"
+#include "ServerStructs.h"
 
 namespace qfcnet
 {
@@ -11,6 +13,7 @@ namespace qfcnet
 	{
 	public:
 		std::function<LauncherLoginResponse(const LauncherLoginInfo&)> handleLoginInfo;
+		std::function<std::shared_ptr<ServerPlayerInfo>(const RequestPlayerInfo&)> handleRequestPlayer;
 
 	public:
 		ServerChannel(int port);

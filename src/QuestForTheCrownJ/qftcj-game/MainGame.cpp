@@ -10,6 +10,7 @@
 #include "Hero.h"
 #include "Slime.h"
 #include "StructBase.h"
+#include "Log.h"
 
 using namespace qfcgame;
 
@@ -34,7 +35,7 @@ std::shared_ptr<qfcbase::Entity> CreateEntity(const ServerEntityInfo& info)
 }
 
 MainGame::MainGame(std::string auth_token)
-	: clientChannel("localhost", 12345)
+	: clientChannel(12301, "127.0.0.1", 12345)
 {
 	clientChannel.auth_token = auth_token;
 	clientChannel.onEntity = [this](const ServerEntityInfo& entityInfo) {
@@ -59,13 +60,18 @@ void MainGame::RefreshSceneFromServer()
 	enemy->AddBehavior(std::make_shared<FollowBehavior>(enemy, "GoodGuy", 5, 32 * 4));
 	scene->AddEntity(enemy);*/
 
-	auto player = clientChannel.GetPlayerInfo();
+	clientChannel.GetPlayerInfo([&, this](ServerPlayerInfo player) {
+		qfcbase::LevelLoader::LoadLevels("Content/maps/QuestForTheCrown.maps");
 
-	qfcbase::LevelLoader::LoadLevels("Content/maps/QuestForTheCrown.maps");
+		auto scene = qfcbase::LevelLoader::LoadMap(this, 1, (std::string)"Content/maps/" + (std::string)player.map_name + (std::string)".tmx");
+		Game::LoadScene(scene, false);
 
-	auto scene = qfcbase::LevelLoader::LoadMap(this, 1, (std::string)"Content/maps/" + player.map_name + ".tmx");
-	Game::LoadScene(scene, false);
-	clientChannel.GetEntities(player.map_name);
+		qfcbase::Log::Debug((std::string)"Map loaded: " + std::string(player.map_name));
+
+		clientChannel.GetEntities(player.map_name);
+	}, [&](std::exception& ex) {
+		qfcbase::Log::Error(ex.what());
+	});
 }
 
 MainGame::~MainGame()

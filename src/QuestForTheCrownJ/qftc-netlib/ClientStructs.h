@@ -3,10 +3,21 @@
 #include "BattleDefinitions.h"
 #include "StructBase.h"
 
+typedef struct s_client_header
+{
+	Header header;
+	char authKey[260];
+} ClientHeader;
+
+typedef struct s_request_player_info
+{
+	ClientHeader clientHeader;
+} RequestPlayerInfo;
+
 // Client current position.
 typedef struct s_client_position
 {
-	Header header;
+	ClientHeader clientHeader;
 	EntityHeader entity;
 	int x, y;
 } ClientCharacterPosition;
@@ -14,7 +25,7 @@ typedef struct s_client_position
 // Sends character status on the server.
 typedef struct s_client_character_status
 {
-	Header header;
+	ClientHeader clientHeader;
 	EntityHeader entity;
 	int level;
 	int current_hp;
@@ -24,7 +35,7 @@ typedef struct s_client_character_status
 // Updates character item quantity.
 typedef struct s_client_character_item
 {
-	Header header;
+	ClientHeader clientHeader;
 	EntityHeader entity;
 	int item_id;
 	int quantity;
@@ -33,7 +44,7 @@ typedef struct s_client_character_item
 
 typedef struct s_client_character_battle_begin
 {
-	Header header;
+	ClientHeader clientHeader;
 	EntityHeader entity;
 	int enemy_id;
 } ClientCharacterBattleBegin;
@@ -41,7 +52,7 @@ typedef struct s_client_character_battle_begin
 // Request next turn info from the server.
 typedef struct s_client_character_next_turn
 {
-	Header header;
+	ClientHeader clientHeader;
 	EntityHeader entity;
 	int battle_id;
 	int lastTurn;
@@ -50,7 +61,7 @@ typedef struct s_client_character_next_turn
 
 typedef struct s_client_character_command
 {
-	Header header;
+	ClientHeader clientHeader;
 	EntityHeader entity;
 	int battle_id;
 	int turn_id;
