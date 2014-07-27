@@ -12,28 +12,10 @@
 using namespace qfcnet;
 using namespace qfcbase;
 
-ClientChannel::ClientChannel(int localPort, std::string serverAddress, int serverPort)
+ClientChannel::ClientChannel()
 	: stop_listen(false), channel_socket(0)
 {
-	WSADATA wsaData;
-	int r = WSAStartup(MAKEWORD(2, 2), &wsaData);
 
-	if (LOBYTE(wsaData.wVersion) != 2 ||
-		HIBYTE(wsaData.wVersion) != 2)
-		throw std::exception("Invalid WinSock version.");
-
-	std::condition_variable initialized;
-	std::mutex mtx;
-
-	listen_thread = std::thread([&]() {
-		StartConnection(localPort, serverAddress, serverPort);
-		initialized.notify_all();
-		Listen();
-	});
-
-	std::unique_lock<std::mutex> lck(mtx);
-	initialized.wait(lck);
-	listen_thread.detach();
 }
 
 
@@ -46,11 +28,17 @@ ClientChannel::~ClientChannel()
 
 	if (listen_thread.joinable())
 		listen_thread.join();
-	WSACleanup();
+
 }
 
 void qfcnet::ClientChannel::StartConnection(int localPort, std::string &serverAddress, int serverPort)
 {
+	WSADATA wsaData;
+	int r = WSAStartup(MAKEWORD(2, 2), &wsaData);
+
+	if (LOBYTE(wsaData.wVersion) != 2 ||
+		HIBYTE(wsaData.wVersion) != 2)
+		throw std::exception("Invalid WinSock version.");
 	channel_socket = socket(AF_INET, SOCK_DGRAM, IPPROTO_UDP);
 	if (channel_socket == INVALID_SOCKET)
 		throw std::exception(("Error while creating channel_socket: " + std::to_string(WSAGetLastError())).c_str());
@@ -83,7 +71,7 @@ void qfcnet::ClientChannel::Listen()
 	{
 		size = recvfrom(channel_socket, (char*)buffer, NET_BUFFER_SIZE - 1, 0, (SOCKADDR*)&server_addr, &server_addr_size);
 		if (stop_listen)
-			return;
+			break;
 
 		if (size < 0)
 		{
@@ -148,6 +136,23 @@ void qfcnet::ClientChannel::Listen()
 			break;
 		}
 	}
+	WSACleanup();
+}
+
+void qfcnet::ClientChannel::Connect(int localPort, std::string serverAddress, int serverPort)
+{
+	std::condition_variable initialized;
+	std::mutex mtx;
+
+	listen_thread = std::thread([&]() {
+		StartConnection(localPort, serverAddress, serverPort);
+		initialized.notify_all();
+		Listen();
+	});
+
+	std::unique_lock<std::mutex> lck(mtx);
+	initialized.wait(lck);
+	listen_thread.detach();
 }
 
 #pragma region Requests
@@ -202,6 +207,6 @@ void ClientChannel::GetPlayerInfo(
 
 void ClientChannel::GetEntities(std::string screen_name)
 {
-	
+
 }
 #pragma endregion Requests

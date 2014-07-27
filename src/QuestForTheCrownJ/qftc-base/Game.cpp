@@ -39,6 +39,8 @@ void Game::LoadScene(Scene* s, bool stack)
 	}
 
 	currentScene = s;
+
+	currentScene->AddRemoveEntities();
 }
 
 void Game::UnstackScene()

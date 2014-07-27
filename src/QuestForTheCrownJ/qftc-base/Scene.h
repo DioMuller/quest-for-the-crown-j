@@ -31,6 +31,9 @@ namespace qfcbase
 		/////////////////////////////////////
 		public:
 			virtual void Update(double dt);
+
+			void AddRemoveEntities();
+
 			virtual void Draw(sf::RenderWindow* renderer);
 
 			void AddEntity(std::shared_ptr<Entity> e);

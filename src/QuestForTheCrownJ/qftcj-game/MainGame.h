@@ -14,7 +14,10 @@ namespace qfcgame
 		// Constructors
 		/////////////////////////////////////
 		public:
-			MainGame(std::string auth_token);
+			MainGame();
+
+			void Connect(int localPort, std::string auth_token);
+
 			~MainGame();
 
 			void RefreshSceneFromServer();

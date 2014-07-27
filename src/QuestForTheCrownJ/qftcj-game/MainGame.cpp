@@ -34,15 +34,8 @@ std::shared_ptr<qfcbase::Entity> CreateEntity(const ServerEntityInfo& info)
 	return entity;
 }
 
-MainGame::MainGame(std::string auth_token)
-	: clientChannel(12301, "127.0.0.1", 12345)
+MainGame::MainGame()
 {
-	clientChannel.auth_token = auth_token;
-	clientChannel.onEntity = [this](const ServerEntityInfo& entityInfo) {
-		auto entity = CreateEntity(entityInfo);
-		currentScene->AddEntity(entity);
-	};
-
 	qfcbase::AudioPlayer::SetMusicPath("Content/bgm/");
 	qfcbase::AudioPlayer::SetSoundPath("Content/sound/");
 }
@@ -81,4 +74,14 @@ MainGame::~MainGame()
 void MainGame::Update(double dt)
 {
 	Game::Update(dt);
+}
+
+void qfcgame::MainGame::Connect(int localPort, std::string auth_token)
+{
+	clientChannel.Connect(localPort, "127.0.0.1", 12345);
+	clientChannel.auth_token = auth_token;
+	clientChannel.onEntity = [this](const ServerEntityInfo& entityInfo) {
+		auto entity = CreateEntity(entityInfo);
+		currentScene->AddEntity(entity);
+	};
 }

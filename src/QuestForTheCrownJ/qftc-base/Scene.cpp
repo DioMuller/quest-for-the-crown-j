@@ -22,24 +22,8 @@ Scene::~Scene()
 /////////////////////////////////////
 void Scene::Update(double dt)
 {
-	// Remove entities to be removed.
-	while (!toRemove.empty())
-	{
-		auto e = toRemove.top();
-		toRemove.pop();
+	AddRemoveEntities();
 
-		auto position = std::find(entities.begin(), entities.end(), e);
-		if (position != entities.end()) entities.erase(position);
-	}
-
-	// Add entities to be added
-	while (!toAdd.empty())
-	{
-		auto e = toAdd.top();
-		toAdd.pop();
-
-		entities.push_back(e);
-	}
 
 	// Updates entities.
 	for (const auto& e : entities)
@@ -82,7 +66,7 @@ std::vector<std::shared_ptr<Entity>> Scene::GetEntities(std::string category)
 std::vector<std::shared_ptr<Entity>> Scene::GetEntities(std::function<bool(const std::shared_ptr<Entity>&)> predicate)
 {
 	std::vector<std::shared_ptr<Entity>> bar;
-	auto it = std::copy_if(entities.begin(), entities.end(), std::back_inserter(bar), predicate);
+	std::copy_if(entities.begin(), entities.end(), std::back_inserter(bar), predicate);
 	return bar;
 }
 
@@ -102,3 +86,25 @@ Game* Scene::GetParent()
 }
 
 void Scene::OnResume() { }
+
+void qfcbase::Scene::AddRemoveEntities()
+{
+	// Remove entities to be removed.
+	while (!toRemove.empty())
+	{
+		auto e = toRemove.top();
+		toRemove.pop();
+
+		auto position = std::find(entities.begin(), entities.end(), e);
+		if (position != entities.end()) entities.erase(position);
+	}
+
+	// Add entities to be added
+	while (!toAdd.empty())
+	{
+		auto e = toAdd.top();
+		toAdd.pop();
+
+		entities.push_back(e);
+	}
+}

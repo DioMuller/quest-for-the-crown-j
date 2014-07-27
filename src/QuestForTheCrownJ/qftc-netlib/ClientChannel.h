@@ -21,7 +21,9 @@ namespace qfcnet
 		std::function<void(const ServerEntityInfo&)> onEntity;
 
 	public:
-		ClientChannel(int localPort, std::string serverAddress, int serverPort);
+		ClientChannel();
+
+		void Connect(int localPort, std::string serverAddress, int serverPort);
 
 		~ClientChannel();
 
