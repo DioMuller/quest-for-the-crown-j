@@ -17,13 +17,14 @@ namespace qfcbase
 			std::vector<std::shared_ptr<Entity>> entities;
 			std::stack<std::shared_ptr<Entity>> toRemove;
 			std::stack<std::shared_ptr<Entity>> toAdd;
+			bool allowStacking;
 			Game* parent;
 
 		/////////////////////////////////////
 		// Constructors
 		/////////////////////////////////////
 		public:
-			Scene(Game* parent);
+			Scene(Game* parent, bool allowStacking = true);
 			~Scene();
 
 		/////////////////////////////////////

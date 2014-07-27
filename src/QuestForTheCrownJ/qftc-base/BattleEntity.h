@@ -10,6 +10,7 @@ namespace qfcbase
 		/////////////////////////////////////
 		private:
 			std::shared_ptr<Entity> parent;
+			sf::Text text;
 
 		/////////////////////////////////////
 		// "Properties"
@@ -25,5 +26,8 @@ namespace qfcbase
 		public:
 			BattleEntity(std::shared_ptr<Entity> parent);
 			~BattleEntity();
+
+		public:
+			void DrawInfo(sf::RenderWindow* renderer, sf::Vector2f position);
 	};
 }

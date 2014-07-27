@@ -57,6 +57,11 @@ void Hero::CollideWith(std::shared_ptr<Entity> e)
 	if (e->category == "Enemy")
 	{
 		this->scene->RemoveEntity(e);
-		this->scene->LoadScene(new qfcbase::BattleScene(this->scene->GetParent()));
+		auto battle = new qfcbase::BattleScene(this->scene->GetParent());
+
+		if (battle->PlayerJoin(std::shared_ptr<Entity>(this)))
+			this->scene->LoadScene(battle);
+		else
+			delete battle;
 	}
 }

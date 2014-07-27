@@ -33,5 +33,6 @@ namespace qfcbase
 
 			void LoadScene(Scene* s, bool stack = false);
 			void UnstackScene();
+			bool IsCurrentScene(Scene* scene);
 	};
 }

@@ -7,9 +7,10 @@ using namespace qfcbase;
 /////////////////////////////////////
 // Constructors
 /////////////////////////////////////
-Scene::Scene(Game* parent)
+Scene::Scene(Game* parent, bool allowStacking)
 {
 	this->parent = parent;
+	this->allowStacking = allowStacking;
 }
 
 
@@ -72,7 +73,8 @@ std::vector<std::shared_ptr<Entity>> Scene::GetEntities(std::function<bool(const
 
 void Scene::LoadScene(Scene* scene)
 {
-	parent->LoadScene(scene, true);
+	if ( allowStacking && parent->IsCurrentScene(this) )
+		parent->LoadScene(scene, true);
 }
 
 void Scene::UnloadScene()

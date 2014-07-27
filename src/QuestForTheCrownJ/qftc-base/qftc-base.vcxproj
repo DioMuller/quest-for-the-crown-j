@@ -88,6 +88,7 @@
     <ClCompile Include="EntityFactory.cpp" />
     <ClCompile Include="FollowBehavior.cpp" />
     <ClCompile Include="Game.cpp" />
+    <ClCompile Include="GameAssets.cpp" />
     <ClCompile Include="GameEntityFactory.cpp" />
     <ClCompile Include="Hero.cpp" />
     <ClCompile Include="Level.cpp" />
@@ -120,6 +121,7 @@
     <ClInclude Include="EntityFactory.h" />
     <ClInclude Include="FollowBehavior.h" />
     <ClInclude Include="Game.h" />
+    <ClInclude Include="GameAssets.h" />
     <ClInclude Include="GameEntityFactory.h" />
     <ClInclude Include="Hero.h" />
     <ClInclude Include="Level.h" />

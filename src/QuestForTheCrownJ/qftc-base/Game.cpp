@@ -53,3 +53,8 @@ void Game::UnstackScene()
 		currentScene->OnResume();
 	}
 }
+
+bool Game::IsCurrentScene(Scene* scene)
+{
+	return (currentScene == scene);
+}

@@ -127,6 +127,7 @@
       <Filter>Scenes</Filter>
     </ClCompile>
     <ClCompile Include="BattleEntity.cpp" />
+    <ClCompile Include="GameAssets.cpp" />
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="Behavior.h">
@@ -223,6 +224,7 @@
       <Filter>Scenes</Filter>
     </ClInclude>
     <ClInclude Include="BattleEntity.h" />
+    <ClInclude Include="GameAssets.h" />
   </ItemGroup>
   <ItemGroup>
     <None Include="..\..\..\references\SFML-2.1\bin\sfml-audio-d-2.dll">

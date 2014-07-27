@@ -9,7 +9,6 @@ namespace qfcbase
 	{
 		private:
 			double time;
-			sf::Font font;
 			sf::Text text;
 
 			int currentTurn;
@@ -31,6 +30,6 @@ namespace qfcbase
 			void Draw(sf::RenderWindow* renderer);
 
 			bool PlayerJoin(std::shared_ptr<Entity> hero);
-
+			bool AddMonster(std::shared_ptr<Entity> monster);
 	};
 }
