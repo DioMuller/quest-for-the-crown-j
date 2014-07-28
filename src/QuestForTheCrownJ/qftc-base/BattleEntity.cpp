@@ -36,7 +36,7 @@ void BattleEntity::DrawInfo(sf::RenderWindow* renderer, sf::Vector2f position)
 
 	sstream << "HP " << parent->status.HP << std::endl
 			<< "MP " << parent->status.MP << std::endl
-			<< "Potions " << 0;
+			<< "Potions " << "O";
 	str = sstream.str();
 	text.setString(str);
 	renderer->draw(text);

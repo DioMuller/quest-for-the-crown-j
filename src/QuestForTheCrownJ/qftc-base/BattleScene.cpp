@@ -54,7 +54,7 @@ void BattleScene::Draw(sf::RenderWindow* renderer)
 	//	Players Text
 	for (int i = 0; i < players.size(); i++)
 	{
-		players[i]->DrawInfo(renderer, sf::Vector2f(10.0f + (i * 200.0f), 500.0f));
+		players[i]->DrawInfo(renderer, sf::Vector2f(10.0f + (i * 200.0f), 550.0f));
 	}
 
 	//	Enemy Sprite
@@ -78,4 +78,9 @@ bool BattleScene::AddMonster(std::shared_ptr<Entity> monster)
 
 	enemies.push_back(std::shared_ptr<BattleEntity>(new BattleEntity(monster)));
 	return true;
+}
+
+void BattleScene::NextTurn()
+{
+	// TODO: Change Turn, show turn, do anything!
 }

@@ -126,8 +126,12 @@
     <ClCompile Include="BattleScene.cpp">
       <Filter>Scenes</Filter>
     </ClCompile>
-    <ClCompile Include="BattleEntity.cpp" />
-    <ClCompile Include="GameAssets.cpp" />
+    <ClCompile Include="BattleEntity.cpp">
+      <Filter>Core</Filter>
+    </ClCompile>
+    <ClCompile Include="GameAssets.cpp">
+      <Filter>Drawing</Filter>
+    </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="Behavior.h">
@@ -223,8 +227,12 @@
     <ClInclude Include="BattleScene.h">
       <Filter>Scenes</Filter>
     </ClInclude>
-    <ClInclude Include="BattleEntity.h" />
-    <ClInclude Include="GameAssets.h" />
+    <ClInclude Include="BattleEntity.h">
+      <Filter>Core</Filter>
+    </ClInclude>
+    <ClInclude Include="GameAssets.h">
+      <Filter>Drawing</Filter>
+    </ClInclude>
   </ItemGroup>
   <ItemGroup>
     <None Include="..\..\..\references\SFML-2.1\bin\sfml-audio-d-2.dll">
