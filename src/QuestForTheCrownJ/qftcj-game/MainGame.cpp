@@ -54,8 +54,6 @@ void MainGame::RefreshSceneFromServer()
 	scene->AddEntity(enemy);*/
 
 	clientChannel.GetPlayerInfo([&, this](ServerPlayerInfo player) {
-		qfcbase::LevelLoader::LoadLevels("Content/maps/QuestForTheCrown.maps");
-
 		auto scene = qfcbase::LevelLoader::LoadMap(this, 1, (std::string)"Content/maps/" + (std::string)player.map_name + (std::string)".tmx");
 		Game::LoadScene(scene, false);
 
