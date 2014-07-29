@@ -201,3 +201,8 @@ void qfcserver::Server::Update(double delta)
 {
 
 }
+
+void qfcserver::Server::GoToNeighbour(std::shared_ptr<qfcbase::Entity> entity, qfcbase::Direction direction)
+{
+
+}

@@ -5,6 +5,7 @@
 
 #include "Entity.h"
 #include "Interfaces.h"
+#include "Level.h"
 
 namespace qfcbase
 {
@@ -16,6 +17,7 @@ namespace qfcbase
 			Game();
 			~Game();
 
+			virtual void GoToNeighbour(std::shared_ptr<qfcbase::Entity> entity, qfcbase::Direction direction) = 0;
 			virtual void StartConfront(std::shared_ptr<qfcbase::Entity> e1, std::shared_ptr<qfcbase::Entity> e2) = 0;
 	};
 }

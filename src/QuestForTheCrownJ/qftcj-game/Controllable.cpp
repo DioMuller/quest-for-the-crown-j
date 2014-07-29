@@ -1,6 +1,7 @@
 #include "Controllable.h"
 #include "Entity.h"
 #include "Level.h"
+#include "Game.h"
 
 qfcgame::Controllable::Controllable(std::weak_ptr<qfcbase::Entity> parent, std::shared_ptr<PlayerInput> input)
 	: qfcbase::Behavior(parent), input(input)
@@ -26,13 +27,14 @@ void qfcgame::Controllable::Update(double dt)
 			qfcbase::Direction direction = qfcbase::Direction::NONE;
 
 			if (parent->Sprite->Center.x < 0) direction = qfcbase::Direction::WEST;
-			if (parent->Sprite->Center.x >(scene->Map()->GetMapSize().x)) direction = qfcbase::Direction::EAST;
+			if (parent->Sprite->Center.x > (scene->Map()->GetMapSize().x)) direction = qfcbase::Direction::EAST;
 			if (parent->Sprite->Center.y < 0) direction = qfcbase::Direction::NORTH;
-			if (parent->Sprite->Center.y >(scene->Map()->GetMapSize().y)) direction = qfcbase::Direction::SOUTH;
+			if (parent->Sprite->Center.y > (scene->Map()->GetMapSize().y)) direction = qfcbase::Direction::SOUTH;
 
 			if (direction != qfcbase::Direction::NONE)
 			{
-				scene->GoToNeighbour(parent, direction);
+				if (auto game = scene->GetParent().lock())
+					game->GoToNeighbour(parent, direction);
 			}
 		}
 	}

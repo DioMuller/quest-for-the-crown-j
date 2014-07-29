@@ -3,6 +3,7 @@
 #include "StructBase.h"
 #include "ClientChannel.h"
 #include "Scene.h"
+#include "Level.h"
 
 namespace qfcgame
 {
@@ -39,6 +40,7 @@ namespace qfcgame
 		void UnstackScene();
 		bool IsCurrentScene(std::shared_ptr<qfcbase::Scene> scene);
 
+		void GoToNeighbour(std::shared_ptr<qfcbase::Entity> entity, qfcbase::Direction direction);
 		void StartConfront(std::shared_ptr<qfcbase::Entity> e1, std::shared_ptr<qfcbase::Entity> e2);
 	};
 }

@@ -78,6 +78,13 @@ void MainGame::StartConfront(std::shared_ptr<Entity> e1, std::shared_ptr<Entity>
 		LoadScene(battle, true);
 }
 
+void qfcgame::MainGame::GoToNeighbour(std::shared_ptr<qfcbase::Entity> entity, qfcbase::Direction direction)
+{
+	// Hot-swap current level content.
+	auto level = std::dynamic_pointer_cast<Level>(entity->scene.lock());
+	level->GoToNeighbour(entity, direction);
+}
+
 //void Scene::LoadScene(Scene* scene)
 //{
 //	if (allowStacking && parent->IsCurrentScene(this))
