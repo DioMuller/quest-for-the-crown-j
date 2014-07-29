@@ -4,16 +4,20 @@
 #include "sqlite3.h"
 #include "ServerChannel.h"
 #include "ServerStructs.h"
+#include "Game.h"
 
 namespace qfcserver {
 	class Server
+		: public qfcbase::Game
 	{
 		public:
 			Server(int port);
 			~Server();
 
 			void Run();
+			void Update(double delta);
 
+			void StartConfront(std::shared_ptr<qfcbase::Entity> e1, std::shared_ptr<qfcbase::Entity> e2);
 		private:
 			sqlite3* db;
 			qfcnet::ServerChannel channel;

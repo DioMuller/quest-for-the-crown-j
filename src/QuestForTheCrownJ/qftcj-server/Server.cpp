@@ -53,8 +53,7 @@ void Server::UpdateLoop()
 		std::chrono::time_point<std::chrono::system_clock> start, end;
 		start = std::chrono::system_clock::now();
 
-		// foreach player screen
-		//screen->Update(delta);
+		Update(delta);
 
 		end = std::chrono::system_clock::now();
 
@@ -191,4 +190,14 @@ std::shared_ptr<ServerPlayerInfo> qfcserver::Server::HandleRequestPlayerInfo(con
 	//resp.position.x
 	//resp.position.y
 	return resp;
+}
+
+void qfcserver::Server::StartConfront(std::shared_ptr<qfcbase::Entity> e1, std::shared_ptr<qfcbase::Entity> e2)
+{
+
+}
+
+void qfcserver::Server::Update(double delta)
+{
+
 }

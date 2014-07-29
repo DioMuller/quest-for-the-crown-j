@@ -19,6 +19,6 @@ namespace qfcbase
 		// Methods
 		/////////////////////////////////////
 		public:
-			virtual std::shared_ptr<Entity> GenerateEntity(Scene* scene, std::string name, tmx::MapObject object);
+			virtual std::shared_ptr<Entity> GenerateEntity(std::weak_ptr<Scene> scene, std::string name, tmx::MapObject object);
 	};
 }

@@ -80,10 +80,13 @@ void Entity::Walk(sf::Vector2f direction, double dt)
 
 bool Entity::ValidPosition(sf::Vector2f offset)
 {
+	auto sceneInst = scene.lock();
+	if (!sceneInst) return false;
+
 	auto area = SFHelper::translate(Sprite->GetArea(), offset);
 
 	/* Level Collision */
-	Level* level = (Level*)scene;
+	auto level = std::dynamic_pointer_cast<Level>(sceneInst);
 
 	if ( level )
 	{
@@ -111,7 +114,7 @@ bool Entity::ValidPosition(sf::Vector2f offset)
 	}
 	/* End Level Collision */
 
-	auto entCollisions = scene->GetEntities([this, area](std::shared_ptr<Entity> e){
+	auto entCollisions = sceneInst->GetEntities([this, area](std::shared_ptr<Entity> e){
 		if (this == e.get())
 			return false;
 		return  e->Sprite->GetArea().intersects(area);

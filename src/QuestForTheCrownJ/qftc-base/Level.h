@@ -76,7 +76,7 @@ namespace qfcbase
 		// Constructors
 		/////////////////////////////////////
 		public:
-			Level(Game* game, int id);
+			Level(std::weak_ptr<Game> game, int id);
 			~Level();
 
 		/////////////////////////////////////

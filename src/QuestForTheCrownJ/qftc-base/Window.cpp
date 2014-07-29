@@ -14,13 +14,12 @@ Window::Window(sf::Vector2i size, std::string title)
 Window::~Window()
 {
 	delete window;
-	delete game;
 }
 
-void Window::Run(Game* game)
+void Window::Run(std::shared_ptr<IRunnable> runnable)
 {
 	// Sets the game.
-	this->game = game;
+	this->running = runnable;
 
 	//Initial update duration = 1 frame.
 	double delta = SECONDS_PER_FRAME;
@@ -38,8 +37,8 @@ void Window::Run(Game* game)
 		}
 
 		window->clear();
-		game->Update(delta);
-		game->Draw(window);
+		runnable->Update(delta);
+		runnable->Draw(window);
 		window->display();
 		end = std::chrono::system_clock::now();
 

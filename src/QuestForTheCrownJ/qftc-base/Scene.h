@@ -3,12 +3,14 @@
 #include <stack>
 #include <functional>
 #include "Entity.h"
+#include "Shareable.h"
 
 namespace qfcbase
 {
 	class Game;
 
 	class Scene
+		: public Shareable<Scene>
 	{
 		/////////////////////////////////////
 		// Attributes
@@ -18,13 +20,13 @@ namespace qfcbase
 			std::stack<std::shared_ptr<Entity>> toRemove;
 			std::stack<std::shared_ptr<Entity>> toAdd;
 			bool allowStacking;
-			Game* parent;
+			std::weak_ptr<Game> parent;
 
 		/////////////////////////////////////
 		// Constructors
 		/////////////////////////////////////
 		public:
-			Scene(Game* parent, bool allowStacking = true);
+			Scene(std::weak_ptr<Game> parent, bool allowStacking = true);
 			~Scene();
 
 		/////////////////////////////////////
@@ -42,9 +44,9 @@ namespace qfcbase
 
 			std::vector<std::shared_ptr<Entity>> GetEntities(std::string category);
 			std::vector<std::shared_ptr<Entity>> GetEntities(std::function<bool(const std::shared_ptr<Entity>&)> predicate);
-			void LoadScene(Scene* scene);
-			void UnloadScene();
-			Game* GetParent();
+			//void LoadScene(std::shared_ptr<Scene> scene);
+			//void UnloadScene();
+			std::weak_ptr<Game> GetParent();
 			virtual void OnResume();
 	};
 }

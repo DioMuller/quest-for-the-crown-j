@@ -17,12 +17,14 @@ void qfcbase::FollowBehavior::Update(double dt)
 {
 	auto parent = Parent.lock();
 	if (!parent) return;
+	auto scene = parent->scene.lock();
+	if (!scene) return;
 
 	float targetDistance = -1;
 
 	if (currentTarget.expired())
 	{
-		auto ents = parent->scene->GetEntities(targetCategory);
+		auto ents = scene->GetEntities(targetCategory);
 		std::shared_ptr<qfcbase::Entity> bestTarget = nullptr;
 		auto position = parent->Sprite->Position;
 		for (const auto& e : ents)

@@ -19,7 +19,7 @@ void qfcgame::Controllable::Update(double dt)
 		input->Update(dt);
 		parent->Walk(input->Movement(), dt);
 
-		qfcbase::Level* scene = (qfcbase::Level*)parent->Scene();
+		auto scene = std::dynamic_pointer_cast<qfcbase::Level>(parent->Scene().lock());
 
 		if (scene)
 		{

@@ -7,7 +7,7 @@ using namespace qfcbase;
 /////////////////////////////////////
 // Constructors
 /////////////////////////////////////
-Scene::Scene(Game* parent, bool allowStacking)
+Scene::Scene(std::weak_ptr<Game> parent, bool allowStacking)
 {
 	this->parent = parent;
 	this->allowStacking = allowStacking;
@@ -50,7 +50,7 @@ void Scene::Draw(sf::RenderWindow* renderer)
 
 void Scene::AddEntity(std::shared_ptr<Entity> e)
 {
-	e->scene = this;
+	e->scene = getptr();
 	toAdd.push(e);
 }
 
@@ -71,18 +71,7 @@ std::vector<std::shared_ptr<Entity>> Scene::GetEntities(std::function<bool(const
 	return bar;
 }
 
-void Scene::LoadScene(Scene* scene)
-{
-	if ( allowStacking && parent->IsCurrentScene(this) )
-		parent->LoadScene(scene, true);
-}
-
-void Scene::UnloadScene()
-{
-	parent->UnstackScene();
-}
-
-Game* Scene::GetParent()
+std::weak_ptr<Game> Scene::GetParent()
 {
 	return parent;
 }

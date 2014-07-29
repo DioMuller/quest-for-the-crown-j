@@ -19,8 +19,8 @@ namespace qfcbase
 		/////////////////////////////////////
 		public:
 			static void LoadLevels(std::string path);
-			static Level* LoadMap(Game* game, int id, std::string tmxFile);
+			static std::shared_ptr<Level> LoadMap(std::weak_ptr<Game> game, int id, std::string tmxFile);
 			static void SetFactory(EntityFactory* factory);
-			static std::shared_ptr<Entity> CreateEntity(Scene* scene, int levelId, tmx::MapObject object);
+			static std::shared_ptr<Entity> CreateEntity(std::weak_ptr<Scene> scene, int levelId, tmx::MapObject object);
 	};
 }

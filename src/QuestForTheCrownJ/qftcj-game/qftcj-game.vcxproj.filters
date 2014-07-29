@@ -14,6 +14,15 @@
       <Filter>Behaviors</Filter>
     </ClCompile>
     <ClCompile Include="client-main.cpp" />
+    <ClCompile Include="BattleScene.cpp">
+      <Filter>Scenes</Filter>
+    </ClCompile>
+    <ClCompile Include="BattleEntity.cpp">
+      <Filter>Core</Filter>
+    </ClCompile>
+    <ClCompile Include="MultiplayerGame.cpp">
+      <Filter>Core</Filter>
+    </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <Filter Include="Core">
@@ -24,6 +33,9 @@
     </Filter>
     <Filter Include="Behaviors">
       <UniqueIdentifier>{b470c142-1151-4360-989b-331ece890e22}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Scenes">
+      <UniqueIdentifier>{2b01ac85-b8b5-4da0-ba93-4483e09921e6}</UniqueIdentifier>
     </Filter>
   </ItemGroup>
   <ItemGroup>
@@ -38,6 +50,15 @@
     </ClInclude>
     <ClInclude Include="Controllable.h">
       <Filter>Behaviors</Filter>
+    </ClInclude>
+    <ClInclude Include="BattleScene.h">
+      <Filter>Scenes</Filter>
+    </ClInclude>
+    <ClInclude Include="BattleEntity.h">
+      <Filter>Core</Filter>
+    </ClInclude>
+    <ClInclude Include="MultiplayerGame.h">
+      <Filter>Core</Filter>
     </ClInclude>
   </ItemGroup>
 </Project>

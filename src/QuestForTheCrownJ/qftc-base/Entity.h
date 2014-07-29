@@ -5,6 +5,7 @@
 #include "Container.h"
 #include "Definitions.h"
 #include "Scene.h"
+#include "Shareable.h"
 
 namespace qfcbase
 {
@@ -32,7 +33,7 @@ namespace qfcbase
 
 	class Scene;
 
-	class Entity
+	class Entity : public Shareable<Entity>
 	{
 		/////////////////////////////////////
 		// Attributes
@@ -41,7 +42,7 @@ namespace qfcbase
 			std::vector<std::shared_ptr<Behavior>> behaviors;
 			std::string lastDirectionName;
 		public:
-			qfcbase::Scene* scene;
+			std::weak_ptr<qfcbase::Scene> scene;
 			std::string category;
 			Status status;
 
@@ -63,7 +64,7 @@ namespace qfcbase
 			void Walk(sf::Vector2f direction, double dt);
 			virtual void CollideWith(std::shared_ptr<Entity> e);
 
-			qfcbase::Scene* Scene()
+			std::weak_ptr<qfcbase::Scene> Scene()
 			{
 				return scene;
 			}

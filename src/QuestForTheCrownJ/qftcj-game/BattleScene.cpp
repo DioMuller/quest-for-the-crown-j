@@ -1,13 +1,17 @@
 #include "BattleScene.h"
-#include "Game.h"
-#include "GameAssets.h"
-#include "AudioPlayer.h"
+
 #include <string>
 #include <sstream>
 
+#include "MainGame.h"
+#include "GameAssets.h"
+#include "AudioPlayer.h"
+
+using namespace qfcgame;
 using namespace qfcbase;
 
-BattleScene::BattleScene(Game* parent) : Scene(parent, false)
+BattleScene::BattleScene(std::weak_ptr<qfcbase::Game>)
+	: Scene(parent, false)
 {
 	time = 0.0;
 
@@ -28,8 +32,12 @@ void BattleScene::Update(double dt)
 {
 	time += dt;
 
-	if ( time > 5.0)
-		parent->UnstackScene();
+	if (time > 5.0)
+	{
+		auto game = std::dynamic_pointer_cast<MainGame>(parent.lock());
+		if (game)
+			game->UnstackScene();
+	}
 }
 
 void BattleScene::Draw(sf::RenderWindow* renderer)

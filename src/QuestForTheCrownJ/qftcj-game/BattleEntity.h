@@ -1,22 +1,22 @@
 #pragma once
 #include "Entity.h"
 
-namespace qfcbase
+namespace qfcgame
 {
-	class BattleEntity : public Entity
+	class BattleEntity : public qfcbase::Entity
 	{
 		/////////////////////////////////////
 		// Attributes
 		/////////////////////////////////////
 		private:
-			std::shared_ptr<Entity> parent;
+			std::shared_ptr<qfcbase::Entity> parent;
 			sf::Text text;
 
 		/////////////////////////////////////
 		// "Properties"
 		/////////////////////////////////////
 		public:
-			std::shared_ptr<Entity> Parent()
+			std::shared_ptr<qfcbase::Entity> Parent()
 			{
 				return parent;
 			}
@@ -24,7 +24,7 @@ namespace qfcbase
 		// Constructors
 		/////////////////////////////////////
 		public:
-			BattleEntity(std::shared_ptr<Entity> parent);
+			BattleEntity(std::shared_ptr<qfcbase::Entity> parent);
 			~BattleEntity();
 
 		public:

@@ -2,31 +2,43 @@
 #include "Game.h"
 #include "StructBase.h"
 #include "ClientChannel.h"
+#include "Scene.h"
 
 namespace qfcgame
 {
-	class MainGame : public qfcbase::Game
+	class MainGame :
+		public qfcbase::Game,
+		public qfcbase::IDrawable,
+		public qfcbase::IRunnable
 	{
-		private:
-			qfcnet::ClientChannel clientChannel;
+		////////////////////////////////////////
+		// Attributes
+		////////////////////////////////////////
+	private:
+		std::stack<std::shared_ptr<qfcbase::Scene>> pastScenes;
+		bool endScene;
+		bool sceneStacked;
+	protected:
+		std::shared_ptr<qfcbase::Scene> currentScene;
 
 		/////////////////////////////////////
 		// Constructors
 		/////////////////////////////////////
-		public:
-			MainGame();
-
-			void Connect(int localPort, std::string auth_token);
-
-			~MainGame();
-
-			void RefreshSceneFromServer();
-			void SetEntities(std::vector<ServerEntityInfo> entities);
+	public:
+		MainGame();
+		~MainGame();
 
 		/////////////////////////////////////
 		// Methods
 		/////////////////////////////////////
-		public:
-			void Update(double dt);
+	public:
+		virtual void Update(double dt);
+		virtual void Draw(sf::RenderWindow* renderer);
+
+		void LoadScene(std::shared_ptr<qfcbase::Scene> s, bool stack = false);
+		void UnstackScene();
+		bool IsCurrentScene(std::shared_ptr<qfcbase::Scene> scene);
+
+		void StartConfront(std::shared_ptr<qfcbase::Entity> e1, std::shared_ptr<qfcbase::Entity> e2);
 	};
 }

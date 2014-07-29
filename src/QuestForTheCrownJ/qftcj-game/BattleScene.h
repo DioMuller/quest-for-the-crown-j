@@ -6,9 +6,9 @@
 #define MAX_BATTLE_PLAYERS 4
 #define MAX_BATTLE_ENEMIES 1
 
-namespace qfcbase
+namespace qfcgame
 {
-	class BattleScene : public Scene
+	class BattleScene : public qfcbase::Scene
 	{
 		private:
 			double time;
@@ -22,7 +22,7 @@ namespace qfcbase
 		// Constructors
 		/////////////////////////////////////
 		public:
-			BattleScene(Game* parent);
+			BattleScene(std::weak_ptr<qfcbase::Game> parent);
 			~BattleScene();
 
 		/////////////////////////////////////
@@ -32,7 +32,7 @@ namespace qfcbase
 			void Update(double dt);
 			void Draw(sf::RenderWindow* renderer);
 
-			bool PlayerJoin(std::shared_ptr<Entity> hero);
-			bool AddMonster(std::shared_ptr<Entity> monster);
+			bool PlayerJoin(std::shared_ptr<qfcbase::Entity> hero);
+			bool AddMonster(std::shared_ptr<qfcbase::Entity> monster);
 	};
 }

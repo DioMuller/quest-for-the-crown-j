@@ -3,6 +3,7 @@
 #include <string>
 #include <sstream>
 
+using namespace qfcgame;
 using namespace qfcbase;
 
 BattleEntity::BattleEntity(std::shared_ptr<Entity> parent) : Entity()

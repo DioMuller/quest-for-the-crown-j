@@ -35,9 +35,9 @@ void LevelLoader::LoadLevels(std::string path)
 	}
 }
 
-Level* LevelLoader::LoadMap(Game* game, int id, std::string tmxFile)
+std::shared_ptr<Level> LevelLoader::LoadMap(std::weak_ptr<Game> game, int id, std::string tmxFile)
 {
-	Level* level = new Level(game, id);
+	auto level = std::make_shared<Level>(game, id);
 	level->LoadMap(tmxFile);
 
 	return level;
@@ -48,7 +48,7 @@ void LevelLoader::SetFactory(EntityFactory* factory)
 	LevelLoader::factory = std::shared_ptr<EntityFactory>(factory);
 }
 
-std::shared_ptr<Entity> LevelLoader::CreateEntity(Scene* scene, int levelId, tmx::MapObject object)
+std::shared_ptr<Entity> LevelLoader::CreateEntity(std::weak_ptr<Scene> scene, int levelId, tmx::MapObject object)
 {
 	if (factory == nullptr)
 	{

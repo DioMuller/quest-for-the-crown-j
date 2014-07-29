@@ -81,8 +81,6 @@
   <ItemGroup>
     <ClCompile Include="AnimatedSprite.cpp" />
     <ClCompile Include="AudioPlayer.cpp" />
-    <ClCompile Include="BattleEntity.cpp" />
-    <ClCompile Include="BattleScene.cpp" />
     <ClCompile Include="Behavior.cpp" />
     <ClCompile Include="Entity.cpp" />
     <ClCompile Include="EntityFactory.cpp" />
@@ -111,8 +109,6 @@
   <ItemGroup>
     <ClInclude Include="AnimatedSprite.h" />
     <ClInclude Include="AudioPlayer.h" />
-    <ClInclude Include="BattleEntity.h" />
-    <ClInclude Include="BattleScene.h" />
     <ClInclude Include="Behavior.h" />
     <ClInclude Include="Container.h" />
     <ClInclude Include="Definitions.h" />
@@ -124,6 +120,7 @@
     <ClInclude Include="GameAssets.h" />
     <ClInclude Include="GameEntityFactory.h" />
     <ClInclude Include="Hero.h" />
+    <ClInclude Include="Interfaces.h" />
     <ClInclude Include="Level.h" />
     <ClInclude Include="LevelCollection.h" />
     <ClInclude Include="LevelLoader.h" />
@@ -138,6 +135,7 @@
     <ClInclude Include="sfml-tmxloader\pugixml\pugiconfig.hpp" />
     <ClInclude Include="sfml-tmxloader\pugixml\pugixml.hpp" />
     <ClInclude Include="sfml-tmxloader\QuadTreeNode.h" />
+    <ClInclude Include="Shareable.h" />
     <ClInclude Include="Slime.h" />
     <ClInclude Include="StringHelper.h" />
     <ClInclude Include="tinyxml2\tinyxml2.h" />

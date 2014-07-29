@@ -5,7 +5,7 @@
 
 using namespace qfcbase;
 
-Level::Level(Game* game, int id) : Scene(game)
+Level::Level(std::weak_ptr<Game> game, int id) : Scene(game)
 {
 	this->map = nullptr;
 }
@@ -88,7 +88,7 @@ void Level::LoadMap(std::string tmxFile)
 		{
 			for (auto object : layer.objects)
 			{
-				std::shared_ptr<Entity> entity = LevelLoader::CreateEntity(this, id, object);
+				std::shared_ptr<Entity> entity = LevelLoader::CreateEntity(getptr(), id, object);
 				if (entity != nullptr) AddEntity(entity);
 			}
 		}

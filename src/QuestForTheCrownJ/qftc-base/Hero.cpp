@@ -1,9 +1,12 @@
 #include "Hero.h"
+
+#include <memory>
+#include <math.h>
+
 #include "AnimatedSprite.h"
 #include "Container.h"
 #include "Level.h"
-#include "BattleScene.h"
-#include <math.h>
+#include "Game.h"
 
 using namespace qfcbase;
 
@@ -56,7 +59,7 @@ void Hero::Draw(sf::RenderWindow* renderer)
 {
 	sf::Vector2f cameraPosition = Sprite->Position;
 	sf::Vector2f screenSize = sf::Vector2f(renderer->getSize().x, renderer->getSize().y);
-	sf::Vector2u mapSize = ((qfcbase::Level*) scene)->Map()->GetMapSize();
+	sf::Vector2u mapSize = (dynamic_cast<qfcbase::Level*>(scene.lock().get()))->Map()->GetMapSize();
 
 	// Not on the same line because... It won't work. Not sure why.
 	cameraPosition.x = max(cameraPosition.x, screenSize.x / 2);
@@ -72,13 +75,12 @@ void Hero::CollideWith(std::shared_ptr<Entity> e)
 {
 	if (e->category == "Enemy")
 	{
-		this->scene->RemoveEntity(e);
-		auto battle = new qfcbase::BattleScene(this->scene->GetParent());
+		auto sceneInst = scene.lock();
+		if (!sceneInst) return;
 
-		if ( battle->PlayerJoin(std::shared_ptr<Entity>(this)) &&
-			 battle->AddMonster(e) )
-			this->scene->LoadScene(battle);
-		else
-			delete battle;
+		auto game = sceneInst->GetParent().lock();
+		if (!game) return;
+
+		game->StartConfront(getptr(), e);
 	}
 }

@@ -2,8 +2,10 @@
 #include <SFML/Graphics.hpp>
 #include <chrono>
 #include <thread>
+#include <memory>
+
 #include "Definitions.h"
-#include "Game.h"
+#include "Interfaces.h"
 
 namespace qfcbase
 {
@@ -16,7 +18,7 @@ namespace qfcbase
 			sf::Vector2i size;
 			std::string title;
 			sf::RenderWindow* window;
-			Game* game;
+			std::shared_ptr<IRunnable> running;
 
 		/////////////////////////////////////
 		// Constructors
@@ -29,6 +31,6 @@ namespace qfcbase
 		// Methods
 		/////////////////////////////////////
 		public:
-			void Run(Game* game);
+			void Run(std::shared_ptr<IRunnable> runnable);
 	};
 }
