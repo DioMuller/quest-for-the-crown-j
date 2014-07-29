@@ -49,7 +49,7 @@ void MainGame::LoadScene(std::shared_ptr<Scene> s, bool stack)
 	currentScene->AddRemoveEntities();
 }
 
-void MainGame::UnstackScene()
+void MainGame::UnstackScene(std::shared_ptr<qfcbase::Entity> entity)
 {
 	if (pastScenes.size() > 0)
 	{
@@ -71,9 +71,9 @@ void MainGame::StartConfront(std::shared_ptr<Entity> e1, std::shared_ptr<Entity>
 		return;
 
 	e1Scene->RemoveEntity(e2);
-	auto battle = std::make_shared<qfcgame::BattleScene>(e1Scene->GetParent());
+	auto battle = std::make_shared<qfcbase::BattleScene>(e1Scene->GetParent());
 
-	if (battle->PlayerJoin(e1->getptr()) &&
+	if (battle->PlayerJoin(e1) &&
 		battle->AddMonster(e2))
 		LoadScene(battle, true);
 }

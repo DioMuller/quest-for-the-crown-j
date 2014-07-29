@@ -14,14 +14,11 @@
       <Filter>Behaviors</Filter>
     </ClCompile>
     <ClCompile Include="client-main.cpp" />
-    <ClCompile Include="BattleScene.cpp">
-      <Filter>Scenes</Filter>
-    </ClCompile>
-    <ClCompile Include="BattleEntity.cpp">
-      <Filter>Core</Filter>
-    </ClCompile>
     <ClCompile Include="MultiplayerGame.cpp">
       <Filter>Core</Filter>
+    </ClCompile>
+    <ClCompile Include="GameEntityFactory.cpp">
+      <Filter>Entities\Factory</Filter>
     </ClCompile>
   </ItemGroup>
   <ItemGroup>
@@ -34,8 +31,11 @@
     <Filter Include="Behaviors">
       <UniqueIdentifier>{b470c142-1151-4360-989b-331ece890e22}</UniqueIdentifier>
     </Filter>
-    <Filter Include="Scenes">
-      <UniqueIdentifier>{2b01ac85-b8b5-4da0-ba93-4483e09921e6}</UniqueIdentifier>
+    <Filter Include="Entities">
+      <UniqueIdentifier>{d4b75b95-1656-4c65-876e-dfb8c62ed4de}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Entities\Factory">
+      <UniqueIdentifier>{49b1e9c6-1018-44c6-864f-b971da14e810}</UniqueIdentifier>
     </Filter>
   </ItemGroup>
   <ItemGroup>
@@ -51,14 +51,11 @@
     <ClInclude Include="Controllable.h">
       <Filter>Behaviors</Filter>
     </ClInclude>
-    <ClInclude Include="BattleScene.h">
-      <Filter>Scenes</Filter>
-    </ClInclude>
-    <ClInclude Include="BattleEntity.h">
-      <Filter>Core</Filter>
-    </ClInclude>
     <ClInclude Include="MultiplayerGame.h">
       <Filter>Core</Filter>
+    </ClInclude>
+    <ClInclude Include="GameEntityFactory.h">
+      <Filter>Entities\Factory</Filter>
     </ClInclude>
   </ItemGroup>
 </Project>

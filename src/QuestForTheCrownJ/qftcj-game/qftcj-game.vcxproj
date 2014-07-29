@@ -85,19 +85,17 @@
   <ItemGroup>
     <ClCompile Include="..\qftc-base\KeyboardInput.cpp" />
     <ClCompile Include="..\qftc-base\PlayerInput.cpp" />
-    <ClCompile Include="BattleEntity.cpp" />
-    <ClCompile Include="BattleScene.cpp" />
     <ClCompile Include="Controllable.cpp" />
     <ClCompile Include="client-main.cpp" />
+    <ClCompile Include="GameEntityFactory.cpp" />
     <ClCompile Include="MainGame.cpp" />
     <ClCompile Include="MultiplayerGame.cpp" />
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="..\qftc-base\KeyboardInput.h" />
     <ClInclude Include="..\qftc-base\PlayerInput.h" />
-    <ClInclude Include="BattleEntity.h" />
-    <ClInclude Include="BattleScene.h" />
     <ClInclude Include="Controllable.h" />
+    <ClInclude Include="GameEntityFactory.h" />
     <ClInclude Include="MainGame.h" />
     <ClInclude Include="MultiplayerGame.h" />
   </ItemGroup>

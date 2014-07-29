@@ -83,13 +83,11 @@
 371,371,371,371,371,371,371,371,371,371,371,371,371,371,371,371,371,371,371,371,371,371,371,371,371,371,371,371,371,371,371,371,371,371,371,371,371,371,371,371,371,371,371,371,371,371,371,371,371,371,371,371,371,371,371,371,371,371,371,371
 </data>
  </layer>
- <objectgroup name="Collision" width="60" height="34"/>
- <objectgroup name="Objects" width="60" height="34">
-  <object x="-12" y="-17" width="40" height="559"/>
-  <object x="1891" y="-19" width="27" height="208"/>
-  <object x="1888" y="261" width="31" height="284"/>
-  <object x="-5" y="639" width="1928" height="452"/>
-  <object x="-35" y="532" width="43" height="123"/>
-  <object x="1909" y="535" width="23" height="115"/>
+ <objectgroup name="Collision" width="60" height="34">
+  <object x="-13" y="-9" width="41" height="645"/>
+  <object x="-24" y="636" width="1947" height="452"/>
+  <object x="1885" y="259" width="39" height="384"/>
+  <object x="1884" y="-13" width="40" height="208"/>
  </objectgroup>
+ <objectgroup name="Objects" width="60" height="34"/>
 </map>

@@ -108,9 +108,6 @@
     <ClCompile Include="LevelLoader.cpp">
       <Filter>Tiled</Filter>
     </ClCompile>
-    <ClCompile Include="GameEntityFactory.cpp">
-      <Filter>Entities\Factory</Filter>
-    </ClCompile>
     <ClCompile Include="Hero.cpp">
       <Filter>Entities</Filter>
     </ClCompile>
@@ -123,7 +120,15 @@
     <ClCompile Include="Level.cpp">
       <Filter>Scenes</Filter>
     </ClCompile>
-    <ClCompile Include="GameAssets.cpp" />
+    <ClCompile Include="GameAssets.cpp">
+      <Filter>Drawing</Filter>
+    </ClCompile>
+    <ClCompile Include="BattleScene.cpp">
+      <Filter>Scenes</Filter>
+    </ClCompile>
+    <ClCompile Include="BattleEntity.cpp">
+      <Filter>Core</Filter>
+    </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="Behavior.h">
@@ -201,9 +206,6 @@
     <ClInclude Include="LevelLoader.h">
       <Filter>Tiled</Filter>
     </ClInclude>
-    <ClInclude Include="GameEntityFactory.h">
-      <Filter>Entities\Factory</Filter>
-    </ClInclude>
     <ClInclude Include="Hero.h">
       <Filter>Entities</Filter>
     </ClInclude>
@@ -216,9 +218,17 @@
     <ClInclude Include="Level.h">
       <Filter>Scenes</Filter>
     </ClInclude>
-    <ClInclude Include="GameAssets.h" />
+    <ClInclude Include="GameAssets.h">
+      <Filter>Drawing</Filter>
+    </ClInclude>
     <ClInclude Include="Interfaces.h" />
     <ClInclude Include="Shareable.h" />
+    <ClInclude Include="BattleScene.h">
+      <Filter>Scenes</Filter>
+    </ClInclude>
+    <ClInclude Include="BattleEntity.h">
+      <Filter>Core</Filter>
+    </ClInclude>
   </ItemGroup>
   <ItemGroup>
     <None Include="..\..\..\references\SFML-2.1\bin\sfml-audio-d-2.dll">

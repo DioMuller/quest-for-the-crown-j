@@ -22,7 +22,7 @@ GameEntityFactory::~GameEntityFactory()
 /////////////////////////////////////
 // Methods
 /////////////////////////////////////
-std::shared_ptr<qfcbase::Entity> GameEntityFactory::GenerateEntity(std::shared_ptr<qfcbase::Scene> scene, std::string type, tmx::MapObject object)
+std::shared_ptr<qfcbase::Entity> GameEntityFactory::GenerateEntity(std::weak_ptr<qfcbase::Scene> scene, std::string type, tmx::MapObject object)
 {
 	std::shared_ptr<qfcbase::Entity> entity;
 

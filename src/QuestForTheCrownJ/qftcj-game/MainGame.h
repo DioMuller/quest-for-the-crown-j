@@ -37,7 +37,7 @@ namespace qfcgame
 		virtual void Draw(sf::RenderWindow* renderer);
 
 		void LoadScene(std::shared_ptr<qfcbase::Scene> s, bool stack = false);
-		void UnstackScene();
+		void UnstackScene(std::shared_ptr<qfcbase::Entity> entity);
 		bool IsCurrentScene(std::shared_ptr<qfcbase::Scene> scene);
 
 		void GoToNeighbour(std::shared_ptr<qfcbase::Entity> entity, qfcbase::Direction direction);

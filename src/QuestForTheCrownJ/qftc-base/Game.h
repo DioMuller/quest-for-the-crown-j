@@ -19,5 +19,7 @@ namespace qfcbase
 
 			virtual void GoToNeighbour(std::shared_ptr<qfcbase::Entity> entity, qfcbase::Direction direction) = 0;
 			virtual void StartConfront(std::shared_ptr<qfcbase::Entity> e1, std::shared_ptr<qfcbase::Entity> e2) = 0;
+
+			virtual void UnstackScene(std::shared_ptr<qfcbase::Entity> entity) = 0;
 	};
 }

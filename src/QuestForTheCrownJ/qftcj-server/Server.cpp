@@ -206,3 +206,8 @@ void qfcserver::Server::GoToNeighbour(std::shared_ptr<qfcbase::Entity> entity, q
 {
 
 }
+
+void qfcserver::Server::UnstackScene(std::shared_ptr<qfcbase::Entity> entity)
+{
+
+}

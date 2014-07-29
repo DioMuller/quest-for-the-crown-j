@@ -20,6 +20,7 @@ namespace qfcserver {
 
 			void GoToNeighbour(std::shared_ptr<qfcbase::Entity> entity, qfcbase::Direction direction);
 			void StartConfront(std::shared_ptr<qfcbase::Entity> e1, std::shared_ptr<qfcbase::Entity> e2);
+			void UnstackScene(std::shared_ptr<qfcbase::Entity> entity);
 		private:
 			sqlite3* db;
 			qfcnet::ServerChannel channel;

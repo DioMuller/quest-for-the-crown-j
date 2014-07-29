@@ -13,6 +13,7 @@ using namespace qfcbase;
 
 int main(int argc, char* argv[])
 {
+	Log::SetVerboseLevel(LOG_ALL);
 	Log::Debug("Initializing game server");
 
 	while (true)
