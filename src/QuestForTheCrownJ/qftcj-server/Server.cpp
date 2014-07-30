@@ -15,13 +15,12 @@
 #include "Definitions.h"
 #include "SHA1.h"
 #include "LevelLoader.h"
-#include "Hero.h"
 
 using namespace qfcserver;
 using namespace qfcbase;
 
 Server::Server(int port)
-	: channel(port)
+	: channel(port), next_player_id(0)
 {
 	qfcbase::LevelLoader::LoadLevels("Content/maps/QuestForTheCrown.maps");
 
@@ -103,7 +102,7 @@ LauncherLoginResponse Server::HandleLoginInfo(const LauncherLoginInfo& login_inf
 	std::string mapName;
 	long long userId;
 	long long playerId;
-	std::shared_ptr<Entity> playerEntity;
+	std::shared_ptr<Hero> playerEntity;
 
 	std::stringstream getUserSql;
 	getUserSql << "SELECT id, player_id, password FROM users WHERE login=\'" << login_info.login << "\'";
@@ -172,9 +171,10 @@ LauncherLoginResponse Server::HandleLoginInfo(const LauncherLoginInfo& login_inf
 	return resp;
 }
 
-std::shared_ptr<qfcbase::Entity> qfcserver::Server::CreatePlayerEntity(std::string map_name, float x, float y)
+std::shared_ptr<Hero> qfcserver::Server::CreatePlayerEntity(std::string map_name, float x, float y)
 {
 	auto player_entity = std::make_shared<Hero>();
+	player_entity->Id = next_player_id++;
 	// TODO: Add Tracking behaviors
 
 	auto map_file = (std::string)"Content/maps/" + (std::string)map_name + (std::string)".tmx";
@@ -192,12 +192,13 @@ std::shared_ptr<ServerPlayerInfo> qfcserver::Server::HandleRequestPlayerInfo(con
 	}
 	auto user = logged_users[data.clientHeader.authKey];
 	auto resp = std::make_shared<ServerPlayerInfo>();
-	// TODO: Fill struct data
-	//resp.entity.type
-	//resp.entity.id
+	auto pos = user.game_entity->Sprite->Position;
+	// TODO: Player entity types
+	resp->entity.type = EntityType::ENTITY_HERO;
+	resp->entity.entityId = user.game_entity->Id;
 	strcpy_s(resp->map_name, sizeof(resp->map_name), user.map_name.c_str());
-	//resp.position.x
-	//resp.position.y
+	resp->position.x = static_cast<int>(pos.x);
+	resp->position.y = static_cast<int>(pos.y);
 	return resp;
 }
 
@@ -224,7 +225,7 @@ void qfcserver::Server::GoToNeighbour(std::shared_ptr<qfcbase::Entity> entity, q
 
 		itr->second->RemoveEntity(entity);
 
-		if(itr->second->GetEntities(is_player).size() <= 0)
+		if (itr->second->GetEntities(is_player).size() <= 0)
 			loaded_levels.erase(itr);
 		break;
 	}
@@ -258,5 +259,24 @@ void qfcserver::Server::SetEntityPosition(std::shared_ptr<qfcbase::Entity> playe
 		level = loaded_levels[map_file];
 	}
 
+	auto code = GetUserAuthCode(player_entity);
+	if (code.size() > 0)
+	{
+		auto map_name = map_file.substr(13, map_file.length() - 17); // Assets/maps/ .tmx
+
+		auto info = logged_users[code];
+		info.map_name = map_name;
+		logged_users[code] = info;
+	}
+
 	level->AddEntity(player_entity);
+}
+
+std::string Server::GetUserAuthCode(std::shared_ptr<qfcbase::Entity> entity)
+{
+	for (auto& user : logged_users) {
+		if (user.second.game_entity == entity)
+			return user.first;
+	}
+	return std::string();
 }

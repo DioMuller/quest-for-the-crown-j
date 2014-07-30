@@ -10,6 +10,6 @@ namespace qfcserver
 		ServerLevel(std::weak_ptr<qfcbase::Game> game, int id);
 		~ServerLevel();
 	private:
-		std::vector<int> players;
+		//std::vector<int> players;
 	};
 }

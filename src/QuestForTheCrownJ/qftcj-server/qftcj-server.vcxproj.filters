@@ -2,22 +2,32 @@
 <Project ToolsVersion="4.0" xmlns="http://schemas.microsoft.com/developer/msbuild/2003">
   <ItemGroup>
     <ClCompile Include="server-main.cpp" />
-    <ClCompile Include="Server.cpp" />
     <ClCompile Include="sqlite3.c">
       <Filter>References\SQLite3</Filter>
     </ClCompile>
-    <ClCompile Include="ServerLevel.cpp" />
+    <ClCompile Include="ServerLevel.cpp">
+      <Filter>Scenes</Filter>
+    </ClCompile>
+    <ClCompile Include="Server.cpp">
+      <Filter>Core</Filter>
+    </ClCompile>
   </ItemGroup>
   <ItemGroup>
-    <ClInclude Include="Server.h" />
     <ClInclude Include="sqlite3.h">
       <Filter>References\SQLite3</Filter>
     </ClInclude>
     <ClInclude Include="sqlite3ext.h">
       <Filter>References\SQLite3</Filter>
     </ClInclude>
-    <ClInclude Include="ServerStructs.h" />
-    <ClInclude Include="ServerLevel.h" />
+    <ClInclude Include="ServerLevel.h">
+      <Filter>Scenes</Filter>
+    </ClInclude>
+    <ClInclude Include="Server.h">
+      <Filter>Core</Filter>
+    </ClInclude>
+    <ClInclude Include="ServerStructs.h">
+      <Filter>Core</Filter>
+    </ClInclude>
   </ItemGroup>
   <ItemGroup>
     <None Include="database.sqlite" />
@@ -28,6 +38,12 @@
     </Filter>
     <Filter Include="References\SQLite3">
       <UniqueIdentifier>{b8edd6d0-68c5-4e3d-bc33-4a4cc2e84171}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Scenes">
+      <UniqueIdentifier>{7d90c125-7369-4191-a375-d0f775bb43d6}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Core">
+      <UniqueIdentifier>{80900bdd-f55c-4d33-86ef-e234ea7d81d5}</UniqueIdentifier>
     </Filter>
   </ItemGroup>
 </Project>
