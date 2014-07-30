@@ -5,14 +5,14 @@
 
 namespace qfcbase
 {
-	typedef struct LevelInfo
+	typedef struct s_level_info
 	{
 		int levelId;
 		std::string mapFile;
 		std::string music;
 		std::string title;
 		int neighbours[4];
-	};
+	} LevelInfo;
 
 	class LevelCollection
 	{

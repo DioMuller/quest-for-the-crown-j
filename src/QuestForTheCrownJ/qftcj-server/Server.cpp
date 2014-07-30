@@ -14,6 +14,8 @@
 #include "ClientStructs.h"
 #include "Definitions.h"
 #include "SHA1.h"
+#include "LevelLoader.h"
+#include "Hero.h"
 
 using namespace qfcserver;
 using namespace qfcbase;
@@ -21,6 +23,8 @@ using namespace qfcbase;
 Server::Server(int port)
 	: channel(port)
 {
+	qfcbase::LevelLoader::LoadLevels("Content/maps/QuestForTheCrown.maps");
+
 	if (sqlite3_open("database.sqlite", &db))
 		throw std::exception(("Can't open database.sqlite: " + (std::string)sqlite3_errmsg(db)).c_str());
 
@@ -168,10 +172,15 @@ LauncherLoginResponse Server::HandleLoginInfo(const LauncherLoginInfo& login_inf
 	return resp;
 }
 
-std::shared_ptr<qfcbase::Entity> qfcserver::Server::CreatePlayerEntity(std::string map_name, int x, int y)
+std::shared_ptr<qfcbase::Entity> qfcserver::Server::CreatePlayerEntity(std::string map_name, float x, float y)
 {
-	// TODO: Create player entity
-	return nullptr;
+	auto player_entity = std::make_shared<Hero>();
+	// TODO: Add Tracking behaviors
+
+	auto map_file = (std::string)"Content/maps/" + (std::string)map_name + (std::string)".tmx";
+	SetEntityPosition(player_entity, map_file, x, y);
+
+	return player_entity;
 }
 
 std::shared_ptr<ServerPlayerInfo> qfcserver::Server::HandleRequestPlayerInfo(const RequestPlayerInfo& data)
@@ -199,15 +208,55 @@ void qfcserver::Server::StartConfront(std::shared_ptr<qfcbase::Entity> e1, std::
 
 void qfcserver::Server::Update(double delta)
 {
-
+	for (auto& level : loaded_levels)
+		level.second->Update(delta);
 }
 
 void qfcserver::Server::GoToNeighbour(std::shared_ptr<qfcbase::Entity> entity, qfcbase::Direction direction)
 {
+	auto is_entity = [entity](const std::shared_ptr<Entity>& e){ return e == entity; };
+	auto is_player = [entity](const std::shared_ptr<Entity>& e){ return dynamic_cast<Hero*>(e.get()) != nullptr; };
+	// TODO: PlayerEntity?
 
+	for (auto itr = loaded_levels.begin(); itr != loaded_levels.end(); ++itr) {
+		if (itr->second->GetEntities(is_entity).size() <= 0)
+			continue;
+
+		itr->second->RemoveEntity(entity);
+
+		if(itr->second->GetEntities(is_player).size() <= 0)
+			loaded_levels.erase(itr);
+		break;
+	}
+
+	auto level = std::dynamic_pointer_cast<Level>(entity->scene.lock());
+	auto neighborMap = LevelCollection::GetNeighbour(level->Id(), direction);
+
+	// TODO: calc x, y based on direction
+	auto entityPosition = entity->Sprite->Position;
+
+	SetEntityPosition(entity, neighborMap, entityPosition.x, entityPosition.y);
 }
 
 void qfcserver::Server::UnstackScene(std::shared_ptr<qfcbase::Entity> entity)
 {
 
+}
+
+void qfcserver::Server::SetEntityPosition(std::shared_ptr<qfcbase::Entity> player_entity, std::string map_file, float x, float y)
+{
+	player_entity->Sprite->Position = sf::Vector2f(x, y);
+	std::shared_ptr<ServerLevel> level;
+	if (loaded_levels.count(map_file) == 0)
+	{
+		level = std::make_shared<ServerLevel>(getptr(), 1);
+		level->LoadMap(map_file);
+
+		loaded_levels[map_file] = level;
+	}
+	else {
+		level = loaded_levels[map_file];
+	}
+
+	level->AddEntity(player_entity);
 }

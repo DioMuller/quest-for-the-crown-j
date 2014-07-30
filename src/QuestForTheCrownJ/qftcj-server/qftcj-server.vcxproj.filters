@@ -6,6 +6,7 @@
     <ClCompile Include="sqlite3.c">
       <Filter>References\SQLite3</Filter>
     </ClCompile>
+    <ClCompile Include="ServerLevel.cpp" />
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="Server.h" />
@@ -16,6 +17,7 @@
       <Filter>References\SQLite3</Filter>
     </ClInclude>
     <ClInclude Include="ServerStructs.h" />
+    <ClInclude Include="ServerLevel.h" />
   </ItemGroup>
   <ItemGroup>
     <None Include="database.sqlite" />

@@ -41,8 +41,8 @@
   <PropertyGroup Label="UserMacros" />
   <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">
     <LinkIncremental>true</LinkIncremental>
-    <LibraryPath>$(SolutionDir)..\..\references\SFML-2.1\lib;$(LibraryPath)</LibraryPath>
-    <IncludePath>$(SolutionDir)\..\..\references\SFML-2.1\include;$(IncludePath)</IncludePath>
+    <LibraryPath>$(SolutionDir)..\..\references\zlib\lib;$(SolutionDir)..\..\references\SFML-2.1\lib;$(LibraryPath)</LibraryPath>
+    <IncludePath>$(SolutionDir)..\..\references\zlib\include;$(SolutionDir)\..\..\references\SFML-2.1\include;$(IncludePath)</IncludePath>
   </PropertyGroup>
   <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Release|Win32'">
     <LinkIncremental>false</LinkIncremental>
@@ -84,6 +84,7 @@
   <ItemGroup>
     <ClCompile Include="server-main.cpp" />
     <ClCompile Include="Server.cpp" />
+    <ClCompile Include="ServerLevel.cpp" />
     <ClCompile Include="sqlite3.c" />
   </ItemGroup>
   <ItemGroup>
@@ -96,6 +97,7 @@
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="Server.h" />
+    <ClInclude Include="ServerLevel.h" />
     <ClInclude Include="ServerStructs.h" />
     <ClInclude Include="sqlite3.h" />
     <ClInclude Include="sqlite3ext.h" />

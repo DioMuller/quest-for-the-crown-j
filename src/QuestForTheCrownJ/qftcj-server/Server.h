@@ -5,7 +5,7 @@
 #include "ServerChannel.h"
 #include "ServerStructs.h"
 #include "Game.h"
-#include "Level.h"
+#include "ServerLevel.h"
 
 namespace qfcserver {
 	class Server
@@ -26,11 +26,13 @@ namespace qfcserver {
 			qfcnet::ServerChannel channel;
 			void UpdateLoop();
 
-			//map scenes = no MainGame
-
 			LauncherLoginResponse HandleLoginInfo(const LauncherLoginInfo& login_info);
-			std::shared_ptr<qfcbase::Entity> CreatePlayerEntity(std::string map_name, int x, int y);
+			std::shared_ptr<qfcbase::Entity> CreatePlayerEntity(std::string map_name, float x, float y);
+
+			void SetEntityPosition(std::shared_ptr<qfcbase::Entity> player_entity, std::string map_file, float x, float y);
+
 			std::shared_ptr<ServerPlayerInfo> HandleRequestPlayerInfo(const RequestPlayerInfo& data);
 			std::map<std::string, LoggedUser> logged_users;
+			std::map<std::string, std::shared_ptr<ServerLevel>> loaded_levels;
 	};
 }
