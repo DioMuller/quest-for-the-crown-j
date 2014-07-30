@@ -31,7 +31,7 @@ void BattleScene::Update(double dt)
 {
 	time += dt;
 
-	if (time > 5.0)
+	if (enemies.size() <= 0)
 	{
 		auto game = std::dynamic_pointer_cast<Game>(parent.lock());
 		if (game)
@@ -91,5 +91,31 @@ bool BattleScene::AddMonster(std::shared_ptr<Entity> monster)
 
 void BattleScene::NextTurn()
 {
-	// TODO: Change Turn, show turn, do anything!
+	if (turnOrder.size() == 0)
+	{
+		for (auto player : players)
+		{
+			turnOrder.push_back(player);
+		}
+
+		for (auto enemy : enemies)
+		{
+			turnOrder.push_back(enemy);
+		}
+
+		std::sort(turnOrder.begin(), turnOrder.end(), 
+			[]( std::shared_ptr<BattleEntity> p1, 
+			    std::shared_ptr<BattleEntity> p2 )
+			{
+				return p1->Speed < p2->Speed;
+			}
+		);
+	}
+
+	currentTurn++;
+
+	// TODO: Turn Logic!
+	turns.push_back(Turn{ currentTurn, turnOrder[turnOrder.size() - 1], BattleAction::ATTACK, rand() % 10 });
+
+	turnOrder.pop_back();
 }
