@@ -34,6 +34,9 @@ namespace qfcbase
 			int currentTurn;
 			std::vector<Turn> turns;
 
+			int playerCount;
+			int enemyCount;
+
 			std::vector<std::shared_ptr<BattleEntity>> turnOrder;
 
 		/////////////////////////////////////
@@ -54,5 +57,6 @@ namespace qfcbase
 			bool AddMonster(std::shared_ptr<Entity> monster);
 
 			void NextTurn();
+			virtual bool ExecuteTurn(std::shared_ptr<BattleEntity> entity);
 	};
 }

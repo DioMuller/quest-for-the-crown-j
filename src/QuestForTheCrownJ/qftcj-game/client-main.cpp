@@ -9,6 +9,7 @@
 #include "GameEntityFactory.h"
 #include "Controllable.h"
 #include "KeyboardInput.h"
+#include "Log.h"
 
 std::shared_ptr<qfcgame::MainGame> CreateSinglePlayer();
 std::shared_ptr<qfcgame::MainGame> CreateMultiplayer(std::string auth_token);
@@ -42,6 +43,7 @@ int main(int argc, char* argv[])
 std::shared_ptr<qfcgame::MainGame> CreateSinglePlayer()
 {
 	qfcbase::LevelLoader::SetFactory(new qfcbase::GameEntityFactory());
+	qfcbase::Log::SetVerboseLevel(LOG_ALL);
 
 	auto game = std::make_shared<qfcgame::MainGame>();
 

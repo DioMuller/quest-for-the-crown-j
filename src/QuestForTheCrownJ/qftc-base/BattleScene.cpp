@@ -15,6 +15,9 @@ BattleScene::BattleScene(std::weak_ptr<qfcbase::Game> parent)
 {
 	time = 0.0;
 
+	enemyCount = 0;
+	playerCount = 0;
+
 	text = sf::Text("Battle!", *GameAssets::DefaultFont());
 	text.setCharacterSize(12);
 	text.setPosition(10, 10);
@@ -32,12 +35,12 @@ void BattleScene::Update(double dt)
 {
 	time += dt;
 
-	if (entities.size() <= 0)
+	if (enemyCount <= 0 || playerCount <= 0)
 	{
 		auto game = std::dynamic_pointer_cast<Game>(parent.lock());
 		if (game)
 		{
-			game->UnstackScene(std::dynamic_pointer_cast<BattleEntity>(entities[0])->Parent());
+			game->UnstackScene(std::dynamic_pointer_cast<BattleEntity>(entities[0])->GetParent());
 		}
 	}
 }
@@ -79,16 +82,18 @@ void BattleScene::Draw(sf::RenderWindow* renderer)
 
 bool BattleScene::PlayerJoin(std::shared_ptr<Entity> hero)
 {
-	if (entities.size() > MAX_BATTLE_PLAYERS + MAX_BATTLE_ENEMIES) return false;
+	if (playerCount > MAX_BATTLE_PLAYERS) return false;
 	
+	playerCount++;
 	entities.push_back(std::shared_ptr<BattleEntity>(new BattleEntity(hero, BattleEntityType::PLAYER)));
 	return true;
 }
 
 bool BattleScene::AddMonster(std::shared_ptr<Entity> monster)
 {
-	if (entities.size() > MAX_BATTLE_PLAYERS + MAX_BATTLE_ENEMIES) return false;
-
+	if (enemyCount > MAX_BATTLE_ENEMIES) return false;
+	
+	enemyCount++;
 	entities.push_back(std::shared_ptr<BattleEntity>(new BattleEntity(monster, BattleEntityType::ENEMY)));
 	return true;
 }
@@ -113,51 +118,69 @@ void BattleScene::NextTurn()
 	}
 
 	// TODO: Turn Logic!
+	if (ExecuteTurn(turnOrder[turnOrder.size() - 1])) currentTurn++;
+}
 
+bool BattleScene::ExecuteTurn(std::shared_ptr<BattleEntity> currentEntity)
+{
+	std::shared_ptr<BattleEntity> targetEntity;
 
-	turns.push_back(Turn{ currentTurn, turnOrder[turnOrder.size() - 1], std::static_pointer_cast<BattleEntity>(entities[0]), BattleAction::ATTACK, rand() % 10 });
+	for (auto ent : entities)
+	{
+		auto be = std::static_pointer_cast<BattleEntity>(ent);
+		if (be && be->Type() != currentEntity->Type())
+		{
+			targetEntity = be;
+			break;
+		}
+	}
+
+	if (!targetEntity) return false;
+
+	turns.push_back(Turn{ currentTurn, currentEntity, targetEntity, BattleAction::ATTACK, rand() % 10 });
 	turnOrder.pop_back();
 
-	while (currentTurn < turns.size())
+	auto entity = turns[currentTurn].entity;
+	auto target = turns[currentTurn].target;
+	int value = turns[currentTurn].value;
+
+	switch (turns[currentTurn].action)
 	{
-		auto entity = turns[currentTurn].entity;
-		auto target = turns[currentTurn].target;
-		int value = turns[currentTurn].value;
+	case BattleAction::ATTACK:
+		Log::Message(entity->category + " attacked " + target->category);
+		Log::Message("Damage: " + std::to_string(value));
 
-		switch (turns[currentTurn].action)
-		{
-			case BattleAction::ATTACK:
-				Log::Message(entity->Parent()->category + " attacked " + target->Parent()->category);
-				Log::Message("Damage: " + value);
+		target->ChangeHP(-value);
+		break;
+	case BattleAction::SPECIAL:
+		Log::Message(entity->category + " special attacked " + target->category);
+		Log::Message("Damage: " + std::to_string(value));
 
-				target->Parent()->status.hp -= value;
-				break;
-			case BattleAction::SPECIAL:
-				Log::Message(entity->Parent()->category + " special attacked " + target->Parent()->category);
-				Log::Message("Damage: " + value);
+		target->ChangeHP(-value);
+		break;
+	case BattleAction::ITEM:
+		Log::Message(entity->category + " used potion on " + target->category);
+		Log::Message("Cured: " + std::to_string(value));
 
-				target->Parent()->status.hp -= value;
-				break;
-			case BattleAction::ITEM:
-				Log::Message(entity->Parent()->category + " used potion on " + target->Parent()->category);
-				Log::Message("Cured: " + value);
-				
-				target->Parent()->status.hp -= value;
-				break;
-			case BattleAction::RUN:
-				Log::Message(entity->Parent()->category + " ran away!");
+		target->ChangeHP(value);
+		break;
+	case BattleAction::RUN:
+		Log::Message(entity->category + " ran away!");
 
 
-				break;
-			default:
-				Log::Warning("Unknown Action!");
-		}
-
-		if (target->Parent()->status.hp <= 0)
-		{
-			// TODO: Remove Entity.
-		}
-
-		currentTurn++;
+		break;
+	default:
+		Log::Warning("Unknown Action!");
 	}
+
+	int currentHP = target->CurrentHP();
+	if (currentHP <= 0)
+	{
+		RemoveEntity(target);
+
+		if (target->Type() == BattleEntityType::ENEMY) enemyCount--;
+		else if (target->Type() == BattleEntityType::PLAYER) playerCount--;
+	}
+
+	return true;
 }

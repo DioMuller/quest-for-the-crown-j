@@ -127,7 +127,7 @@
       <Filter>Scenes</Filter>
     </ClCompile>
     <ClCompile Include="BattleEntity.cpp">
-      <Filter>Core</Filter>
+      <Filter>Entities</Filter>
     </ClCompile>
   </ItemGroup>
   <ItemGroup>
@@ -227,7 +227,7 @@
       <Filter>Scenes</Filter>
     </ClInclude>
     <ClInclude Include="BattleEntity.h">
-      <Filter>Core</Filter>
+      <Filter>Entities</Filter>
     </ClInclude>
   </ItemGroup>
   <ItemGroup>
