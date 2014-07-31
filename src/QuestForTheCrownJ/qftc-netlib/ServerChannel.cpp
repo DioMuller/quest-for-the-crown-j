@@ -90,7 +90,7 @@ void ServerChannel::Listen(int port)
 			}
 			else {
 				auto data = (LauncherLoginInfo*)buffer;
-				auto resp = handleLoginInfo(*data);
+				auto resp = handleLoginInfo(*data, sender, sender_size);
 				resp.header.type = PacketType::LAUNCHER_LOGIN_RESPONSE;
 
 				size = sendto(channel_socket, (char*)&resp, sizeof(resp), 0, (SOCKADDR*)&sender, sender_size);

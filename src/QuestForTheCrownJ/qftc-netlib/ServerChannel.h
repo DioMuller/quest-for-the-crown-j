@@ -12,12 +12,20 @@ namespace qfcnet
 	class ServerChannel
 	{
 	public:
-		std::function<LauncherLoginResponse(const LauncherLoginInfo&)> handleLoginInfo;
+		std::function<LauncherLoginResponse(const LauncherLoginInfo&, sockaddr_in, int)> handleLoginInfo;
 		std::function<std::shared_ptr<ServerPlayerInfo>(const RequestPlayerInfo&)> handleRequestPlayer;
 
 	public:
 		ServerChannel(int port);
 		~ServerChannel();
+
+		template <typename T>
+		void Send(T data, sockaddr_in addr, int addr_size)
+		{
+			int r = sendto(channel_socket, (char*)&data, sizeof(data), 0, (SOCKADDR*)&addr, addr_size);
+			if (r <= 0)
+				throw std::exception(("Send error: " + std::to_string(WSAGetLastError())).c_str());
+		}
 
 	private:
 		bool stop_listen;
