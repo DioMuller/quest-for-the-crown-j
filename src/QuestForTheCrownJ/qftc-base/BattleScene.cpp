@@ -6,6 +6,7 @@
 #include "Game.h"
 #include "GameAssets.h"
 #include "AudioPlayer.h"
+#include "Log.h"
 
 using namespace qfcbase;
 
@@ -71,13 +72,16 @@ void BattleScene::Draw(sf::RenderWindow* renderer)
 	{
 		enemies[i]->DrawEntity(renderer, sf::Vector2f(350.0f + (i * 30.0f), 300.0f));
 	}
+
+	// TODO: Correct Turn Treatment.
+	NextTurn();
 }
 
 bool BattleScene::PlayerJoin(std::shared_ptr<Entity> hero)
 {
 	if (players.size() > MAX_BATTLE_PLAYERS) return false;
 	
-	players.push_back(std::shared_ptr<BattleEntity>(new BattleEntity(hero)));
+	players.push_back(std::shared_ptr<BattleEntity>(new BattleEntity(hero, BattleEntityType::PLAYER)));
 	return true;
 }
 
@@ -85,7 +89,7 @@ bool BattleScene::AddMonster(std::shared_ptr<Entity> monster)
 {
 	if (enemies.size() > MAX_BATTLE_ENEMIES) return false;
 
-	enemies.push_back(std::shared_ptr<BattleEntity>(new BattleEntity(monster)));
+	enemies.push_back(std::shared_ptr<BattleEntity>(new BattleEntity(monster, BattleEntityType::ENEMY)));
 	return true;
 }
 
@@ -112,10 +116,52 @@ void BattleScene::NextTurn()
 		);
 	}
 
-	currentTurn++;
-
 	// TODO: Turn Logic!
-	turns.push_back(Turn{ currentTurn, turnOrder[turnOrder.size() - 1], BattleAction::ATTACK, rand() % 10 });
 
+
+	turns.push_back(Turn{ currentTurn, turnOrder[turnOrder.size() - 1], enemies[0], BattleAction::ATTACK, rand() % 10 });
 	turnOrder.pop_back();
+
+	while (currentTurn < turns.size())
+	{
+		auto entity = turns[currentTurn].entity;
+		auto target = turns[currentTurn].target;
+		int value = turns[currentTurn].value;
+
+		switch (turns[currentTurn].action)
+		{
+			case BattleAction::ATTACK:
+				Log::Message(entity->Parent()->category + " attacked " + target->Parent()->category);
+				Log::Message("Damage: " + value);
+
+				target->Parent()->status.hp -= value;
+				break;
+			case BattleAction::SPECIAL:
+				Log::Message(entity->Parent()->category + " special attacked " + target->Parent()->category);
+				Log::Message("Damage: " + value);
+
+				target->Parent()->status.hp -= value;
+				break;
+			case BattleAction::ITEM:
+				Log::Message(entity->Parent()->category + " used potion on " + target->Parent()->category);
+				Log::Message("Cured: " + value);
+				
+				target->Parent()->status.hp -= value;
+				break;
+			case BattleAction::RUN:
+				Log::Message(entity->Parent()->category + " ran away!");
+
+
+				break;
+			default:
+				Log::Warning("Unknown Action!");
+		}
+
+		if (target->Parent()->status.hp <= 0)
+		{
+			// TODO: Remove Entity.
+		}
+
+		currentTurn++;
+	}
 }

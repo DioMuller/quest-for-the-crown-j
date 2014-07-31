@@ -20,6 +20,7 @@ namespace qfcbase
 	{
 		int id; // Turn Count
 		std::shared_ptr<BattleEntity> entity; // Entity
+		std::shared_ptr <BattleEntity> target;
 		BattleAction action; // Turn Action
 		int value; // Value (Damage, Restore, Success)
 	} Turn;
@@ -30,6 +31,7 @@ namespace qfcbase
 			double time;
 			sf::Text text;
 
+			//TODO: Remove this.
 			std::vector<std::shared_ptr<BattleEntity>> players;
 			std::vector<std::shared_ptr<BattleEntity>> enemies;
 

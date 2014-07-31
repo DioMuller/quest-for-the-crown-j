@@ -5,9 +5,10 @@
 
 using namespace qfcbase;
 
-BattleEntity::BattleEntity(std::shared_ptr<Entity> parent) : Entity()
+BattleEntity::BattleEntity(std::shared_ptr<Entity> parent, BattleEntityType type) : Entity()
 {
 	this->parent = parent;
+	this->type = type;
 
 	this->text = sf::Text("Info", *GameAssets::DefaultFont());
 	text.setCharacterSize(12);

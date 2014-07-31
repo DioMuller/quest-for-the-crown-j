@@ -3,6 +3,12 @@
 
 namespace qfcbase
 {
+	enum BattleEntityType
+	{
+		PLAYER = 0,
+		ENEMY = 1
+	};
+
 	class BattleEntity : public qfcbase::Entity
 	{
 		/////////////////////////////////////
@@ -10,6 +16,7 @@ namespace qfcbase
 		/////////////////////////////////////
 		private:
 			std::shared_ptr<qfcbase::Entity> parent;
+			BattleEntityType type;
 			sf::Text text;
 
 		/////////////////////////////////////
@@ -20,11 +27,16 @@ namespace qfcbase
 			{
 				return parent;
 			}
+
+			BattleEntityType Type()
+			{
+				return type;
+			}
 		/////////////////////////////////////
 		// Constructors
 		/////////////////////////////////////
 		public:
-			BattleEntity(std::shared_ptr<qfcbase::Entity> parent);
+			BattleEntity(std::shared_ptr<qfcbase::Entity> parent, BattleEntityType type);
 			~BattleEntity();
 
 		public:
