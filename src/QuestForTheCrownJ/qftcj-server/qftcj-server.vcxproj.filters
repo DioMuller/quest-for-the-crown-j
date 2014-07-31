@@ -11,6 +11,7 @@
     <ClCompile Include="Server.cpp">
       <Filter>Core</Filter>
     </ClCompile>
+    <ClCompile Include="ServerEntityFactory.cpp" />
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="sqlite3.h">
@@ -28,6 +29,7 @@
     <ClInclude Include="ServerStructs.h">
       <Filter>Core</Filter>
     </ClInclude>
+    <ClInclude Include="ServerEntityFactory.h" />
   </ItemGroup>
   <ItemGroup>
     <None Include="database.sqlite" />

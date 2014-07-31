@@ -16,6 +16,7 @@
 #include "SHA1.h"
 #include "LevelLoader.h"
 #include "Slime.h"
+#include "ServerEntityFactory.h"
 
 using namespace qfcserver;
 using namespace qfcbase;
@@ -24,6 +25,7 @@ using namespace qfcbase;
 Server::Server(int port)
 	: channel(port), next_player_id(0)
 {
+	qfcbase::LevelLoader::SetFactory(new ServerEntityFactory());
 	qfcbase::LevelLoader::LoadLevels("Content/maps/QuestForTheCrown.maps");
 
 	if (sqlite3_open("database.sqlite", &db))
