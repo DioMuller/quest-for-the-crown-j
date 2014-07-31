@@ -32,12 +32,12 @@ void BattleScene::Update(double dt)
 {
 	time += dt;
 
-	if (enemies.size() <= 0)
+	if (entities.size() <= 0)
 	{
 		auto game = std::dynamic_pointer_cast<Game>(parent.lock());
 		if (game)
 		{
-			game->UnstackScene(players[0]->Parent());
+			game->UnstackScene(std::dynamic_pointer_cast<BattleEntity>(entities[0])->Parent());
 		}
 	}
 }
@@ -55,41 +55,41 @@ void BattleScene::Draw(sf::RenderWindow* renderer)
 
 	// Battle Info Text
 	sstream << "Battle Time " << (int)time << std::endl
-		<< "Players " << players.size() << std::endl
-		<< "Enemies " << enemies.size();
+		<< "Entities " << entities.size();
 	str = sstream.str();
 	text.setString(str);
 	renderer->draw(text);
 
 	//	Players Text
-	for (int i = 0; i < players.size(); i++)
+	for (int i = 0; i < entities.size(); i++)
 	{
-		players[i]->DrawInfo(renderer, sf::Vector2f(10.0f + (i * 200.0f), 550.0f));
+		auto battleEntity = std::static_pointer_cast<BattleEntity>(entities[i]);
+		
+		if ( battleEntity )
+		{
+			if (battleEntity->Type() == BattleEntityType::PLAYER)
+				battleEntity->DrawInfo(renderer, sf::Vector2f(10.0f + (i * 200.0f), 550.0f));
+			else if (battleEntity->Type() == BattleEntityType::ENEMY)
+				battleEntity->DrawEntity(renderer, sf::Vector2f(350.0f + (i * 30.0f), 300.0f));
+		}
 	}
-
-	//	Enemy Sprite
-	for (int i = 0; i < players.size(); i++)
-	{
-		enemies[i]->DrawEntity(renderer, sf::Vector2f(350.0f + (i * 30.0f), 300.0f));
-	}
-
 	// TODO: Correct Turn Treatment.
 	NextTurn();
 }
 
 bool BattleScene::PlayerJoin(std::shared_ptr<Entity> hero)
 {
-	if (players.size() > MAX_BATTLE_PLAYERS) return false;
+	if (entities.size() > MAX_BATTLE_PLAYERS + MAX_BATTLE_ENEMIES) return false;
 	
-	players.push_back(std::shared_ptr<BattleEntity>(new BattleEntity(hero, BattleEntityType::PLAYER)));
+	entities.push_back(std::shared_ptr<BattleEntity>(new BattleEntity(hero, BattleEntityType::PLAYER)));
 	return true;
 }
 
 bool BattleScene::AddMonster(std::shared_ptr<Entity> monster)
 {
-	if (enemies.size() > MAX_BATTLE_ENEMIES) return false;
+	if (entities.size() > MAX_BATTLE_PLAYERS + MAX_BATTLE_ENEMIES) return false;
 
-	enemies.push_back(std::shared_ptr<BattleEntity>(new BattleEntity(monster, BattleEntityType::ENEMY)));
+	entities.push_back(std::shared_ptr<BattleEntity>(new BattleEntity(monster, BattleEntityType::ENEMY)));
 	return true;
 }
 
@@ -97,14 +97,10 @@ void BattleScene::NextTurn()
 {
 	if (turnOrder.size() == 0)
 	{
-		for (auto player : players)
+		for (auto entity : entities)
 		{
-			turnOrder.push_back(player);
-		}
-
-		for (auto enemy : enemies)
-		{
-			turnOrder.push_back(enemy);
+			auto battle = std::static_pointer_cast<BattleEntity>(entity);
+			turnOrder.push_back(battle);
 		}
 
 		std::sort(turnOrder.begin(), turnOrder.end(), 
@@ -119,7 +115,7 @@ void BattleScene::NextTurn()
 	// TODO: Turn Logic!
 
 
-	turns.push_back(Turn{ currentTurn, turnOrder[turnOrder.size() - 1], enemies[0], BattleAction::ATTACK, rand() % 10 });
+	turns.push_back(Turn{ currentTurn, turnOrder[turnOrder.size() - 1], std::static_pointer_cast<BattleEntity>(entities[0]), BattleAction::ATTACK, rand() % 10 });
 	turnOrder.pop_back();
 
 	while (currentTurn < turns.size())

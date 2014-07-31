@@ -31,10 +31,6 @@ namespace qfcbase
 			double time;
 			sf::Text text;
 
-			//TODO: Remove this.
-			std::vector<std::shared_ptr<BattleEntity>> players;
-			std::vector<std::shared_ptr<BattleEntity>> enemies;
-
 			int currentTurn;
 			std::vector<Turn> turns;
 
