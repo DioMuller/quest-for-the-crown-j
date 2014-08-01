@@ -29,6 +29,7 @@ namespace qfcbase
 	{
 		private:
 			double time;
+			double lastAttack;
 			sf::Text text;
 
 			int currentTurn;

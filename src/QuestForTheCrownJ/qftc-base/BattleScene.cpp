@@ -14,6 +14,7 @@ BattleScene::BattleScene(std::weak_ptr<qfcbase::Game> parent)
 	: Scene(parent, false)
 {
 	time = 0.0;
+	lastAttack = 0.0;
 
 	enemyCount = 0;
 	playerCount = 0;
@@ -124,6 +125,15 @@ void BattleScene::NextTurn()
 bool BattleScene::ExecuteTurn(std::shared_ptr<BattleEntity> currentEntity)
 {
 	std::shared_ptr<BattleEntity> targetEntity;
+	std::shared_ptr<BattleEntity> entity, target;
+	int value;
+
+	if (time - lastAttack < 1.0)
+	{
+		return false;
+	}
+
+	lastAttack = time;
 
 	for (auto ent : entities)
 	{
@@ -137,50 +147,57 @@ bool BattleScene::ExecuteTurn(std::shared_ptr<BattleEntity> currentEntity)
 
 	if (!targetEntity) return false;
 
-	turns.push_back(Turn{ currentTurn, currentEntity, targetEntity, BattleAction::ATTACK, rand() % 10 });
-	turnOrder.pop_back();
-
-	auto entity = turns[currentTurn].entity;
-	auto target = turns[currentTurn].target;
-	int value = turns[currentTurn].value;
-
-	switch (turns[currentTurn].action)
+	switch (currentEntity->Type())
 	{
-	case BattleAction::ATTACK:
-		Log::Message(entity->category + " attacked " + target->category);
-		Log::Message("Damage: " + std::to_string(value));
+		case BattleEntityType::ENEMY:
+		case BattleEntityType::PLAYER:
+			turns.push_back(Turn{ currentTurn, currentEntity, targetEntity, BattleAction::ATTACK, rand() % 10 });
+			turnOrder.pop_back();
 
-		target->ChangeHP(-value);
-		break;
-	case BattleAction::SPECIAL:
-		Log::Message(entity->category + " special attacked " + target->category);
-		Log::Message("Damage: " + std::to_string(value));
+			entity = turns[currentTurn].entity;
+			target = turns[currentTurn].target;
+			value = turns[currentTurn].value;
 
-		target->ChangeHP(-value);
-		break;
-	case BattleAction::ITEM:
-		Log::Message(entity->category + " used potion on " + target->category);
-		Log::Message("Cured: " + std::to_string(value));
+			switch (turns[currentTurn].action)
+			{
+				case BattleAction::ATTACK:
+					Log::Message(entity->category + " attacked " + target->category);
+					Log::Message("Damage: " + std::to_string(value));
 
-		target->ChangeHP(value);
-		break;
-	case BattleAction::RUN:
-		Log::Message(entity->category + " ran away!");
+					target->ChangeHP(-value);
+					break;
+				case BattleAction::SPECIAL:
+					Log::Message(entity->category + " special attacked " + target->category);
+					Log::Message("Damage: " + std::to_string(value));
+
+					target->ChangeHP(-value);
+					break;
+				case BattleAction::ITEM:
+					Log::Message(entity->category + " used potion on " + target->category);
+					Log::Message("Cured: " + std::to_string(value));
+
+					target->ChangeHP(value);
+					break;
+				case BattleAction::RUN:
+					Log::Message(entity->category + " ran away!");
 
 
-		break;
-	default:
-		Log::Warning("Unknown Action!");
+					break;
+				default:
+					Log::Warning("Unknown Action!");
+			}
+
+			if (target->CurrentHP() <= 0)
+			{
+				RemoveEntity(target);
+
+				if (target->Type() == BattleEntityType::ENEMY) enemyCount--;
+				else if (target->Type() == BattleEntityType::PLAYER) playerCount--;
+			}
+
+			return true;
+		default:
+			return false;
 	}
 
-	int currentHP = target->CurrentHP();
-	if (currentHP <= 0)
-	{
-		RemoveEntity(target);
-
-		if (target->Type() == BattleEntityType::ENEMY) enemyCount--;
-		else if (target->Type() == BattleEntityType::PLAYER) playerCount--;
-	}
-
-	return true;
 }
