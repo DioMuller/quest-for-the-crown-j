@@ -8,7 +8,7 @@
 using namespace qfcgame;
 using namespace qfcbase;
 
-std::shared_ptr<qfcbase::Entity> CreateEntity(const FullEntityInfo& info)
+std::shared_ptr<qfcbase::Entity> CreateEntity(const ServerSendEntity& info)
 {
 	std::shared_ptr<qfcbase::Entity> entity;
 
@@ -41,21 +41,29 @@ void MultiplayerGame::Connect(int localPort, std::string auth_token)
 {
 	clientChannel.Connect(localPort, "127.0.0.1", 12345);
 	clientChannel.auth_token = auth_token;
-	clientChannel.onEntity = [this](const FullEntityInfo& entityInfo) {
-		auto entity = CreateEntity(entityInfo);
-		currentScene->AddEntity(entity);
+	clientChannel.onEntity = [this](const ServerSendEntity& info) {
+		auto updateEntities = currentScene->GetEntities([&](const std::shared_ptr<Entity>& e){
+			return e->Id == info.entity.entityId;
+		});
+		if (!updateEntities.size()) {
+			auto entity = CreateEntity(info);
+			currentScene->AddEntity(entity);
+		}
+		else {
+			for (auto u : updateEntities) {
+				u->Sprite->Position = sf::Vector2f(info.position.x, info.position.y);
+			}
+		}
 	};
 }
 
 void MultiplayerGame::RefreshSceneFromServer()
 {
-	clientChannel.GetPlayerInfo([=](FullEntityInfo player) {
-		auto scene = LevelLoader::LoadMap(this->getptr(), 1, (std::string)"Content/maps/" + (std::string)player.map_name + (std::string)".tmx");
+	clientChannel.GetPlayer([=](ServerResponsePlayerInfo& info) {
+		auto scene = LevelLoader::LoadMap(this->getptr(), 1, (std::string)"Content/maps/" + (std::string)info.player.map_name + (std::string)".tmx");
 		LoadScene(scene, false);
 
-		Log::Debug((std::string)"Map loaded: " + std::string(player.map_name));
-
-		clientChannel.GetEntities(player.map_name);
+		Log::Debug((std::string)"Map loaded: " + std::string(info.player.map_name));
 	}, [&](std::exception& ex) {
 		Log::Error(ex.what());
 	});

@@ -102,7 +102,7 @@ void ServerChannel::Listen(int port)
 			}
 			break;
 		case PacketType::CLIENT_REQUEST_PLAYER_INFO:
-			if (size != sizeof(RequestPlayerInfo))
+			if (size != sizeof(ClientRequestPlayerInfo))
 			{
 				Log::Error("Invalid packet size for CLIENT_REQUEST_PLAYER_INFO: " + size);
 				continue;
@@ -113,21 +113,15 @@ void ServerChannel::Listen(int port)
 				continue;
 			}
 			else {
-				auto data = (RequestPlayerInfo*)buffer;
+				auto data = (ClientRequestPlayerInfo*)buffer;
 				auto resp = handleRequestPlayer(*data);
 				if (!resp) continue;
-				resp->header.type = PacketType::SERVER_PLAYER_INFO;
-
-				size = sendto(channel_socket, (char*)resp.get(), sizeof(FullEntityInfo), 0, (SOCKADDR*)&sender, sender_size);
-				if (size != sizeof(FullEntityInfo))
-				{
-					Log::Error("Error while sending CLIENT_REQUEST_PLAYER_INFO response.");
-					continue;
-				}
+				auto response = *resp.get();
+				Send(response, sender, sender_size);
 			}
 			break;
 		case PacketType::CLIENT_REQUEST_ENTITIES:
-			if (size != sizeof(RequestEntities))
+			if (size != sizeof(ClientRequestEntities))
 			{
 				Log::Error("Invalid packet size for CLIENT_REQUEST_ENTITIES: " + size);
 				continue;
@@ -138,24 +132,40 @@ void ServerChannel::Listen(int port)
 				continue;
 			}
 			else {
-				auto data = (RequestEntities*)buffer;
+				auto data = (ClientRequestEntities*)buffer;
 				handleRequestEntities(*data);
 			}
 			break;
-		case PacketType::CLIENT_SEND_CHARACTER_POSITION:
-			if (size != sizeof(ClientCharacterPosition))
+		case PacketType::CLIENT_SEND_PLAYER_POSITION:
+			if (size != sizeof(ClientSendPlayerPosition))
 			{
-				Log::Error("Invalid packet size for CLIENT_CHARACTER_POSITION: " + size);
+				Log::Error("Invalid packet size for CLIENT_SEND_PLAYER_POSITION: " + size);
 				continue;
 			}
 			if (!handlePlayerPosition)
 			{
-				Log::Debug("No handler for CLIENT_CHARACTER_POSITION");
+				Log::Debug("No handler for CLIENT_SEND_PLAYER_POSITION");
 				continue;
 			}
 			else {
-				auto data = (ClientCharacterPosition*)buffer;
+				auto data = (ClientSendPlayerPosition*)buffer;
 				handlePlayerPosition(*data);
+			}
+			break;
+		case PacketType::CLIENT_SEND_PLAYER_FULL_POSITION:
+			if (size != sizeof(ClientSendPlayerFullPosition))
+			{
+				Log::Error("Invalid packet size for CLIENT_SEND_PLAYER_FULL_POSITION: " + size);
+				continue;
+			}
+			if (!handlePlayerPosition)
+			{
+				Log::Debug("No handler for CLIENT_SEND_PLAYER_FULL_POSITION");
+				continue;
+			}
+			else {
+				auto data = (ClientSendPlayerFullPosition*)buffer;
+				handlePlayerFullPosition(*data);
 			}
 			break;
 		default:
@@ -181,3 +191,12 @@ void ServerChannel::Listen(int port)
 	}
 }
 
+void ServerChannel::SendEntity(int id, EntityType type, int x, int y, sockaddr_in addr, int addr_size)
+{
+	ServerSendEntity data;
+	data.entity.type = type;
+	data.entity.entityId = id;
+	data.position.x = x;
+	data.position.y = y;
+	Send(data, addr, addr_size);
+}

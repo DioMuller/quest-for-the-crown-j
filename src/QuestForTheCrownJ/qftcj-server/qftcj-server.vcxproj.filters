@@ -26,10 +26,10 @@
     <ClInclude Include="Server.h">
       <Filter>Core</Filter>
     </ClInclude>
-    <ClInclude Include="ServerStructs.h">
+    <ClInclude Include="ServerEntityFactory.h" />
+    <ClInclude Include="ServerRuntimeStructs.h">
       <Filter>Core</Filter>
     </ClInclude>
-    <ClInclude Include="ServerEntityFactory.h" />
   </ItemGroup>
   <ItemGroup>
     <None Include="database.sqlite" />

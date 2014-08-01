@@ -6,9 +6,13 @@ enum PacketType
 {
 	LAUNCHER_LOGIN_INFO,
 	LAUNCHER_LOGIN_RESPONSE,
+
 	CLIENT_REQUEST_PLAYER_INFO,
+	SERVER_RESPONSE_PLAYER_INFO,
+	CLIENT_SEND_PLAYER_POSITION,
+	CLIENT_SEND_PLAYER_FULL_POSITION,
 	CLIENT_REQUEST_ENTITIES,
-	CLIENT_SEND_CHARACTER_POSITION,
+	SERVER_SEND_ENTITY,
 
 	CLIENT_CHARACTER_STATUS,
 	CLIENT_CHARACTER_ITEM,
@@ -41,17 +45,8 @@ typedef struct s_entity_header
 	EntityType type;
 } EntityHeader;
 
-typedef struct s_entity_position
+typedef struct s_player_full_position
 {
-	Header header;
-	int entity_id;
-	sf::Vector2i position;
-} EntityPosition;
-
-typedef struct s_full_entity_info
-{
-	Header header;
-	EntityHeader entity;
 	char map_name[255];
 	sf::Vector2i position;
-} FullEntityInfo;
+} PlayerFullPosition;

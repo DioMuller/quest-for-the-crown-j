@@ -98,27 +98,27 @@ void qfcnet::ClientChannel::Listen()
 			on_login_response(*(s_launcher_login_response*)(buffer));
 			on_login_response = nullptr;
 			break;
-		case PacketType::SERVER_PLAYER_INFO:
-			if (size != sizeof(FullEntityInfo))
+		case PacketType::SERVER_RESPONSE_PLAYER_INFO:
+			if (size != sizeof(ServerResponsePlayerInfo))
 			{
-				Log::Error((std::string)"Invalid packet size for SERVER_PLAYER_INFO: " + std::to_string(size));
+				Log::Error((std::string)"Invalid packet size for SERVER_RESPONSE_PLAYER_INFO: " + std::to_string(size));
 				continue;
 			}
 			if (!on_playerinfo_response)
 			{
-				Log::Debug("No handler for SERVER_PLAYER_INFO");
+				Log::Debug("No handler for SERVER_RESPONSE_PLAYER_INFO");
 				continue;
 			}
 			else {
-				auto info = (FullEntityInfo*)buffer;
+				auto info = (ServerResponsePlayerInfo*)buffer;
 				on_playerinfo_response(*info);
 				on_playerinfo_response = nullptr;
 			}
 			break;
-		case PacketType::SERVER_ENTITY_INFO:
-			if (size != sizeof(FullEntityInfo))
+		case PacketType::SERVER_SEND_ENTITY:
+			if (size != sizeof(ServerSendEntity))
 			{
-				Log::Error((std::string)"Invalid packet size for SERVER_ENTITY_INFO: " + std::to_string(size));
+				Log::Error((std::string)"Invalid packet size for SERVER_SEND_ENTITY: " + std::to_string(size));
 				continue;
 			}
 			if (!onEntity)
@@ -127,7 +127,7 @@ void qfcnet::ClientChannel::Listen()
 				continue;
 			}
 			else {
-				auto info = (FullEntityInfo*)buffer;
+				auto info = (ServerSendEntity*)buffer;
 				onEntity(*info);
 			}
 			break;
@@ -160,7 +160,7 @@ void ClientChannel::Login(std::string user, std::string password,
 	std::function<void(std::string)> completed,
 	std::function<void(std::exception&)> error)
 {
-	on_login_response = [&](s_launcher_login_response response) {
+	on_login_response = [=](s_launcher_login_response response) {
 		if (!response.authenticated)
 		{
 			error(std::exception("Invalid username or password"));
@@ -169,65 +169,61 @@ void ClientChannel::Login(std::string user, std::string password,
 		completed(response.authKey);
 	};
 
-	std::thread([&]() {
-		s_launcher_login_info login_request;
-		login_request.header.type = PacketType::LAUNCHER_LOGIN_INFO;
-		strcpy_s(login_request.login, sizeof(login_request.login), user.c_str());
-		strcpy_s(login_request.hashedPassword, sizeof(login_request.hashedPassword), password.c_str());
-
-		int r = sendto(channel_socket, (char*)&login_request, sizeof(login_request), 0, (SOCKADDR*)&server_addr, server_addr_size);
-		if (r <= 0)
-		{
-			error(std::exception(("Send error: " + std::to_string(WSAGetLastError())).c_str()));
-			return;
-		}
+	std::thread([=]() {
+		s_launcher_login_info data;
+		data.header.type = PacketType::LAUNCHER_LOGIN_INFO;
+		strcpy_s(data.login, sizeof(data.login), user.c_str());
+		strcpy_s(data.hashedPassword, sizeof(data.hashedPassword), password.c_str());
+		Send(data);
 	}).detach();
 }
 
-void ClientChannel::GetPlayerInfo(
-	std::function<void(FullEntityInfo)> completed,
+void ClientChannel::GetPlayer(
+	std::function<void(ServerResponsePlayerInfo&)> completed,
 	std::function<void(std::exception&)> error)
 {
-	on_playerinfo_response = [=](FullEntityInfo info) {
+	on_playerinfo_response = [=](ServerResponsePlayerInfo info) {
 		completed(info);
 	};
 
 	std::thread([=]() {
-		RequestPlayerInfo request;
-		request.clientHeader.header.type = PacketType::CLIENT_REQUEST_PLAYER_INFO;
-		strcpy_s(request.clientHeader.authKey, sizeof(request.clientHeader.authKey), auth_token.c_str());
-		int r = sendto(channel_socket, (char*)&request, sizeof(request), 0, (SOCKADDR*)&server_addr, server_addr_size);
-		if (r <= 0)
-		{
-			error(std::exception(("Send error: " + std::to_string(WSAGetLastError())).c_str()));
-			return;
-		}
+		ClientRequestPlayerInfo data;
+		strcpy_s(data.header.authKey, sizeof(data.header.authKey), auth_token.c_str());
+		Send(data);
+	}).detach();
+}
+
+void ClientChannel::SendPlayerPosition(int x, int y)
+{
+	std::thread([=]() {
+		ClientSendPlayerPosition data;
+		strcpy_s(data.header.authKey, sizeof(data.header.authKey), auth_token.c_str());
+		data.position.x = x;
+		data.position.y = y;
+		Send(data);
+	}).detach();
+}
+
+void ClientChannel::SendPlayerFullPosition(std::string map_name, int x, int y)
+{
+	ClientSendPlayerFullPosition data;
+	std::thread([=]() {
+		ClientSendPlayerFullPosition data;
+		strcpy_s(data.header.authKey, sizeof(data.header.authKey), auth_token.c_str());
+		strcpy_s(data.player.map_name, sizeof(data.player.map_name), map_name.c_str());
+		data.player.position.x = x;
+		data.player.position.y = y;
+		Send(data);
 	}).detach();
 }
 
 void ClientChannel::GetEntities(std::string screen_name)
 {
 	std::thread([=]() {
-		RequestEntities request;
-		request.clientHeader.header.type = PacketType::CLIENT_REQUEST_ENTITIES;
-		strcpy_s(request.clientHeader.authKey, sizeof(request.clientHeader.authKey), auth_token.c_str());
-		int r = sendto(channel_socket, (char*)&request, sizeof(request), 0, (SOCKADDR*)&server_addr, server_addr_size);
-		if (r <= 0)
-			Log::Error("Error while requesting entities");
-	}).detach();
-}
-
-void ClientChannel::SendPosition(int x, int y)
-{
-	std::thread([=]() {
-		ClientCharacterPosition request;
-		request.clientHeader.header.type = PacketType::CLIENT_SEND_CHARACTER_POSITION;
-		request.x = x;
-		request.y = y;
-		strcpy_s(request.clientHeader.authKey, sizeof(request.clientHeader.authKey), auth_token.c_str());
-		int r = sendto(channel_socket, (char*)&request, sizeof(request), 0, (SOCKADDR*)&server_addr, server_addr_size);
-		if (r <= 0)
-			Log::Error("Error while sending character position");
+		ClientRequestEntities data;
+		data.header.header.type = PacketType::CLIENT_REQUEST_ENTITIES;
+		strcpy_s(data.header.authKey, sizeof(data.header.authKey), auth_token.c_str());
+		Send(data);
 	}).detach();
 }
 #pragma endregion Requests

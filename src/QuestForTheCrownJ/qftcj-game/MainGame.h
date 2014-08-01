@@ -9,7 +9,6 @@ namespace qfcgame
 {
 	class MainGame :
 		public qfcbase::Game,
-		public qfcbase::IDrawable,
 		public qfcbase::IRunnable
 	{
 		////////////////////////////////////////

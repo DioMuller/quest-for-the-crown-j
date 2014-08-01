@@ -100,7 +100,7 @@
     <ClInclude Include="Server.h" />
     <ClInclude Include="ServerEntityFactory.h" />
     <ClInclude Include="ServerLevel.h" />
-    <ClInclude Include="ServerStructs.h" />
+    <ClInclude Include="ServerRuntimeStructs.h" />
     <ClInclude Include="sqlite3.h" />
     <ClInclude Include="sqlite3ext.h" />
   </ItemGroup>

@@ -8,9 +8,8 @@
 #include <future>
 #include <thread>
 
-#include "AuthStructs.h"
-#include "StructBase.h"
 #include "ServerStructs.h"
+#include "AuthStructs.h"
 
 namespace qfcnet
 {
@@ -18,7 +17,7 @@ namespace qfcnet
 	{
 	public:
 		std::string auth_token;
-		std::function<void(const FullEntityInfo&)> onEntity;
+		std::function<void(ServerSendEntity&)> onEntity;
 
 	public:
 		ClientChannel();
@@ -31,13 +30,20 @@ namespace qfcnet
 			std::function<void(std::string)> completed,
 			std::function<void(std::exception&)> error);
 
-		void GetPlayerInfo(
-			std::function<void(FullEntityInfo)> completed,
+		void GetPlayer(
+			std::function<void(ServerResponsePlayerInfo&)> completed,
 			std::function<void(std::exception&)> error);
-
+		void SendPlayerPosition(int x, int y);
+		void SendPlayerFullPosition(std::string map_name, int x, int y);
 		void GetEntities(std::string screen_name);
 
-		void SendPosition(int x, int y);
+		template <typename T>
+		void Send(T data)
+		{
+			int r = sendto(channel_socket, (char*)&data, sizeof(data), 0, (SOCKADDR*)&server_addr, server_addr_size);
+			if (r <= 0)
+				Log::Error("Send error: " + std::to_string(WSAGetLastError()));
+		}
 
 	private:
 		std::thread listen_thread;
@@ -47,8 +53,8 @@ namespace qfcnet
 		sockaddr_in server_addr;
 		int server_addr_size;
 
-		std::function<void(s_launcher_login_response)> on_login_response;
-		std::function<void(FullEntityInfo)> on_playerinfo_response;
+		std::function<void(LauncherLoginResponse)> on_login_response;
+		std::function<void(ServerResponsePlayerInfo)> on_playerinfo_response;
 
 		void Listen();
 

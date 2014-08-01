@@ -9,22 +9,27 @@ typedef struct s_client_header
 	char authKey[260];
 } ClientHeader;
 
-typedef struct s_request_player_info
+typedef struct s_client_request_player_info
 {
-	ClientHeader clientHeader;
-} RequestPlayerInfo;
+	ClientHeader header = { { PacketType::CLIENT_REQUEST_PLAYER_INFO } };
+} ClientRequestPlayerInfo;
 
-typedef struct s_request_entities
+typedef struct s_client_request_entities
 {
-	ClientHeader clientHeader;
-} RequestEntities;
+	ClientHeader header = { { PacketType::CLIENT_REQUEST_ENTITIES } };
+} ClientRequestEntities;
 
-// Client current position.
-typedef struct s_client_position
+typedef struct s_client_send_player_full_position
 {
-	ClientHeader clientHeader;
-	int x, y;
-} ClientCharacterPosition;
+	ClientHeader header = { { PacketType::CLIENT_SEND_PLAYER_FULL_POSITION } };
+	PlayerFullPosition player;
+} ClientSendPlayerFullPosition;
+
+typedef struct s_client_send_player_position
+{
+	ClientHeader header = { { PacketType::CLIENT_SEND_PLAYER_POSITION } };
+	sf::Vector2i position;
+} ClientSendPlayerPosition;
 
 // Sends character status on the server.
 typedef struct s_client_character_status

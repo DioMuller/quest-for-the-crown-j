@@ -7,6 +7,7 @@
 #include "Game.h"
 #include "ServerLevel.h"
 #include "Hero.h"
+#include "ServerRuntimeStructs.h"
 
 namespace qfcserver {
 	class Server
@@ -35,7 +36,7 @@ namespace qfcserver {
 			void SetEntityPosition(std::shared_ptr<qfcbase::Entity> player_entity, std::string map_file, float x, float y);
 
 			int next_player_id;
-			std::shared_ptr<FullEntityInfo> HandleRequestPlayerInfo(const RequestPlayerInfo& data);
+			std::shared_ptr<ServerResponsePlayerInfo> HandleRequestPlayerInfo(const ClientRequestPlayerInfo& data);
 			std::string GetUserAuthCode(std::shared_ptr<qfcbase::Entity> entity);
 			void SendEntitiesToPlayer(LoggedUser user);
 			std::map<std::string, LoggedUser> logged_users;
@@ -44,5 +45,6 @@ namespace qfcserver {
 			bool IsPlayer(const qfcbase::Entity& entity);
 			std::string GetMapFile(std::string mapName);
 			std::string GetMapName(std::string mapFile);
+			void SendEntityToUsers(int id, EntityType type, int x, int y);
 	};
 }

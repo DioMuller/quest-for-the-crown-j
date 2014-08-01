@@ -11,6 +11,20 @@ SERVER_BATTLE_START,
 SERVER_BATTLE_TURN
 */
 
+typedef struct s_server_send_entity
+{
+	Header header = { { PacketType::SERVER_SEND_ENTITY } };
+	EntityHeader entity;
+	sf::Vector2i position;
+} ServerSendEntity;
+
+typedef struct s_server_response_player_info
+{
+	Header header = { { PacketType::SERVER_RESPONSE_PLAYER_INFO } };
+	EntityHeader entity;
+	PlayerFullPosition player;
+} ServerResponsePlayerInfo;
+
 typedef struct s_server_battle_start
 {
 	Header header;
