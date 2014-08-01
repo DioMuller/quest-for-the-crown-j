@@ -35,12 +35,14 @@ namespace qfcserver {
 			void SetEntityPosition(std::shared_ptr<qfcbase::Entity> player_entity, std::string map_file, float x, float y);
 
 			int next_player_id;
-			std::shared_ptr<ServerPlayerInfo> HandleRequestPlayerInfo(const RequestPlayerInfo& data);
+			std::shared_ptr<FullEntityInfo> HandleRequestPlayerInfo(const RequestPlayerInfo& data);
 			std::string GetUserAuthCode(std::shared_ptr<qfcbase::Entity> entity);
 			void SendEntitiesToPlayer(LoggedUser user);
 			std::map<std::string, LoggedUser> logged_users;
 			std::map<std::string, std::shared_ptr<ServerLevel>> loaded_levels;
 
 			bool IsPlayer(const qfcbase::Entity& entity);
+			std::string GetMapFile(std::string mapName);
+			std::string GetMapName(std::string mapFile);
 	};
 }

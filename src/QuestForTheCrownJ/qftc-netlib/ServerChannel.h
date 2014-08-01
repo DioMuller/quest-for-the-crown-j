@@ -13,7 +13,9 @@ namespace qfcnet
 	{
 	public:
 		std::function<LauncherLoginResponse(const LauncherLoginInfo&, sockaddr_in, int)> handleLoginInfo;
-		std::function<std::shared_ptr<ServerPlayerInfo>(const RequestPlayerInfo&)> handleRequestPlayer;
+		std::function<std::shared_ptr<FullEntityInfo>(const RequestPlayerInfo&)> handleRequestPlayer;
+		std::function<void(const ClientCharacterPosition&)> handlePlayerPosition;
+		std::function<void(const RequestEntities&)> handleRequestEntities;
 
 	public:
 		ServerChannel(int port);

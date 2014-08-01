@@ -118,21 +118,51 @@ void ServerChannel::Listen(int port)
 				if (!resp) continue;
 				resp->header.type = PacketType::SERVER_PLAYER_INFO;
 
-				size = sendto(channel_socket, (char*)resp.get(), sizeof(ServerPlayerInfo), 0, (SOCKADDR*)&sender, sender_size);
-				if (size != sizeof(ServerPlayerInfo))
+				size = sendto(channel_socket, (char*)resp.get(), sizeof(FullEntityInfo), 0, (SOCKADDR*)&sender, sender_size);
+				if (size != sizeof(FullEntityInfo))
 				{
 					Log::Error("Error while sending CLIENT_REQUEST_PLAYER_INFO response.");
 					continue;
 				}
 			}
 			break;
+		case PacketType::CLIENT_REQUEST_ENTITIES:
+			if (size != sizeof(RequestEntities))
+			{
+				Log::Error("Invalid packet size for CLIENT_REQUEST_ENTITIES: " + size);
+				continue;
+			}
+			if (!handleRequestEntities)
+			{
+				Log::Debug("No handler for CLIENT_REQUEST_ENTITIES");
+				continue;
+			}
+			else {
+				auto data = (RequestEntities*)buffer;
+				handleRequestEntities(*data);
+			}
+			break;
+		case PacketType::CLIENT_SEND_CHARACTER_POSITION:
+			if (size != sizeof(ClientCharacterPosition))
+			{
+				Log::Error("Invalid packet size for CLIENT_CHARACTER_POSITION: " + size);
+				continue;
+			}
+			if (!handlePlayerPosition)
+			{
+				Log::Debug("No handler for CLIENT_CHARACTER_POSITION");
+				continue;
+			}
+			else {
+				auto data = (ClientCharacterPosition*)buffer;
+				handlePlayerPosition(*data);
+			}
+			break;
 		default:
 			Log::Debug(std::string("Unknown message type: ") + std::to_string(header->type));
 			break;
-		/*case PacketType::CLIENT_CHARACTER_POSITION:
-			auto client_char_pos = (s_client_position*)buffer;
-			break;
-		case PacketType::CLIENT_CHARACTER_STATUS:
+
+		/*case PacketType::CLIENT_CHARACTER_STATUS:
 			auto client_char_status = (s_client_character_status*)buffer;
 			break;
 		case PacketType::CLIENT_CHARACTER_ITEM:

@@ -18,7 +18,7 @@ namespace qfcnet
 	{
 	public:
 		std::string auth_token;
-		std::function<void(const ServerEntityInfo&)> onEntity;
+		std::function<void(const FullEntityInfo&)> onEntity;
 
 	public:
 		ClientChannel();
@@ -32,10 +32,12 @@ namespace qfcnet
 			std::function<void(std::exception&)> error);
 
 		void GetPlayerInfo(
-			std::function<void(ServerPlayerInfo)> completed,
+			std::function<void(FullEntityInfo)> completed,
 			std::function<void(std::exception&)> error);
 
 		void GetEntities(std::string screen_name);
+
+		void SendPosition(int x, int y);
 
 	private:
 		std::thread listen_thread;
@@ -46,11 +48,10 @@ namespace qfcnet
 		int server_addr_size;
 
 		std::function<void(s_launcher_login_response)> on_login_response;
-		std::function<void(ServerPlayerInfo)> on_playerinfo_response;
+		std::function<void(FullEntityInfo)> on_playerinfo_response;
 
 		void Listen();
 
 		void StartConnection(int localPort, std::string &serverAddress, int serverPort);
-
 	};
 }

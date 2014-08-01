@@ -14,11 +14,15 @@ typedef struct s_request_player_info
 	ClientHeader clientHeader;
 } RequestPlayerInfo;
 
+typedef struct s_request_entities
+{
+	ClientHeader clientHeader;
+} RequestEntities;
+
 // Client current position.
 typedef struct s_client_position
 {
 	ClientHeader clientHeader;
-	EntityHeader entity;
 	int x, y;
 } ClientCharacterPosition;
 

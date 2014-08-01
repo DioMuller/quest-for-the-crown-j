@@ -8,7 +8,7 @@
 using namespace qfcgame;
 using namespace qfcbase;
 
-std::shared_ptr<qfcbase::Entity> CreateEntity(const ServerEntityInfo& info)
+std::shared_ptr<qfcbase::Entity> CreateEntity(const FullEntityInfo& info)
 {
 	std::shared_ptr<qfcbase::Entity> entity;
 
@@ -41,7 +41,7 @@ void MultiplayerGame::Connect(int localPort, std::string auth_token)
 {
 	clientChannel.Connect(localPort, "127.0.0.1", 12345);
 	clientChannel.auth_token = auth_token;
-	clientChannel.onEntity = [this](const ServerEntityInfo& entityInfo) {
+	clientChannel.onEntity = [this](const FullEntityInfo& entityInfo) {
 		auto entity = CreateEntity(entityInfo);
 		currentScene->AddEntity(entity);
 	};
@@ -49,7 +49,7 @@ void MultiplayerGame::Connect(int localPort, std::string auth_token)
 
 void MultiplayerGame::RefreshSceneFromServer()
 {
-	clientChannel.GetPlayerInfo([&, this](ServerPlayerInfo player) {
+	clientChannel.GetPlayerInfo([=](FullEntityInfo player) {
 		auto scene = LevelLoader::LoadMap(this->getptr(), 1, (std::string)"Content/maps/" + (std::string)player.map_name + (std::string)".tmx");
 		LoadScene(scene, false);
 

@@ -37,6 +37,14 @@ Server::Server(int port)
 	channel.handleRequestPlayer = [this](const RequestPlayerInfo& data) {
 		return HandleRequestPlayerInfo(data);
 	};
+	channel.handlePlayerPosition = [this](const ClientCharacterPosition& data) {
+		auto clientData = logged_users[data.clientHeader.authKey];
+		SetEntityPosition(clientData.game_entity, clientData.map_file, data.x, data.y);
+	};
+	channel.handleRequestEntities = [this](const RequestEntities& data) {
+		auto user = logged_users[data.clientHeader.authKey];
+		SendEntitiesToPlayer(user);
+	};
 }
 
 Server::~Server()
@@ -195,7 +203,7 @@ LauncherLoginResponse Server::HandleLoginInfo(const LauncherLoginInfo& login_inf
 		logged.player_id = playerId;
 		logged.user_id = userId;
 		logged.game_entity = playerEntity;
-		logged.map_name = mapName;
+		logged.map_file = GetMapFile (mapName);
 		logged.address = sender;
 		logged.address_size = sender_size;
 		logged_users[resp.authKey] = logged;
@@ -206,7 +214,7 @@ LauncherLoginResponse Server::HandleLoginInfo(const LauncherLoginInfo& login_inf
 	return resp;
 }
 
-std::shared_ptr<ServerPlayerInfo> qfcserver::Server::HandleRequestPlayerInfo(const RequestPlayerInfo& data)
+std::shared_ptr<FullEntityInfo> qfcserver::Server::HandleRequestPlayerInfo(const RequestPlayerInfo& data)
 {
 	if (logged_users.count(data.clientHeader.authKey) == 0)
 	{
@@ -214,12 +222,12 @@ std::shared_ptr<ServerPlayerInfo> qfcserver::Server::HandleRequestPlayerInfo(con
 		return nullptr;
 	}
 	auto user = logged_users[data.clientHeader.authKey];
-	auto resp = std::make_shared<ServerPlayerInfo>();
+	auto resp = std::make_shared<FullEntityInfo>();
 	auto pos = user.game_entity->Sprite->Position;
 	// TODO: Player entity types
 	resp->entity.type = EntityType::ENTITY_HERO;
 	resp->entity.entityId = user.game_entity->Id;
-	strcpy_s(resp->map_name, sizeof(resp->map_name), user.map_name.c_str());
+	strcpy_s(resp->map_name, sizeof(resp->map_name), GetMapName(user.map_file).c_str());
 	resp->position.x = static_cast<int>(pos.x);
 	resp->position.y = static_cast<int>(pos.y);
 
@@ -229,6 +237,16 @@ std::shared_ptr<ServerPlayerInfo> qfcserver::Server::HandleRequestPlayerInfo(con
 #pragma endregion
 
 #pragma region Helpers
+std::string Server::GetMapFile(std::string mapName)
+{
+	return (std::string)"Content/maps/" + mapName + (std::string)".tmx";
+}
+
+std::string Server::GetMapName(std::string mapFile)
+{
+	return mapFile.substr(13, mapFile.length() - 17); // Content/maps/ .tmx
+}
+
 std::string Server::GetUserAuthCode(std::shared_ptr<qfcbase::Entity> entity)
 {
 	for (auto& user : logged_users) {
@@ -292,10 +310,8 @@ void qfcserver::Server::SetEntityPosition(std::shared_ptr<qfcbase::Entity> entit
 	auto code = GetUserAuthCode(entity);
 	if (code.size() > 0)
 	{
-		auto map_name = map_file.substr(13, map_file.length() - 17); // Assets/maps/ .tmx
-
 		auto info = logged_users[code];
-		info.map_name = map_name;
+		info.map_file = map_file;
 		logged_users[code] = info;
 	}
 
@@ -310,7 +326,10 @@ void qfcserver::Server::SendEntitiesToPlayer(LoggedUser user)
 	{
 		for (auto ent : scene->GetEntities([](const std::shared_ptr<Entity>& e) { return true; }))
 		{
-			ServerEntityInfo info;
+			if (ent == user.game_entity)
+				continue;
+
+			FullEntityInfo info;
 			if (std::dynamic_pointer_cast<Hero>(ent))
 				info.entity.type = ENTITY_HERO;
 			else if (std::dynamic_pointer_cast<Slime>(ent))
