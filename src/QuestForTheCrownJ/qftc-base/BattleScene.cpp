@@ -2,6 +2,7 @@
 
 #include <string>
 #include <sstream>
+#include <SFML/Window/Keyboard.hpp>
 
 #include "Game.h"
 #include "GameAssets.h"
@@ -44,6 +45,13 @@ void BattleScene::Update(double dt)
 			game->UnstackScene(std::dynamic_pointer_cast<BattleEntity>(entities[0])->GetParent());
 		}
 	}
+
+	// Battle Input
+	if (sf::Keyboard::isKeyPressed(sf::Keyboard::Num1)) playerAction = BattleAction::ATTACK;
+	else if (sf::Keyboard::isKeyPressed(sf::Keyboard::Num2)) playerAction = BattleAction::SPECIAL;
+	else if (sf::Keyboard::isKeyPressed(sf::Keyboard::Num3)) playerAction = BattleAction::ITEM;
+	else if (sf::Keyboard::isKeyPressed(sf::Keyboard::Num4)) playerAction = BattleAction::RUN;
+	else playerAction = BattleAction::NOACTION;
 }
 
 void BattleScene::Draw(sf::RenderWindow* renderer)
@@ -128,7 +136,7 @@ bool BattleScene::ExecuteTurn(std::shared_ptr<BattleEntity> currentEntity)
 	std::shared_ptr<BattleEntity> entity, target;
 	int value;
 
-	if (time - lastAttack < 1.0)
+	if (time - lastAttack < 0.1)
 	{
 		return false;
 	}
@@ -147,57 +155,68 @@ bool BattleScene::ExecuteTurn(std::shared_ptr<BattleEntity> currentEntity)
 
 	if (!targetEntity) return false;
 
+	Turn nextTurn;
+
 	switch (currentEntity->Type())
 	{
-		case BattleEntityType::ENEMY:
 		case BattleEntityType::PLAYER:
-			turns.push_back(Turn{ currentTurn, currentEntity, targetEntity, BattleAction::ATTACK, rand() % 10 });
-			turnOrder.pop_back();
-
-			entity = turns[currentTurn].entity;
-			target = turns[currentTurn].target;
-			value = turns[currentTurn].value;
-
-			switch (turns[currentTurn].action)
-			{
-				case BattleAction::ATTACK:
-					Log::Message(entity->category + " attacked " + target->category);
-					Log::Message("Damage: " + std::to_string(value));
-
-					target->ChangeHP(-value);
-					break;
-				case BattleAction::SPECIAL:
-					Log::Message(entity->category + " special attacked " + target->category);
-					Log::Message("Damage: " + std::to_string(value));
-
-					target->ChangeHP(-value);
-					break;
-				case BattleAction::ITEM:
-					Log::Message(entity->category + " used potion on " + target->category);
-					Log::Message("Cured: " + std::to_string(value));
-
-					target->ChangeHP(value);
-					break;
-				case BattleAction::RUN:
-					Log::Message(entity->category + " ran away!");
-
-
-					break;
-				default:
-					Log::Warning("Unknown Action!");
-			}
-
-			if (target->CurrentHP() <= 0)
-			{
-				RemoveEntity(target);
-
-				if (target->Type() == BattleEntityType::ENEMY) enemyCount--;
-				else if (target->Type() == BattleEntityType::PLAYER) playerCount--;
-			}
-
-			return true;
+			if (playerAction == BattleAction::NOACTION) return false;
+			if ((playerAction == BattleAction::SPECIAL && currentEntity->CurrentMP() <= 0)) return false;
+			// TODO: Potions.
+			
+			nextTurn = Turn{ currentTurn, currentEntity, targetEntity, playerAction, 3 + rand() % 5 };
+			break;
+		case BattleEntityType::ENEMY:
+			nextTurn = Turn{ currentTurn, currentEntity, targetEntity, BattleAction::ATTACK, 3 + rand() % 5 };
+			break;
 		default:
 			return false;
 	}
+
+	turns.push_back(nextTurn);
+	turnOrder.pop_back();
+
+	entity = turns[currentTurn].entity;
+	target = turns[currentTurn].target;
+	value = turns[currentTurn].value;
+
+	switch (turns[currentTurn].action)
+	{
+	case BattleAction::ATTACK:
+		Log::Message(entity->category + " attacked " + target->category);
+		Log::Message("Damage: " + std::to_string(value));
+
+		target->ChangeHP(-value);
+		break;
+	case BattleAction::SPECIAL:
+		Log::Message(entity->category + " special attacked " + target->category);
+		Log::Message("Damage: " + std::to_string(value));
+
+		target->ChangeHP(-value);
+		break;
+	case BattleAction::ITEM:
+		Log::Message(entity->category + " used potion on " + target->category);
+		Log::Message("Cured: " + std::to_string(value));
+
+		target->ChangeHP(value);
+		break;
+	case BattleAction::RUN:
+		Log::Message(entity->category + " ran away!");
+		break;
+	case BattleAction::NOACTION:
+		break;
+	default:
+		Log::Warning("Unknown Action!");
+	}
+
+	if (target->CurrentHP() <= 0)
+	{
+		RemoveEntity(target);
+
+		if (target->Type() == BattleEntityType::ENEMY) enemyCount--;
+		else if (target->Type() == BattleEntityType::PLAYER) playerCount--;
+	}
+
+	return true;
 
 }

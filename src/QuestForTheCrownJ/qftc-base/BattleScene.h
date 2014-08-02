@@ -13,7 +13,8 @@ namespace qfcbase
 		ATTACK = 0,
 		SPECIAL = 1,
 		ITEM = 2,
-		RUN = 3
+		RUN = 3,
+		NOACTION = -1
 	};
 
 	typedef struct structTurn
@@ -39,6 +40,9 @@ namespace qfcbase
 			int enemyCount;
 
 			std::vector<std::shared_ptr<BattleEntity>> turnOrder;
+			
+			// To Single Player
+			BattleAction playerAction;
 
 		/////////////////////////////////////
 		// Constructors
