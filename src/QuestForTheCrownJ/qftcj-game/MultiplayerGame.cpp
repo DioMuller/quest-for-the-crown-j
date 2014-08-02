@@ -8,6 +8,8 @@
 #include "KeyboardInput.h"
 #include "WatchPosition.h"
 #include "Definitions.h"
+#include "Window.h"
+#include "NetDefinitions.h"
 
 using namespace qfcgame;
 using namespace qfcbase;
@@ -38,7 +40,7 @@ std::shared_ptr<qfcbase::Entity> MultiplayerGame::CreateEntity(int id, EntityTyp
 		entity->AddBehavior(std::make_shared<Controllable>(entity, std::make_shared<KeyboardInput>()));
 		entity->AddBehavior(std::make_shared<WatchPosition>(entity, [&](std::shared_ptr<Entity> e) {
 			clientChannel.SendPlayerPosition(e->Sprite->Position.x, e->Sprite->Position.y);
-		}, ENTITY_SYNC_TIME));
+		}, NET_SECONDS_PER_FRAME));
 	}
 
 	return entity;
@@ -58,6 +60,8 @@ void MultiplayerGame::Connect(int localPort, std::string auth_token)
 	clientChannel.Connect(localPort, "127.0.0.1", 12345);
 	clientChannel.auth_token = auth_token;
 	clientChannel.onEntity = [this](const ServerSendEntity& info) {
+		std::unique_lock<std::mutex> lock_create(ent_update_mutex);
+
 		auto updateEntities = currentScene->GetEntity(info.entity.entityId);
 		if (!updateEntities) {
 			auto entity = CreateEntity(info.entity.entityId, info.entity.type, info.position.x, info.position.y);

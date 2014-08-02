@@ -19,6 +19,7 @@
 #include "ServerEntityFactory.h"
 #include "ServerHelper.h"
 #include "WatchPosition.h"
+#include "NetDefinitions.h"
 
 using namespace qfcserver;
 using namespace qfcbase;
@@ -351,7 +352,7 @@ std::shared_ptr<Entity> qfcserver::Server::GenerateEntity(std::weak_ptr<Scene> s
 						channel->SendEntity(level->Id(), e->Id, ServerHelper::GetEntityType(e), e->Sprite->Position, user.second.address, user.second.address_size);
 				}
 			}
-		}, ENTITY_SYNC_TIME));
+		}, NET_SECONDS_PER_FRAME));
 	}
 
 	return ent;

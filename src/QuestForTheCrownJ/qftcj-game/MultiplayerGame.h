@@ -12,6 +12,7 @@ namespace qfcgame
 	private:
 		qfcnet::ClientChannel clientChannel;
 		int player_entity_id;
+		std::mutex ent_update_mutex;
 
 		/////////////////////////////////////
 		// Constructors

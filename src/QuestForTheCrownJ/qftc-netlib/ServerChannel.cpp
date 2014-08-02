@@ -69,7 +69,8 @@ void ServerChannel::Listen(int port)
 
 		if (size < 0)
 		{
-			Log::Error("Error on receive");
+			Log::Error(std::string("Error on receive: ") + std::to_string(WSAGetLastError()));
+			std::this_thread::sleep_for(std::chrono::microseconds((long long)((NET_SECONDS_PER_FRAME)* (1000 * 1000))));
 			continue;
 		}
 

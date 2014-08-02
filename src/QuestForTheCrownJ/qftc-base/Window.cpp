@@ -67,6 +67,11 @@ bool Window::IsFocused()
 	return focused;
 }
 
+void Window::SetTitle(std::string title)
+{
+	window->setTitle(title);
+}
+
 std::shared_ptr<Window> qfcbase::Window::GetCurrent()
 {
 	return current;

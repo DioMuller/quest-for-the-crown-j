@@ -38,5 +38,6 @@ namespace qfcbase
 			void Run(std::shared_ptr<IRunnable> runnable);
 			bool IsFocused();
 			static std::shared_ptr<Window> GetCurrent();
+			void SetTitle(std::string title);
 	};
 }
