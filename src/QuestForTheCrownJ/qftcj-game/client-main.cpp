@@ -1,6 +1,7 @@
 #include <chrono>
 #include <thread>
 #include <iostream>
+#include <memory>
 
 #include "Window.h"
 #include "MainGame.h"
@@ -9,7 +10,7 @@
 #include "GameEntityFactory.h"
 #include "Controllable.h"
 #include "KeyboardInput.h"
-#include <memory>
+#include "Log.h"
 
 std::shared_ptr<qfcgame::MainGame> CreateSinglePlayer();
 std::shared_ptr<qfcgame::MainGame> CreateMultiplayer(std::string auth_token);
@@ -43,6 +44,8 @@ int main(int argc, char* argv[])
 std::shared_ptr<qfcgame::MainGame> CreateSinglePlayer()
 {
 	qfcbase::LevelLoader::SetFactory(std::make_shared<qfcbase::GameEntityFactory>());
+	qfcbase::Log::SetVerboseLevel(LOG_ALL);
+
 	auto game = std::make_shared<qfcgame::MainGame>();
 	auto scene = qfcbase::LevelLoader::LoadMap(game, 1, "Content/maps/Overworld01.tmx");
 	game->LoadScene(scene, false);

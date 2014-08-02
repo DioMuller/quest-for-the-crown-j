@@ -20,6 +20,7 @@ namespace qfcbase
 	{
 		int id; // Turn Count
 		std::shared_ptr<BattleEntity> entity; // Entity
+		std::shared_ptr <BattleEntity> target;
 		BattleAction action; // Turn Action
 		int value; // Value (Damage, Restore, Success)
 	} Turn;
@@ -28,13 +29,14 @@ namespace qfcbase
 	{
 		private:
 			double time;
+			double lastAttack;
 			sf::Text text;
-
-			std::vector<std::shared_ptr<BattleEntity>> players;
-			std::vector<std::shared_ptr<BattleEntity>> enemies;
 
 			int currentTurn;
 			std::vector<Turn> turns;
+
+			int playerCount;
+			int enemyCount;
 
 			std::vector<std::shared_ptr<BattleEntity>> turnOrder;
 
@@ -56,5 +58,6 @@ namespace qfcbase
 			bool AddMonster(std::shared_ptr<Entity> monster);
 
 			void NextTurn();
+			virtual bool ExecuteTurn(std::shared_ptr<BattleEntity> entity);
 	};
 }
