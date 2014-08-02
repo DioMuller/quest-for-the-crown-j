@@ -42,21 +42,9 @@ int main(int argc, char* argv[])
 std::shared_ptr<qfcgame::MainGame> CreateSinglePlayer()
 {
 	qfcbase::LevelLoader::SetFactory(new qfcbase::GameEntityFactory());
-
 	auto game = std::make_shared<qfcgame::MainGame>();
-
-	auto scene = qfcbase::LevelLoader::LoadMap(game, 1, (std::string)"Content/maps/Overworld01.tmx");
+	auto scene = qfcbase::LevelLoader::LoadMap(game, 1, "Content/maps/Overworld01.tmx");
 	game->LoadScene(scene, false);
-
-	bool found = false;
-	scene->GetEntities([&found](const std::shared_ptr<qfcbase::Entity> e) {
-		if (!found && e->category == "GoodGuy")
-		{
-			e->AddBehavior(std::make_shared<qfcgame::Controllable>(e, std::make_shared<qfcgame::KeyboardInput>()));
-			found = true;
-		}
-		return false;
-	});
 	return game;
 }
 

@@ -59,10 +59,11 @@ void ServerChannel::Listen(int port)
 
 	while (!stop_listen)
 	{
-		sockaddr_in sender;
-		int sender_size = sizeof(sender);
+		auto sender = std::make_shared<sockaddr_in>();
+		int sender_size = sizeof(sockaddr_in);
+		ZeroMemory(sender.get(), sender_size);
 
-		size = recvfrom(channel_socket, buffer, NET_BUFFER_SIZE - 1, 0, (SOCKADDR*)&sender, &sender_size);
+		size = recvfrom(channel_socket, buffer, NET_BUFFER_SIZE, 0, (SOCKADDR*)sender.get(), &sender_size);
 		if (stop_listen)
 			return;
 
@@ -72,15 +73,17 @@ void ServerChannel::Listen(int port)
 			continue;
 		}
 
-		buffer[size] = '\0';
+		ClientHeader* clientHeader = (ClientHeader*)buffer;
 
-		Header* header = (Header*)buffer;
-		switch (header->type)
+		if (onClientMessage)
+			onClientMessage(*clientHeader, sender, sender_size);
+
+		switch (clientHeader->header.type)
 		{
 		case PacketType::LAUNCHER_LOGIN_INFO:
 			if (size != sizeof(LauncherLoginInfo))
 			{
-				Log::Error("Invalid packet size for LAUNCHER_LOGIN_INFO: " + size);
+				Log::Error((std::string)"Invalid packet size for LAUNCHER_LOGIN_INFO: " + std::to_string(size));
 				continue;
 			}
 			if (!handleLoginInfo)
@@ -93,12 +96,7 @@ void ServerChannel::Listen(int port)
 				auto resp = handleLoginInfo(*data, sender, sender_size);
 				resp.header.type = PacketType::LAUNCHER_LOGIN_RESPONSE;
 
-				size = sendto(channel_socket, (char*)&resp, sizeof(resp), 0, (SOCKADDR*)&sender, sender_size);
-				if (size != sizeof(resp))
-				{
-					Log::Error("Error while sending LAUNCHER_LOGIN_INFO response.");
-					continue;
-				}
+				Send(resp, sender, sender_size);
 			}
 			break;
 		case PacketType::CLIENT_REQUEST_PLAYER_INFO:
@@ -114,10 +112,7 @@ void ServerChannel::Listen(int port)
 			}
 			else {
 				auto data = (ClientRequestPlayerInfo*)buffer;
-				auto resp = handleRequestPlayer(*data);
-				if (!resp) continue;
-				auto response = *resp.get();
-				Send(response, sender, sender_size);
+				handleRequestPlayer(*data);
 			}
 			break;
 		case PacketType::CLIENT_REQUEST_ENTITIES:
@@ -169,34 +164,34 @@ void ServerChannel::Listen(int port)
 			}
 			break;
 		default:
-			Log::Debug(std::string("Unknown message type: ") + std::to_string(header->type));
+			Log::Debug(std::string("Unknown message type: ") + std::to_string(clientHeader->header.type));
 			break;
 
-		/*case PacketType::CLIENT_CHARACTER_STATUS:
-			auto client_char_status = (s_client_character_status*)buffer;
-			break;
-		case PacketType::CLIENT_CHARACTER_ITEM:
-			auto client_char_item = (s_client_character_item*)buffer;
-			break;
-		case PacketType::CLIENT_BATTLE_BEGIN:
-			auto client_char_battle_begin = (s_client_character_battle_begin*)buffer;
-			break;
-		case PacketType::CLIENT_BATTLE_NEXT_TURN:
-			auto client_character_next_turn = (s_client_character_next_turn*)buffer;
-			break;
-		case PacketType::CLIENT_BATTLE_COMMAND:
-			auto client_character_command = (s_client_character_command*)buffer;
-			break;*/
+			/*case PacketType::CLIENT_CHARACTER_STATUS:
+				auto client_char_status = (s_client_character_status*)buffer;
+				break;
+				case PacketType::CLIENT_CHARACTER_ITEM:
+				auto client_char_item = (s_client_character_item*)buffer;
+				break;
+				case PacketType::CLIENT_BATTLE_BEGIN:
+				auto client_char_battle_begin = (s_client_character_battle_begin*)buffer;
+				break;
+				case PacketType::CLIENT_BATTLE_NEXT_TURN:
+				auto client_character_next_turn = (s_client_character_next_turn*)buffer;
+				break;
+				case PacketType::CLIENT_BATTLE_COMMAND:
+				auto client_character_command = (s_client_character_command*)buffer;
+				break;*/
 		}
 	}
 }
 
-void ServerChannel::SendEntity(int id, EntityType type, int x, int y, sockaddr_in addr, int addr_size)
+void ServerChannel::SendEntity(int id, EntityType type, sf::Vector2f pos, std::shared_ptr<sockaddr_in> addr, int addr_size)
 {
 	ServerSendEntity data;
 	data.entity.type = type;
 	data.entity.entityId = id;
-	data.position.x = x;
-	data.position.y = y;
+	data.position.x = pos.x;
+	data.position.y = pos.y;
 	Send(data, addr, addr_size);
 }

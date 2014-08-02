@@ -12,8 +12,9 @@ namespace qfcnet
 	class ServerChannel
 	{
 	public:
-		std::function<LauncherLoginResponse(const LauncherLoginInfo&, sockaddr_in, int)> handleLoginInfo;
-		std::function<std::shared_ptr<ServerResponsePlayerInfo>(const ClientRequestPlayerInfo&)> handleRequestPlayer;
+		std::function<void(const ClientHeader&, std::shared_ptr<sockaddr_in>, int sender_size)> onClientMessage;
+		std::function<LauncherLoginResponse(const LauncherLoginInfo&, std::shared_ptr<sockaddr_in>, int)> handleLoginInfo;
+		std::function<void(const ClientRequestPlayerInfo&)> handleRequestPlayer;
 		std::function<void(const ClientSendPlayerPosition&)> handlePlayerPosition;
 		std::function<void(const ClientSendPlayerFullPosition&)> handlePlayerFullPosition;
 		std::function<void(const ClientRequestEntities&)> handleRequestEntities;
@@ -23,14 +24,14 @@ namespace qfcnet
 		~ServerChannel();
 
 		template <typename T>
-		void Send(T data, sockaddr_in addr, int addr_size)
+		void Send(T data, std::shared_ptr<sockaddr_in> addr, int addr_size)
 		{
-			int r = sendto(channel_socket, (char*)&data, sizeof(data), 0, (SOCKADDR*)&addr, addr_size);
+			int r = sendto(channel_socket, (char*)&data, sizeof(data), 0, (SOCKADDR*)addr.get(), addr_size);
 			if (r <= 0)
 				Log::Error("Send error: " + std::to_string(WSAGetLastError()));
 		}
 
-		void SendEntity(int id, EntityType type, int x, int y, sockaddr_in addr, int addr_size);
+		void SendEntity(int id, EntityType type, sf::Vector2f pos, std::shared_ptr<sockaddr_in> addr, int addr_size);
 	private:
 		bool stop_listen;
 		std::thread listen_thread;

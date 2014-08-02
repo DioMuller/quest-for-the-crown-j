@@ -20,8 +20,8 @@ int main(int argc, char* argv[])
 	{
 		try
 		{
-			Server server(12345);
-			server.Run();
+			auto server = std::make_shared<Server>(12345);
+			server->Run();
 			break;
 		}
 		catch (const std::exception& error)

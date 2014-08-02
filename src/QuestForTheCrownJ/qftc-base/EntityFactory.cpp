@@ -6,6 +6,7 @@
 using namespace qfcbase;
 
 EntityFactory::EntityFactory()
+	: _last_entity_id(0)
 {
 }
 

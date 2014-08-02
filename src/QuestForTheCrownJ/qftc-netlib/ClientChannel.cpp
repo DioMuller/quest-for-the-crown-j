@@ -82,6 +82,7 @@ void qfcnet::ClientChannel::Listen()
 		buffer[size] = '\0';
 
 		Header* header = (Header*)buffer;
+		Log::Debug((std::string)"Message: " + std::to_string(header->type));
 		switch (header->type)
 		{
 		case PacketType::LAUNCHER_LOGIN_RESPONSE:
@@ -219,11 +220,11 @@ void ClientChannel::SendPlayerFullPosition(std::string map_name, int x, int y)
 
 void ClientChannel::GetEntities(std::string screen_name)
 {
-	std::thread([=]() {
+	//std::thread([=]() {
 		ClientRequestEntities data;
-		data.header.header.type = PacketType::CLIENT_REQUEST_ENTITIES;
+		Log::Debug("ClientRequestEntities");
 		strcpy_s(data.header.authKey, sizeof(data.header.authKey), auth_token.c_str());
 		Send(data);
-	}).detach();
+	//}).detach();
 }
 #pragma endregion Requests

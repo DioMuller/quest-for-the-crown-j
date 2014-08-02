@@ -30,13 +30,13 @@ namespace qfcserver {
 
 			LoggedUser GetUserInfo(const qfcbase::Entity& entity);
 
-			LauncherLoginResponse HandleLoginInfo(const LauncherLoginInfo& login_info, sockaddr_in sender, int sender_size);
+			LauncherLoginResponse HandleLoginInfo(const LauncherLoginInfo& login_info, std::shared_ptr<sockaddr_in> sender, int sender_size);
 			std::shared_ptr<qfcbase::Hero> CreatePlayerEntity(std::string map_name, float x, float y);
 
 			void SetEntityPosition(std::shared_ptr<qfcbase::Entity> player_entity, std::string map_file, float x, float y);
 
 			int next_player_id;
-			std::shared_ptr<ServerResponsePlayerInfo> HandleRequestPlayerInfo(const ClientRequestPlayerInfo& data);
+			void HandleRequestPlayerInfo(LoggedUser& user);
 			std::string GetUserAuthCode(std::shared_ptr<qfcbase::Entity> entity);
 			void SendEntitiesToPlayer(LoggedUser user);
 			std::map<std::string, LoggedUser> logged_users;

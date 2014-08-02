@@ -31,15 +31,24 @@ Server::Server(int port)
 	if (sqlite3_open("database.sqlite", &db))
 		throw std::exception(("Can't open database.sqlite: " + (std::string)sqlite3_errmsg(db)).c_str());
 
-	channel.handleLoginInfo = [this](const LauncherLoginInfo& info, sockaddr_in sender, int sender_size) {
+	channel.onClientMessage = [this](const ClientHeader& header, std::shared_ptr<sockaddr_in> sender, int sender_size) {
+		if (logged_users.count(header.authKey) <= 0)
+			return;
+		auto user = logged_users[header.authKey];
+		user.address = sender;
+		user.address_size = sender_size;
+		logged_users[header.authKey] = user;
+	};
+	channel.handleLoginInfo = [this](const LauncherLoginInfo& info, std::shared_ptr<sockaddr_in> sender, int sender_size) {
 		return HandleLoginInfo(info, sender, sender_size);
 	};
 	channel.handleRequestPlayer = [this](const ClientRequestPlayerInfo& data) {
-		return HandleRequestPlayerInfo(data);
+		auto user = logged_users[data.header.authKey];
+		HandleRequestPlayerInfo(user);
 	};
 	channel.handlePlayerPosition = [this](const ClientSendPlayerPosition& data) {
-		auto clientData = logged_users[data.header.authKey];
-		SetEntityPosition(clientData.game_entity, clientData.map_file, data.position.x, data.position.y);
+		auto user = logged_users[data.header.authKey];
+		SetEntityPosition(user.game_entity, user.map_file, data.position.x, data.position.y);
 	};
 	channel.handlePlayerFullPosition = [this](const ClientSendPlayerFullPosition& data) {
 		auto clientData = logged_users[data.header.authKey];
@@ -132,7 +141,7 @@ void qfcserver::Server::UnstackScene(std::shared_ptr<qfcbase::Entity> entity)
 #pragma endregion
 
 #pragma region Network
-LauncherLoginResponse Server::HandleLoginInfo(const LauncherLoginInfo& login_info, sockaddr_in sender, int sender_size)
+LauncherLoginResponse Server::HandleLoginInfo(const LauncherLoginInfo& login_info, std::shared_ptr<sockaddr_in> sender, int sender_size)
 {
 	// Log
 	std::stringstream logBuilder;
@@ -201,8 +210,9 @@ LauncherLoginResponse Server::HandleLoginInfo(const LauncherLoginInfo& login_inf
 
 		SHA1 userAuthCode;
 		userAuthCode.update(hashSeed);
-		strcpy_s(resp.authKey, sizeof(resp.authKey), userAuthCode.final().c_str());
-		Log::Debug("User authenticated: " + userAuthCode.final());
+		std::string user_auth_str = userAuthCode.final();
+		strcpy_s(resp.authKey, sizeof(resp.authKey), user_auth_str.c_str());
+		Log::Debug("User authenticated:\n" + user_auth_str);
 
 		logged.player_id = playerId;
 		logged.user_id = userId;
@@ -210,7 +220,7 @@ LauncherLoginResponse Server::HandleLoginInfo(const LauncherLoginInfo& login_inf
 		logged.map_file = GetMapFile (mapName);
 		logged.address = sender;
 		logged.address_size = sender_size;
-		logged_users[resp.authKey] = logged;
+		logged_users[user_auth_str] = logged;
 	}
 	else
 		Log::Debug("Invalid username / password");
@@ -218,25 +228,18 @@ LauncherLoginResponse Server::HandleLoginInfo(const LauncherLoginInfo& login_inf
 	return resp;
 }
 
-std::shared_ptr<ServerResponsePlayerInfo> qfcserver::Server::HandleRequestPlayerInfo(const ClientRequestPlayerInfo& data)
+void qfcserver::Server::HandleRequestPlayerInfo(LoggedUser& user)
 {
-	if (logged_users.count(data.header.authKey) == 0)
-	{
-		Log::Error(std::string("Request from invalid user: ") + data.header.authKey);
-		return nullptr;
-	}
-	auto user = logged_users[data.header.authKey];
-	auto resp = std::make_shared<ServerResponsePlayerInfo>();
+	ServerResponsePlayerInfo resp;
 	auto pos = user.game_entity->Sprite->Position;
 	// TODO: Player entity types
-	resp->entity.type = EntityType::ENTITY_HERO;
-	resp->entity.entityId = user.game_entity->Id;
-	strcpy_s(resp->player.map_name, sizeof(resp->player.map_name), GetMapName(user.map_file).c_str());
-	resp->player.position.x = static_cast<int>(pos.x);
-	resp->player.position.y = static_cast<int>(pos.y);
+	resp.entity.type = EntityType::ENTITY_HERO;
+	resp.entity.entityId = user.game_entity->Id;
+	strcpy_s(resp.player.map_name, sizeof(resp.player.map_name), GetMapName(user.map_file).c_str());
+	resp.player.position.x = static_cast<int>(pos.x);
+	resp.player.position.y = static_cast<int>(pos.y);
 
-	SendEntitiesToPlayer(user);
-	return resp;
+	channel.Send(resp, user.address, user.address_size);
 }
 
 void qfcserver::Server::SetEntityPosition(std::shared_ptr<qfcbase::Entity> entity, std::string map_file, float x, float y)
@@ -300,18 +303,14 @@ void qfcserver::Server::SendEntitiesToPlayer(LoggedUser user)
 			if (ent == user.game_entity)
 				continue;
 
-			ServerSendEntity info;
+			EntityType type;
 			if (std::dynamic_pointer_cast<Hero>(ent))
-				info.entity.type = ENTITY_HERO;
+				type = ENTITY_HERO;
 			else if (std::dynamic_pointer_cast<Slime>(ent))
-				info.entity.type = ENTITY_SLIME;
+				type = ENTITY_SLIME;
 			else
 				continue;
-			info.header.type = SERVER_ENTITY_INFO;
-			info.position.x = ent->Sprite->Position.x;
-			info.position.y = ent->Sprite->Position.y;
-			info.entity.entityId = ent->Id;
-			channel.Send(info, user.address, user.address_size);
+			channel.SendEntity(ent->Id, type, ent->Sprite->Position, user.address, user.address_size);
 		}
 	}
 	//});
