@@ -29,6 +29,7 @@ enum PacketType
 
 enum EntityType
 {
+	UNKNOWN,
 	ENTITY_HERO,
 	ENTITY_SLIME
 };

@@ -17,21 +17,23 @@
 #include "LevelLoader.h"
 #include "Slime.h"
 #include "ServerEntityFactory.h"
+#include "ServerHelper.h"
+#include "WatchPosition.h"
 
 using namespace qfcserver;
 using namespace qfcbase;
+using namespace qfcnet;
 
 #pragma region Constructors
 Server::Server(int port)
-	: channel(port), next_player_id(0)
+	: next_player_id(0)
 {
-	qfcbase::LevelLoader::SetFactory(new ServerEntityFactory());
-	qfcbase::LevelLoader::LoadLevels("Content/maps/QuestForTheCrown.maps");
+	channel = std::make_shared<ServerChannel>(port);
 
 	if (sqlite3_open("database.sqlite", &db))
 		throw std::exception(("Can't open database.sqlite: " + (std::string)sqlite3_errmsg(db)).c_str());
 
-	channel.onClientMessage = [this](const ClientHeader& header, std::shared_ptr<sockaddr_in> sender, int sender_size) {
+	channel->onClientMessage = [this](const ClientHeader& header, std::shared_ptr<sockaddr_in> sender, int sender_size) {
 		if (logged_users.count(header.authKey) <= 0)
 			return;
 		auto user = logged_users[header.authKey];
@@ -39,22 +41,34 @@ Server::Server(int port)
 		user.address_size = sender_size;
 		logged_users[header.authKey] = user;
 	};
-	channel.handleLoginInfo = [this](const LauncherLoginInfo& info, std::shared_ptr<sockaddr_in> sender, int sender_size) {
+	channel->handleLoginInfo = [this](const LauncherLoginInfo& info, std::shared_ptr<sockaddr_in> sender, int sender_size) {
 		return HandleLoginInfo(info, sender, sender_size);
 	};
-	channel.handleRequestPlayer = [this](const ClientRequestPlayerInfo& data) {
+	channel->handleRequestPlayer = [this](const ClientRequestPlayerInfo& data) {
 		auto user = logged_users[data.header.authKey];
 		HandleRequestPlayerInfo(user);
 	};
-	channel.handlePlayerPosition = [this](const ClientSendPlayerPosition& data) {
+	channel->handlePlayerPosition = [this](const ClientSendPlayerPosition& data) {
 		auto user = logged_users[data.header.authKey];
 		SetEntityPosition(user.game_entity, user.map_file, data.position.x, data.position.y);
+
+		ServerSendEntity ent;
+		ent.entity.entityId = user.game_entity->Id;
+		ent.entity.type = ServerHelper::GetEntityType(user.game_entity);
+		ent.map_id = std::dynamic_pointer_cast<Level>(user.game_entity->Scene().lock())->Id();
+		ent.position = user.game_entity->Sprite->Position;
+
+		for (auto other : logged_users)
+		{
+			if (other.first != (std::string)data.header.authKey)
+				channel->Send(ent, other.second.address, other.second.address_size);
+		}
 	};
-	channel.handlePlayerFullPosition = [this](const ClientSendPlayerFullPosition& data) {
+	channel->handlePlayerFullPosition = [this](const ClientSendPlayerFullPosition& data) {
 		auto clientData = logged_users[data.header.authKey];
 		SetEntityPosition(clientData.game_entity, GetMapFile(data.player.map_name), data.player.position.x, data.player.position.y);
 	};
-	channel.handleRequestEntities = [this](const ClientRequestEntities& data) {
+	channel->handleRequestEntities = [this](const ClientRequestEntities& data) {
 		auto user = logged_users[data.header.authKey];
 		SendEntitiesToPlayer(user);
 	};
@@ -67,6 +81,8 @@ Server::~Server()
 
 void Server::Run()
 {
+	qfcbase::LevelLoader::SetFactory(std::dynamic_pointer_cast<EntityFactory>(getptr()));
+	qfcbase::LevelLoader::LoadLevels("Content/maps/QuestForTheCrown.maps");
 	UpdateLoop();
 }
 
@@ -214,10 +230,11 @@ LauncherLoginResponse Server::HandleLoginInfo(const LauncherLoginInfo& login_inf
 		strcpy_s(resp.authKey, sizeof(resp.authKey), user_auth_str.c_str());
 		Log::Debug("User authenticated:\n" + user_auth_str);
 
+		playerEntity->Id = LevelLoader::GetFactory()->GenerateId();
 		logged.player_id = playerId;
 		logged.user_id = userId;
 		logged.game_entity = playerEntity;
-		logged.map_file = GetMapFile (mapName);
+		logged.map_file = GetMapFile(mapName);
 		logged.address = sender;
 		logged.address_size = sender_size;
 		logged_users[user_auth_str] = logged;
@@ -242,7 +259,7 @@ void qfcserver::Server::HandleRequestPlayerInfo(LoggedUser& user)
 	resp.player.position.x = static_cast<int>(pos.x);
 	resp.player.position.y = static_cast<int>(pos.y);
 
-	channel.Send(resp, user.address, user.address_size);
+	channel->Send(resp, user.address, user.address_size);
 }
 
 void qfcserver::Server::SetEntityPosition(std::shared_ptr<qfcbase::Entity> entity, std::string map_file, float x, float y)
@@ -303,32 +320,41 @@ void qfcserver::Server::SendEntitiesToPlayer(LoggedUser user)
 	{
 		for (auto ent : scene->GetEntities([](const std::shared_ptr<Entity>& e) { return true; }))
 		{
-			if (ent == user.game_entity)
-				continue;
-
-			EntityType type;
-			if (std::dynamic_pointer_cast<Hero>(ent))
-				type = ENTITY_HERO;
-			else if (std::dynamic_pointer_cast<Slime>(ent))
-				type = ENTITY_SLIME;
-			else
-				continue;
-			channel.SendEntity(ent->Id, type, ent->Sprite->Position, user.address, user.address_size);
+			auto level = std::dynamic_pointer_cast<Level>(ent->Scene().lock());
+			if (level)
+			{
+				EntityType type = ServerHelper::GetEntityType(ent);
+				channel->SendEntity(level->Id(), ent->Id, type, ent->Sprite->Position, user.address, user.address_size);
+			}
 		}
 	}
 	//});
 }
+#pragma endregion
 
-void Server::SendEntityToUsers(int id, EntityType type, int x, int y)
+#pragma region EntityFactory
+std::shared_ptr<Entity> qfcserver::Server::GenerateEntity(std::weak_ptr<Scene> scene, std::string name, tmx::MapObject object)
 {
-	ServerSendEntity data;
-	data.entity.entityId = id;
-	data.entity.type = type;
-	data.position.x = x;
-	data.position.y = y;
+	if (name == "Player")
+		return nullptr;
+	auto ent = EntityFactory::GenerateEntity(scene, name, object);
 
-	for (auto user : logged_users)
-		channel.Send(data, user.second.address, user.second.address_size);
+	if (ent)
+	{
+		ent->AddBehavior(std::make_shared<WatchPosition>(ent, [&](std::shared_ptr<Entity> e) {
+			auto level = std::dynamic_pointer_cast<Level>(e->Scene().lock());
+			if (level)
+			{
+				for (auto user : logged_users)
+				{
+					if (user.second.game_entity != e)
+						channel->SendEntity(level->Id(), e->Id, ServerHelper::GetEntityType(e), e->Sprite->Position, user.second.address, user.second.address_size);
+				}
+			}
+		}, ENTITY_SYNC_TIME));
+	}
+
+	return ent;
 }
 #pragma endregion
 

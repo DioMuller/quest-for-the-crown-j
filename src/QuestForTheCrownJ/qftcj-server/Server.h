@@ -8,10 +8,12 @@
 #include "ServerLevel.h"
 #include "Hero.h"
 #include "ServerRuntimeStructs.h"
+#include "EntityFactory.h"
 
 namespace qfcserver {
-	class Server
-		: public qfcbase::Game
+	class Server :
+		public qfcbase::Game,
+		public qfcbase::EntityFactory
 	{
 		public:
 			Server(int port);
@@ -23,9 +25,10 @@ namespace qfcserver {
 			void GoToNeighbour(std::shared_ptr<qfcbase::Entity> entity, qfcbase::Direction direction);
 			void StartConfront(std::shared_ptr<qfcbase::Entity> e1, std::shared_ptr<qfcbase::Entity> e2);
 			void UnstackScene(std::shared_ptr<qfcbase::Entity> entity);
+			std::shared_ptr<qfcbase::Entity> GenerateEntity(std::weak_ptr<qfcbase::Scene> scene, std::string name, tmx::MapObject object);
 		private:
 			sqlite3* db;
-			qfcnet::ServerChannel channel;
+			std::shared_ptr<qfcnet::ServerChannel> channel;
 			void UpdateLoop();
 
 			LoggedUser GetUserInfo(const qfcbase::Entity& entity);

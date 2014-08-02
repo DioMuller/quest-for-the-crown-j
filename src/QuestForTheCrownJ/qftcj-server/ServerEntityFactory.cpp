@@ -1,11 +1,17 @@
 #include "ServerEntityFactory.h"
 
+#include "WatchPosition.h"
+#include "Level.h"
+#include "ServerHelper.h"
+#include "Definitions.h"
+
 using namespace qfcserver;
 using namespace qfcbase;
+using namespace qfcnet;
 
-
-ServerEntityFactory::ServerEntityFactory()
+ServerEntityFactory::ServerEntityFactory(std::weak_ptr<ServerChannel> channel)
 {
+	this->channel = channel;
 }
 
 
@@ -13,9 +19,4 @@ ServerEntityFactory::~ServerEntityFactory()
 {
 }
 
-std::shared_ptr<Entity> ServerEntityFactory::GenerateEntity(std::weak_ptr<Scene> scene, std::string name, tmx::MapObject object)
-{
-	if (name == "Player")
-		return nullptr;
-	return EntityFactory::GenerateEntity(scene, name, object);
-}
+

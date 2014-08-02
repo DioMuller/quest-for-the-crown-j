@@ -84,7 +84,6 @@
   <ItemGroup>
     <ClCompile Include="server-main.cpp" />
     <ClCompile Include="Server.cpp" />
-    <ClCompile Include="ServerEntityFactory.cpp" />
     <ClCompile Include="ServerLevel.cpp" />
     <ClCompile Include="sqlite3.c" />
   </ItemGroup>
@@ -98,7 +97,7 @@
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="Server.h" />
-    <ClInclude Include="ServerEntityFactory.h" />
+    <ClInclude Include="ServerHelper.h" />
     <ClInclude Include="ServerLevel.h" />
     <ClInclude Include="ServerRuntimeStructs.h" />
     <ClInclude Include="sqlite3.h" />

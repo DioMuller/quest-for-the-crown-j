@@ -41,7 +41,7 @@ int main(int argc, char* argv[])
 
 std::shared_ptr<qfcgame::MainGame> CreateSinglePlayer()
 {
-	qfcbase::LevelLoader::SetFactory(new qfcbase::GameEntityFactory());
+	qfcbase::LevelLoader::SetFactory(std::make_shared<qfcbase::GameEntityFactory>());
 	auto game = std::make_shared<qfcgame::MainGame>();
 	auto scene = qfcbase::LevelLoader::LoadMap(game, 1, "Content/maps/Overworld01.tmx");
 	game->LoadScene(scene, false);
@@ -51,7 +51,7 @@ std::shared_ptr<qfcgame::MainGame> CreateSinglePlayer()
 std::shared_ptr<qfcgame::MainGame> CreateMultiplayer(std::string auth_token)
 {
 	auto game = std::make_shared<qfcgame::MultiplayerGame>();
-	game->Connect(12301, auth_token);
+	game->Connect(0, auth_token);
 	game->RefreshSceneFromServer();
 	return game;
 }

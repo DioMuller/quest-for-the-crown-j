@@ -11,7 +11,6 @@
     <ClCompile Include="Server.cpp">
       <Filter>Core</Filter>
     </ClCompile>
-    <ClCompile Include="ServerEntityFactory.cpp" />
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="sqlite3.h">
@@ -26,9 +25,11 @@
     <ClInclude Include="Server.h">
       <Filter>Core</Filter>
     </ClInclude>
-    <ClInclude Include="ServerEntityFactory.h" />
     <ClInclude Include="ServerRuntimeStructs.h">
       <Filter>Core</Filter>
+    </ClInclude>
+    <ClInclude Include="ServerHelper.h">
+      <Filter>Helper</Filter>
     </ClInclude>
   </ItemGroup>
   <ItemGroup>
@@ -46,6 +47,9 @@
     </Filter>
     <Filter Include="Core">
       <UniqueIdentifier>{80900bdd-f55c-4d33-86ef-e234ea7d81d5}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Helper">
+      <UniqueIdentifier>{44456daa-cbd8-4092-b573-d62519b2ed6c}</UniqueIdentifier>
     </Filter>
   </ItemGroup>
 </Project>

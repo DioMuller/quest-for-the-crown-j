@@ -6,11 +6,13 @@
 #include "LevelLoader.h"
 #include "Controllable.h"
 #include "KeyboardInput.h"
+#include "WatchPosition.h"
+#include "Definitions.h"
 
 using namespace qfcgame;
 using namespace qfcbase;
 
-std::shared_ptr<qfcbase::Entity> CreateEntity(int id, EntityType type, float x, float y)
+std::shared_ptr<qfcbase::Entity> MultiplayerGame::CreateEntity(int id, EntityType type, float x, float y)
 {
 	std::shared_ptr<qfcbase::Entity> entity;
 
@@ -29,6 +31,14 @@ std::shared_ptr<qfcbase::Entity> CreateEntity(int id, EntityType type, float x, 
 	if (entity) {
 		entity->Sprite->Position = sf::Vector2f(x, y);
 		entity->Id = id;
+	}
+
+	if (player_entity_id == entity->Id)
+	{
+		entity->AddBehavior(std::make_shared<Controllable>(entity, std::make_shared<KeyboardInput>()));
+		entity->AddBehavior(std::make_shared<WatchPosition>(entity, [&](std::shared_ptr<Entity> e) {
+			clientChannel.SendPlayerPosition(e->Sprite->Position.x, e->Sprite->Position.y);
+		}, ENTITY_SYNC_TIME));
 	}
 
 	return entity;
@@ -54,7 +64,8 @@ void MultiplayerGame::Connect(int localPort, std::string auth_token)
 			currentScene->AddEntity(entity);
 		}
 		else {
-			updateEntities->Sprite->Position = sf::Vector2f(info.position.x, info.position.y);
+			if (info.entity.entityId != player_entity_id)
+				updateEntities->Sprite->Position = sf::Vector2f(info.position.x, info.position.y);
 		}
 	};
 }
@@ -64,16 +75,8 @@ void MultiplayerGame::RefreshSceneFromServer()
 	clientChannel.GetPlayer([=](ServerResponsePlayerInfo& info) {
 		auto scene = LevelLoader::LoadMap(this->getptr(), 1, (std::string)"Content/maps/" + (std::string)info.player.map_name + (std::string)".tmx");
 		LoadScene(scene, false);
+		this->player_entity_id = info.entity.entityId;
 		clientChannel.GetEntities(info.player.map_name);
-
-		auto player = currentScene->GetEntity(info.entity.entityId);
-		if (!player)
-		{
-			player = CreateEntity(info.entity.entityId, info.entity.type, info.player.position.x, info.player.position.y);
-			player->AddBehavior(std::make_shared<qfcgame::Controllable>(player, std::make_shared<qfcgame::KeyboardInput>()));
-			currentScene->AddEntity(player);
-		}
-
 		Log::Debug((std::string)"Map loaded: " + std::string(info.player.map_name));
 	}, [&](std::exception& ex) {
 		Log::Error(ex.what());

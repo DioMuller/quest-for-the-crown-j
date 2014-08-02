@@ -43,9 +43,14 @@ std::shared_ptr<Level> LevelLoader::LoadMap(std::weak_ptr<Game> game, int id, st
 	return level;
 }
 
-void LevelLoader::SetFactory(EntityFactory* factory)
+void qfcbase::LevelLoader::SetFactory(std::shared_ptr<EntityFactory> factory)
 {
-	LevelLoader::factory = std::shared_ptr<EntityFactory>(factory);
+	LevelLoader::factory = factory;
+}
+
+std::shared_ptr<EntityFactory> qfcbase::LevelLoader::GetFactory()
+{
+	return LevelLoader::factory;
 }
 
 std::shared_ptr<Entity> LevelLoader::CreateEntity(std::weak_ptr<Scene> scene, int levelId, tmx::MapObject object)

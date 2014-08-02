@@ -186,12 +186,14 @@ void ServerChannel::Listen(int port)
 	}
 }
 
-void ServerChannel::SendEntity(int id, EntityType type, sf::Vector2f pos, std::shared_ptr<sockaddr_in> addr, int addr_size)
+void ServerChannel::SendEntity(int map_id, int id, EntityType type, sf::Vector2f pos, std::shared_ptr<sockaddr_in> addr, int addr_size)
 {
 	ServerSendEntity data;
+	data.map_id = map_id;
 	data.entity.type = type;
 	data.entity.entityId = id;
 	data.position.x = pos.x;
 	data.position.y = pos.y;
+
 	Send(data, addr, addr_size);
 }

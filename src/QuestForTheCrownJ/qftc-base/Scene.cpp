@@ -66,8 +66,13 @@ std::vector<std::shared_ptr<Entity>> Scene::GetEntities(std::string category)
 
 std::shared_ptr<Entity> Scene::GetEntity(int id)
 {
-	auto ents = GetEntities([id](const std::shared_ptr<Entity>& e){return e->Id == id; });
-	return ents.size() > 0? ents[0] : nullptr;
+	for (int i = 0; i < entities.size(); i++)
+	{
+		auto ent = entities[i];
+		if (ent && ent->Id == id)
+			return ent;
+	}
+	return nullptr;
 }
 
 std::vector<std::shared_ptr<Entity>> Scene::GetEntities(std::function<bool(const std::shared_ptr<Entity>&)> predicate)

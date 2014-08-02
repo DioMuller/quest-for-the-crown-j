@@ -15,6 +15,11 @@ EntityFactory::~EntityFactory()
 {
 }
 
+int EntityFactory::GenerateId()
+{
+	return ++_last_entity_id;
+}
+
 std::shared_ptr<Entity> EntityFactory::GenerateEntity(std::weak_ptr<Scene> scene, std::string name, tmx::MapObject object)
 {
 	std::shared_ptr<qfcbase::Entity> entity;
@@ -37,7 +42,7 @@ std::shared_ptr<Entity> EntityFactory::GenerateEntity(std::weak_ptr<Scene> scene
 		return nullptr;
 	}
 
-	entity->Id = ++_last_entity_id;
+	entity->Id = GenerateId();
 	entity->Sprite->Position = object.GetPosition();
 	return entity;
 }

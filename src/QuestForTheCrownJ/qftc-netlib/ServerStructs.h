@@ -14,8 +14,9 @@ SERVER_BATTLE_TURN
 typedef struct s_server_send_entity
 {
 	Header header = { { PacketType::SERVER_SEND_ENTITY } };
+	int map_id;
 	EntityHeader entity;
-	sf::Vector2i position;
+	sf::Vector2f position;
 } ServerSendEntity;
 
 typedef struct s_server_response_player_info
