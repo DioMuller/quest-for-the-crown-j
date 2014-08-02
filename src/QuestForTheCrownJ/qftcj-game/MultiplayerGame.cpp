@@ -4,6 +4,8 @@
 #include "Slime.h"
 #include "Log.h"
 #include "LevelLoader.h"
+#include "Controllable.h"
+#include "KeyboardInput.h"
 
 using namespace qfcgame;
 using namespace qfcbase;
@@ -46,17 +48,13 @@ void MultiplayerGame::Connect(int localPort, std::string auth_token)
 	clientChannel.Connect(localPort, "127.0.0.1", 12345);
 	clientChannel.auth_token = auth_token;
 	clientChannel.onEntity = [this](const ServerSendEntity& info) {
-		auto updateEntities = currentScene->GetEntities([&](const std::shared_ptr<Entity>& e){
-			return e->Id == info.entity.entityId;
-		});
-		if (!updateEntities.size()) {
+		auto updateEntities = currentScene->GetEntity(info.entity.entityId);
+		if (!updateEntities) {
 			auto entity = CreateEntity(info.entity.entityId, info.entity.type, info.position.x, info.position.y);
 			currentScene->AddEntity(entity);
 		}
 		else {
-			for (auto u : updateEntities) {
-				u->Sprite->Position = sf::Vector2f(info.position.x, info.position.y);
-			}
+			updateEntities->Sprite->Position = sf::Vector2f(info.position.x, info.position.y);
 		}
 	};
 }
@@ -67,6 +65,14 @@ void MultiplayerGame::RefreshSceneFromServer()
 		auto scene = LevelLoader::LoadMap(this->getptr(), 1, (std::string)"Content/maps/" + (std::string)info.player.map_name + (std::string)".tmx");
 		LoadScene(scene, false);
 		clientChannel.GetEntities(info.player.map_name);
+
+		auto player = currentScene->GetEntity(info.entity.entityId);
+		if (!player)
+		{
+			player = CreateEntity(info.entity.entityId, info.entity.type, info.player.position.x, info.player.position.y);
+			player->AddBehavior(std::make_shared<qfcgame::Controllable>(player, std::make_shared<qfcgame::KeyboardInput>()));
+			currentScene->AddEntity(player);
+		}
 
 		Log::Debug((std::string)"Map loaded: " + std::string(info.player.map_name));
 	}, [&](std::exception& ex) {

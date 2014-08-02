@@ -230,6 +230,9 @@ LauncherLoginResponse Server::HandleLoginInfo(const LauncherLoginInfo& login_inf
 
 void qfcserver::Server::HandleRequestPlayerInfo(LoggedUser& user)
 {
+	if (!user.game_entity)
+		return;
+
 	ServerResponsePlayerInfo resp;
 	auto pos = user.game_entity->Sprite->Position;
 	// TODO: Player entity types
