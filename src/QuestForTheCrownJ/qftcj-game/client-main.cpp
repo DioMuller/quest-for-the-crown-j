@@ -9,6 +9,7 @@
 #include "GameEntityFactory.h"
 #include "Controllable.h"
 #include "KeyboardInput.h"
+#include <memory>
 
 std::shared_ptr<qfcgame::MainGame> CreateSinglePlayer();
 std::shared_ptr<qfcgame::MainGame> CreateMultiplayer(std::string auth_token);
@@ -19,7 +20,7 @@ int main(int argc, char* argv[])
 	std::cerr.rdbuf(0);
 	sf::err().rdbuf(0);
 
-	qfcbase::Window window({ 800, 600 }, "Quest for the Crown J");
+	auto window = std::make_shared<qfcbase::Window>(sf::Vector2i(800, 600), "Quest for the Crown J");
 	std::shared_ptr<qfcgame::MainGame> game;
 
 	// Loads Level INFO.
@@ -35,7 +36,7 @@ int main(int argc, char* argv[])
 		game = CreateMultiplayer(auth_token);
 	}
 
-	window.Run(game);
+	window->Run(game);
 	return 0;
 }
 

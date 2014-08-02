@@ -6,10 +6,12 @@
 
 #include "Definitions.h"
 #include "Interfaces.h"
+#include "Shareable.h"
 
 namespace qfcbase
 {
-	class Window
+	class Window :
+		public Shareable<Window>
 	{
 		/////////////////////////////////////
 		// Attributes
@@ -19,6 +21,8 @@ namespace qfcbase
 			std::string title;
 			sf::RenderWindow* window;
 			std::shared_ptr<IRunnable> running;
+			bool focused;
+			static std::shared_ptr<Window> current;
 
 		/////////////////////////////////////
 		// Constructors
@@ -32,5 +36,7 @@ namespace qfcbase
 		/////////////////////////////////////
 		public:
 			void Run(std::shared_ptr<IRunnable> runnable);
+			bool IsFocused();
+			static std::shared_ptr<Window> GetCurrent();
 	};
 }

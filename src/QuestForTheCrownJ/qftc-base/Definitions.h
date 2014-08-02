@@ -36,4 +36,4 @@
 #define max(x,y) x > y ? x : y
 #define min(x,y) x < y ? x : y
 
-const double ENTITY_SYNC_TIME = 0.1;
+const double ENTITY_SYNC_TIME = (1.0 / 30.0);

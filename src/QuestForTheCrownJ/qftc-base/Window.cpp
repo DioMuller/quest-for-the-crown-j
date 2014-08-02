@@ -3,6 +3,8 @@
 
 using namespace qfcbase;
 
+std::shared_ptr<Window> Window::current;
+
 Window::Window(sf::Vector2i size, std::string title)
 {
 	this->size = size;
@@ -18,6 +20,8 @@ Window::~Window()
 
 void Window::Run(std::shared_ptr<IRunnable> runnable)
 {
+	current = getptr();
+
 	// Sets the game.
 	this->running = runnable;
 
@@ -34,6 +38,10 @@ void Window::Run(std::shared_ptr<IRunnable> runnable)
 		{
 			if (windowEvent.type == sf::Event::Closed)
 				window->close();
+			else if (windowEvent.type == sf::Event::GainedFocus)
+				focused = true;
+			else if (windowEvent.type == sf::Event::LostFocus)
+				focused = false;
 		}
 
 		window->clear();
@@ -50,4 +58,16 @@ void Window::Run(std::shared_ptr<IRunnable> runnable)
 			delta = SECONDS_PER_FRAME;
 		}
 	}
+
+	current = nullptr;
+}
+
+bool Window::IsFocused()
+{
+	return focused;
+}
+
+std::shared_ptr<Window> qfcbase::Window::GetCurrent()
+{
+	return current;
 }
