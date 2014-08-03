@@ -3,7 +3,7 @@
 #include <memory>
 
 #include "AudioPlayer.h"
-#include "BattleScene.h"
+#include "ClientBattle.h"
 #include "GameEntityFactory.h"
 #include "KeyboardInput.h"
 
@@ -100,7 +100,7 @@ void MainGame::StartConfront(std::shared_ptr<Entity> e1, std::shared_ptr<Entity>
 		return;
 
 	e1Scene->RemoveEntity(e2);
-	auto battle = std::make_shared<qfcbase::BattleScene>(getptr());
+	auto battle = std::make_shared<ClientBattle>(getptr());
 
 	if (battle->PlayerJoin(e1) &&
 		battle->AddMonster(e2))

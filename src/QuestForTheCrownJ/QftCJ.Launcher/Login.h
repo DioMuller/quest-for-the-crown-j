@@ -37,19 +37,34 @@ namespace QftCJLauncher {
 				delete components;
 			}
 		}
-	private: System::Windows::Forms::Button^  ButtonLogin;
-	private: System::Windows::Forms::TextBox^  tbUser;
-
-
-	private: System::Windows::Forms::Label^  lblUser;
-	private: System::Windows::Forms::Label^  lblPassword;
-	private: System::Windows::Forms::TextBox^  tbPassword;
-
-
-	private: System::Windows::Forms::Label^  lblStatus;
-
-	private: System::Windows::Forms::Label^  lblServerAddress;
+	private: System::Windows::Forms::GroupBox^  groupBox1;
+	protected:
+	private: System::Windows::Forms::Button^  ButtonExit;
 	public: System::Windows::Forms::TextBox^  tbServerAddress;
+	private:
+	private: System::Windows::Forms::Label^  lblServerAddress;
+	public:
+	private: System::Windows::Forms::Label^  lblStatus;
+	private: System::Windows::Forms::TextBox^  tbPassword;
+	private: System::Windows::Forms::Label^  lblPassword;
+	private: System::Windows::Forms::Label^  lblUser;
+	private: System::Windows::Forms::TextBox^  tbUser;
+	private: System::Windows::Forms::Button^  ButtonLogin;
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+	public:
 	private:
 
 	protected:
@@ -71,108 +86,145 @@ namespace QftCJLauncher {
 		/// </summary>
 		void InitializeComponent(void)
 		{
-			this->ButtonLogin = (gcnew System::Windows::Forms::Button());
-			this->tbUser = (gcnew System::Windows::Forms::TextBox());
-			this->lblUser = (gcnew System::Windows::Forms::Label());
-			this->lblPassword = (gcnew System::Windows::Forms::Label());
-			this->tbPassword = (gcnew System::Windows::Forms::TextBox());
-			this->lblStatus = (gcnew System::Windows::Forms::Label());
-			this->lblServerAddress = (gcnew System::Windows::Forms::Label());
+			System::ComponentModel::ComponentResourceManager^  resources = (gcnew System::ComponentModel::ComponentResourceManager(Login::typeid));
+			this->groupBox1 = (gcnew System::Windows::Forms::GroupBox());
+			this->ButtonExit = (gcnew System::Windows::Forms::Button());
 			this->tbServerAddress = (gcnew System::Windows::Forms::TextBox());
+			this->lblServerAddress = (gcnew System::Windows::Forms::Label());
+			this->lblStatus = (gcnew System::Windows::Forms::Label());
+			this->tbPassword = (gcnew System::Windows::Forms::TextBox());
+			this->lblPassword = (gcnew System::Windows::Forms::Label());
+			this->lblUser = (gcnew System::Windows::Forms::Label());
+			this->tbUser = (gcnew System::Windows::Forms::TextBox());
+			this->ButtonLogin = (gcnew System::Windows::Forms::Button());
+			this->groupBox1->SuspendLayout();
 			this->SuspendLayout();
 			// 
-			// ButtonLogin
+			// groupBox1
 			// 
-			this->ButtonLogin->Location = System::Drawing::Point(197, 90);
-			this->ButtonLogin->Name = L"ButtonLogin";
-			this->ButtonLogin->Size = System::Drawing::Size(75, 23);
-			this->ButtonLogin->TabIndex = 0;
-			this->ButtonLogin->Text = L"Login";
-			this->ButtonLogin->UseVisualStyleBackColor = true;
-			this->ButtonLogin->Click += gcnew System::EventHandler(this, &Login::ButtonLogin_Click);
+			this->groupBox1->BackColor = System::Drawing::Color::Transparent;
+			this->groupBox1->Controls->Add(this->ButtonExit);
+			this->groupBox1->Controls->Add(this->tbServerAddress);
+			this->groupBox1->Controls->Add(this->lblServerAddress);
+			this->groupBox1->Controls->Add(this->lblStatus);
+			this->groupBox1->Controls->Add(this->tbPassword);
+			this->groupBox1->Controls->Add(this->lblPassword);
+			this->groupBox1->Controls->Add(this->lblUser);
+			this->groupBox1->Controls->Add(this->tbUser);
+			this->groupBox1->Controls->Add(this->ButtonLogin);
+			this->groupBox1->ForeColor = System::Drawing::SystemColors::ButtonHighlight;
+			this->groupBox1->Location = System::Drawing::Point(173, 103);
+			this->groupBox1->Name = L"groupBox1";
+			this->groupBox1->Size = System::Drawing::Size(279, 131);
+			this->groupBox1->TabIndex = 10;
+			this->groupBox1->TabStop = false;
+			this->groupBox1->Text = L"Login";
 			// 
-			// tbUser
+			// ButtonExit
 			// 
-			this->tbUser->Location = System::Drawing::Point(71, 12);
-			this->tbUser->MaxLength = 40;
-			this->tbUser->Name = L"tbUser";
-			this->tbUser->Size = System::Drawing::Size(201, 20);
-			this->tbUser->TabIndex = 1;
+			this->ButtonExit->BackColor = System::Drawing::Color::Green;
+			this->ButtonExit->Location = System::Drawing::Point(193, 100);
+			this->ButtonExit->Name = L"ButtonExit";
+			this->ButtonExit->Size = System::Drawing::Size(75, 23);
+			this->ButtonExit->TabIndex = 18;
+			this->ButtonExit->Text = L"Quit";
+			this->ButtonExit->UseVisualStyleBackColor = false;
 			// 
-			// lblUser
+			// tbServerAddress
 			// 
-			this->lblUser->AutoSize = true;
-			this->lblUser->Location = System::Drawing::Point(12, 15);
-			this->lblUser->Name = L"lblUser";
-			this->lblUser->Size = System::Drawing::Size(29, 13);
-			this->lblUser->TabIndex = 2;
-			this->lblUser->Text = L"User";
+			this->tbServerAddress->Location = System::Drawing::Point(67, 74);
+			this->tbServerAddress->Name = L"tbServerAddress";
+			this->tbServerAddress->Size = System::Drawing::Size(201, 20);
+			this->tbServerAddress->TabIndex = 17;
+			this->tbServerAddress->Text = L"127.0.0.1";
 			// 
-			// lblPassword
+			// lblServerAddress
 			// 
-			this->lblPassword->AutoSize = true;
-			this->lblPassword->Location = System::Drawing::Point(12, 41);
-			this->lblPassword->Name = L"lblPassword";
-			this->lblPassword->Size = System::Drawing::Size(53, 13);
-			this->lblPassword->TabIndex = 3;
-			this->lblPassword->Text = L"Password";
-			// 
-			// tbPassword
-			// 
-			this->tbPassword->Location = System::Drawing::Point(71, 38);
-			this->tbPassword->Name = L"tbPassword";
-			this->tbPassword->PasswordChar = '*';
-			this->tbPassword->Size = System::Drawing::Size(201, 20);
-			this->tbPassword->TabIndex = 4;
+			this->lblServerAddress->AutoSize = true;
+			this->lblServerAddress->Location = System::Drawing::Point(8, 77);
+			this->lblServerAddress->Name = L"lblServerAddress";
+			this->lblServerAddress->Size = System::Drawing::Size(51, 13);
+			this->lblServerAddress->TabIndex = 16;
+			this->lblServerAddress->Text = L"Server IP";
 			// 
 			// lblStatus
 			// 
 			this->lblStatus->AutoSize = true;
 			this->lblStatus->ForeColor = System::Drawing::SystemColors::ControlDarkDark;
-			this->lblStatus->Location = System::Drawing::Point(12, 95);
+			this->lblStatus->Location = System::Drawing::Point(13, 103);
 			this->lblStatus->Name = L"lblStatus";
 			this->lblStatus->Size = System::Drawing::Size(0, 13);
-			this->lblStatus->TabIndex = 5;
+			this->lblStatus->TabIndex = 15;
 			// 
-			// lblServerAddress
+			// tbPassword
 			// 
-			this->lblServerAddress->AutoSize = true;
-			this->lblServerAddress->Location = System::Drawing::Point(12, 67);
-			this->lblServerAddress->Name = L"lblServerAddress";
-			this->lblServerAddress->Size = System::Drawing::Size(51, 13);
-			this->lblServerAddress->TabIndex = 7;
-			this->lblServerAddress->Text = L"Server IP";
+			this->tbPassword->Location = System::Drawing::Point(67, 48);
+			this->tbPassword->Name = L"tbPassword";
+			this->tbPassword->PasswordChar = '*';
+			this->tbPassword->Size = System::Drawing::Size(201, 20);
+			this->tbPassword->TabIndex = 14;
 			// 
-			// tbServerAddress
+			// lblPassword
 			// 
-			this->tbServerAddress->Location = System::Drawing::Point(71, 64);
-			this->tbServerAddress->Name = L"tbServerAddress";
-			this->tbServerAddress->Size = System::Drawing::Size(201, 20);
-			this->tbServerAddress->TabIndex = 8;
-			this->tbServerAddress->Text = L"127.0.0.1";
+			this->lblPassword->AutoSize = true;
+			this->lblPassword->Location = System::Drawing::Point(8, 51);
+			this->lblPassword->Name = L"lblPassword";
+			this->lblPassword->Size = System::Drawing::Size(53, 13);
+			this->lblPassword->TabIndex = 13;
+			this->lblPassword->Text = L"Password";
+			// 
+			// lblUser
+			// 
+			this->lblUser->AutoSize = true;
+			this->lblUser->Location = System::Drawing::Point(8, 25);
+			this->lblUser->Name = L"lblUser";
+			this->lblUser->Size = System::Drawing::Size(29, 13);
+			this->lblUser->TabIndex = 12;
+			this->lblUser->Text = L"User";
+			// 
+			// tbUser
+			// 
+			this->tbUser->Location = System::Drawing::Point(67, 22);
+			this->tbUser->MaxLength = 40;
+			this->tbUser->Name = L"tbUser";
+			this->tbUser->Size = System::Drawing::Size(201, 20);
+			this->tbUser->TabIndex = 11;
+			// 
+			// ButtonLogin
+			// 
+			this->ButtonLogin->BackColor = System::Drawing::Color::Green;
+			this->ButtonLogin->Location = System::Drawing::Point(112, 100);
+			this->ButtonLogin->Name = L"ButtonLogin";
+			this->ButtonLogin->Size = System::Drawing::Size(75, 23);
+			this->ButtonLogin->TabIndex = 10;
+			this->ButtonLogin->Text = L"Login";
+			this->ButtonLogin->UseVisualStyleBackColor = false;
 			// 
 			// Login
 			// 
 			this->AutoScaleDimensions = System::Drawing::SizeF(6, 13);
 			this->AutoScaleMode = System::Windows::Forms::AutoScaleMode::Font;
-			this->ClientSize = System::Drawing::Size(284, 125);
-			this->Controls->Add(this->tbServerAddress);
-			this->Controls->Add(this->lblServerAddress);
-			this->Controls->Add(this->lblStatus);
-			this->Controls->Add(this->tbPassword);
-			this->Controls->Add(this->lblPassword);
-			this->Controls->Add(this->lblUser);
-			this->Controls->Add(this->tbUser);
-			this->Controls->Add(this->ButtonLogin);
+			this->BackgroundImage = (cli::safe_cast<System::Drawing::Image^>(resources->GetObject(L"$this.BackgroundImage")));
+			this->ClientSize = System::Drawing::Size(464, 241);
+			this->Controls->Add(this->groupBox1);
+			this->MaximizeBox = false;
+			this->MaximumSize = System::Drawing::Size(480, 280);
+			this->MinimizeBox = false;
+			this->MinimumSize = System::Drawing::Size(480, 280);
 			this->Name = L"Login";
-			this->Text = L"QFTC - Login";
+			this->SizeGripStyle = System::Windows::Forms::SizeGripStyle::Hide;
+			this->StartPosition = System::Windows::Forms::FormStartPosition::CenterScreen;
+			this->Text = L"Quest for the Crown J Online - Login";
+			this->groupBox1->ResumeLayout(false);
+			this->groupBox1->PerformLayout();
 			this->ResumeLayout(false);
-			this->PerformLayout();
 
 		}
 
 		private: 
 			System::Void ButtonLogin_Click(System::Object^  sender, System::EventArgs^  e);
+			System::Void ButtonExit_Click(System::Object^  sender, System::EventArgs^  e);
 #pragma endregion
-	};
+	
+};
 }

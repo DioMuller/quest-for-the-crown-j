@@ -1,12 +1,7 @@
 #include "BattleScene.h"
-
 #include <string>
-#include <sstream>
-#include <SFML/Window/Keyboard.hpp>
-
 #include "Game.h"
-#include "GameAssets.h"
-#include "AudioPlayer.h"
+
 #include "Log.h"
 
 using namespace qfcbase;
@@ -14,18 +9,10 @@ using namespace qfcbase;
 BattleScene::BattleScene(std::weak_ptr<qfcbase::Game> parent)
 	: Scene(parent, false)
 {
-	time = 0.0;
-	lastAttack = 0.0;
+	currentTurn = 0;
 
 	enemyCount = 0;
 	playerCount = 0;
-
-	text = sf::Text("Battle!", *GameAssets::DefaultFont());
-	text.setCharacterSize(12);
-	text.setPosition(10, 10);
-	currentTurn = 0;
-
-	AudioPlayer::PlayBGM("Firebrand");
 }
 
 
@@ -36,8 +23,7 @@ BattleScene::~BattleScene()
 void BattleScene::Update(double dt)
 {
 	std::shared_ptr<Scene> battle = getptr();
-	time += dt;
-
+	
 	if (enemyCount <= 0 || playerCount <= 0)
 	{
 		auto game = std::dynamic_pointer_cast<Game>(parent.lock());
@@ -48,58 +34,13 @@ void BattleScene::Update(double dt)
 		}
 	}
 
-	// Battle Input
-	if (sf::Keyboard::isKeyPressed(sf::Keyboard::Num1)) playerAction = BattleAction::ATTACK;
-	else if (sf::Keyboard::isKeyPressed(sf::Keyboard::Num2)) playerAction = BattleAction::SPECIAL;
-	else if (sf::Keyboard::isKeyPressed(sf::Keyboard::Num3)) playerAction = BattleAction::ITEM;
-	else if (sf::Keyboard::isKeyPressed(sf::Keyboard::Num4)) playerAction = BattleAction::RUN;
-	else playerAction = BattleAction::NOACTION;
-
 	// TODO: Correct Turn Treatment.
 	NextTurn();
 }
 
 void BattleScene::Draw(sf::RenderWindow* renderer)
 {
-	// Camera
-	sf::Vector2f screenSize = sf::Vector2f(renderer->getSize().x, renderer->getSize().y);
-	sf::Vector2f cameraPosition = sf::Vector2f(screenSize.x / 2, screenSize.y / 2);
-	renderer->setView(sf::View(cameraPosition, screenSize));
 
-	// Text Initialization.
-	std::ostringstream sstream;
-	std::string str;
-
-	// Battle Info Text
-	sstream << "1 Attack " << std::endl
-		<< "2 Magic" << std::endl
-		<< "3 Use Potion" << std::endl
-		<< "4 Run" << std::endl
-		<< std::endl << std::endl;
-
-	for (auto message : lastMessages )
-	{
-		sstream << message << std::endl;
-	}
-	str = sstream.str();
-	text.setString(str);
-	renderer->draw(text);
-
-	//	Players Text
-	int i = 0;
-	for (auto entity : GetEntities())
-	{
-		auto battleEntity = std::static_pointer_cast<BattleEntity>(entity);
-		
-		if ( battleEntity )
-		{
-			if (battleEntity->Type() == BattleEntityType::PLAYER)
-				battleEntity->DrawInfo(renderer, sf::Vector2f(10.0f + (i * 200.0f), 550.0f));
-			else if (battleEntity->Type() == BattleEntityType::ENEMY)
-				battleEntity->DrawEntity(renderer, sf::Vector2f(350.0f + (i * 30.0f), 300.0f));
-		}
-		i++;
-	}
 }
 
 bool BattleScene::PlayerJoin(std::shared_ptr<Entity> hero)
@@ -125,6 +66,7 @@ void BattleScene::NextTurn()
 	auto entities = GetEntities();
 
 	if (entities.size() == 0) return;
+	if (playerCount <= 0 || enemyCount <= 0) return;
 
 	if (turnOrder.size() == 0)
 	{
@@ -150,49 +92,7 @@ void BattleScene::NextTurn()
 
 bool BattleScene::SelectAction(std::shared_ptr<BattleEntity> currentEntity)
 {
-	std::shared_ptr<BattleEntity> targetEntity;
-
-	if (time - lastAttack < 0.1)
-	{
-		return false;
-	}
-
-	lastAttack = time;
-
-	for (auto ent : GetEntities())
-	{
-		auto be = std::static_pointer_cast<BattleEntity>(ent);
-		if (be && be->Type() != currentEntity->Type())
-		{
-			targetEntity = be;
-			break;
-		}
-	}
-
-	if (!targetEntity) return false;
-
-	Turn nextTurn;
-
-	switch (currentEntity->Type())
-	{
-		case BattleEntityType::PLAYER:
-			if (playerAction == BattleAction::NOACTION) return false;
-			if ((playerAction == BattleAction::SPECIAL && currentEntity->CurrentMP() <= 0)) return false;
-			// TODO: Potions.
-			
-			nextTurn = Turn{ currentTurn, currentEntity, targetEntity, playerAction, 3 + rand() % 5 };
-			break;
-		case BattleEntityType::ENEMY:
-			nextTurn = Turn{ currentTurn, currentEntity, targetEntity, BattleAction::ATTACK, 3 + rand() % 5 };
-			break;
-		default:
-			return false;
-	}
-
-	turns.push_back(nextTurn);
-
-	return true;
-
+	return false;
 }
 
 void BattleScene::ExecuteTurn()
@@ -230,10 +130,7 @@ void BattleScene::ExecuteTurn()
 			PrintMessage(entity->category + " ran away!");
 			RemoveEntity(entity);
 			if (entity->Type() == BattleEntityType::ENEMY) enemyCount--;
-			else if (entity->Type() == BattleEntityType::PLAYER)
-			{
-
-			}
+			else if (entity->Type() == BattleEntityType::PLAYER) playerCount--;
 			break;
 		case BattleAction::NOACTION:
 			break;
@@ -255,6 +152,4 @@ void BattleScene::ExecuteTurn()
 void BattleScene::PrintMessage(std::string message)
 {
 	Log::Message(message);
-	lastMessages.push_back(message);
-	while (lastMessages.size() > MAX_MESSAGES) lastMessages.pop_front();
 }

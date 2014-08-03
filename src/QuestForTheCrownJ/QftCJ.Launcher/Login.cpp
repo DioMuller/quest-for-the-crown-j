@@ -2,7 +2,9 @@
 #include "AuthStructs.h"
 #include <WinSock2.h>
 #include <msclr/marshal_cppstd.h>
+
 using namespace System::Runtime::InteropServices;
+using namespace System::Windows::Forms;
 
 bool QftCJLauncher::Login::NetLogin(std::string userName, std::string hashedPassword)
 {
@@ -97,4 +99,9 @@ System::Void QftCJLauncher::Login::ButtonLogin_Click(System::Object^ sender, Sys
 
 	if (NetLogin(user, passwordHash))
 		DialogResult = System::Windows::Forms::DialogResult::OK;
+}
+
+System::Void QftCJLauncher::Login::ButtonExit_Click(System::Object^  sender, System::EventArgs^  e)
+{
+	Application::Exit();
 }
