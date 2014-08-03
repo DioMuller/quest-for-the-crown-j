@@ -7,13 +7,11 @@ using namespace qfcbase;
 
 Level::Level(std::weak_ptr<Game> game, int id) : Scene(game)
 {
-	this->map = nullptr;
 }
 
 
 Level::~Level()
 {
-	if(map) delete map;
 }
 
 
@@ -52,17 +50,12 @@ void Level::LoadMap(std::string tmxFile)
 {
 	if (tmxFile == "") return;
 
-	if (this->map) delete this->map;
-
-	this->map = new tmx::MapLoader(tmxFile.substr(0, tmxFile.find_last_of("\\/")));
+	this->map = std::make_shared<tmx::MapLoader>(tmxFile.substr(0, tmxFile.find_last_of("\\/")));
 	this->map->AddSearchPath("Content/tilesets/"); // For tsx files.
 	this->map->AddSearchPath("Content/tiles/"); // For png files.
 	this->map->Load(tmxFile.substr(tmxFile.find_last_of("\\/"), tmxFile.length()));
 
-	for (auto entity : entities)
-	{
-		RemoveEntity(entity);
-	}
+	RemoveAllEntities();
 
 	LevelInfo* info = LevelCollection::GetLevel(tmxFile);
 

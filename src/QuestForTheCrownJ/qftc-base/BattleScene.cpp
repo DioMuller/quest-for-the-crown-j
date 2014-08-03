@@ -35,6 +35,7 @@ BattleScene::~BattleScene()
 
 void BattleScene::Update(double dt)
 {
+	std::shared_ptr<Scene> battle = getptr();
 	time += dt;
 
 	if (enemyCount <= 0 || playerCount <= 0)
@@ -42,7 +43,8 @@ void BattleScene::Update(double dt)
 		auto game = std::dynamic_pointer_cast<Game>(parent.lock());
 		if (game)
 		{
-			game->UnstackScene(std::dynamic_pointer_cast<BattleEntity>(entities[0])->GetParent());
+			for (auto e : GetEntities())
+				game->UnstackScene(std::dynamic_pointer_cast<BattleEntity>(e)->GetParent());
 		}
 	}
 
@@ -59,8 +61,6 @@ void BattleScene::Update(double dt)
 
 void BattleScene::Draw(sf::RenderWindow* renderer)
 {
-	int i;
-
 	// Camera
 	sf::Vector2f screenSize = sf::Vector2f(renderer->getSize().x, renderer->getSize().y);
 	sf::Vector2f cameraPosition = sf::Vector2f(screenSize.x / 2, screenSize.y / 2);
@@ -86,9 +86,10 @@ void BattleScene::Draw(sf::RenderWindow* renderer)
 	renderer->draw(text);
 
 	//	Players Text
-	for (i = 0; i < entities.size(); i++)
+	int i = 0;
+	for (auto entity : GetEntities())
 	{
-		auto battleEntity = std::static_pointer_cast<BattleEntity>(entities[i]);
+		auto battleEntity = std::static_pointer_cast<BattleEntity>(entity);
 		
 		if ( battleEntity )
 		{
@@ -97,6 +98,7 @@ void BattleScene::Draw(sf::RenderWindow* renderer)
 			else if (battleEntity->Type() == BattleEntityType::ENEMY)
 				battleEntity->DrawEntity(renderer, sf::Vector2f(350.0f + (i * 30.0f), 300.0f));
 		}
+		i++;
 	}
 }
 
@@ -105,7 +107,7 @@ bool BattleScene::PlayerJoin(std::shared_ptr<Entity> hero)
 	if (playerCount > MAX_BATTLE_PLAYERS) return false;
 	
 	playerCount++;
-	entities.push_back(std::shared_ptr<BattleEntity>(new BattleEntity(hero, BattleEntityType::PLAYER)));
+	AddEntity(std::shared_ptr<BattleEntity>(new BattleEntity(hero, BattleEntityType::PLAYER)));
 	return true;
 }
 
@@ -114,12 +116,14 @@ bool BattleScene::AddMonster(std::shared_ptr<Entity> monster)
 	if (enemyCount > MAX_BATTLE_ENEMIES) return false;
 	
 	enemyCount++;
-	entities.push_back(std::shared_ptr<BattleEntity>(new BattleEntity(monster, BattleEntityType::ENEMY)));
+	AddEntity(std::shared_ptr<BattleEntity>(new BattleEntity(monster, BattleEntityType::ENEMY)));
 	return true;
 }
 
 void BattleScene::NextTurn()
 {
+	auto entities = GetEntities();
+
 	if (entities.size() == 0) return;
 
 	if (turnOrder.size() == 0)
@@ -155,7 +159,7 @@ bool BattleScene::SelectAction(std::shared_ptr<BattleEntity> currentEntity)
 
 	lastAttack = time;
 
-	for (auto ent : entities)
+	for (auto ent : GetEntities())
 	{
 		auto be = std::static_pointer_cast<BattleEntity>(ent);
 		if (be && be->Type() != currentEntity->Type())

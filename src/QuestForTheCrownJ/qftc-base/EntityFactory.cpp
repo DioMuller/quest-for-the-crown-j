@@ -2,6 +2,7 @@
 #include "FollowBehavior.h"
 #include "Hero.h"
 #include "Slime.h"
+#include "Game.h"
 
 using namespace qfcbase;
 
@@ -44,5 +45,6 @@ std::shared_ptr<Entity> EntityFactory::GenerateEntity(std::weak_ptr<Scene> scene
 
 	entity->Id = GenerateId();
 	entity->Sprite->Position = object.GetPosition();
+
 	return entity;
 }

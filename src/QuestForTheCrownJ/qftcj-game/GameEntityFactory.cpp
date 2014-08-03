@@ -8,12 +8,13 @@
 
 using namespace qfcbase;
 
+std::shared_ptr<Entity> GameEntityFactory::Player;
+
 /////////////////////////////////////
 // Constructors
 /////////////////////////////////////
 GameEntityFactory::GameEntityFactory() : EntityFactory()
 {
-	hasPlayer = false;
 }
 
 
@@ -30,15 +31,18 @@ std::shared_ptr<qfcbase::Entity> GameEntityFactory::GenerateEntity(std::weak_ptr
 
 	if (type == "Player")
 	{
-		if (hasPlayer) return nullptr;
+		if (Player) return nullptr;
 		additionalBehaviors.push_back([](std::weak_ptr<Entity> e) {
 			return std::make_shared<qfcgame::Controllable>(e, std::make_shared<qfcgame::KeyboardInput>());
 		});
-		hasPlayer = true;
 	}
 
 	auto ent = EntityFactory::GenerateEntity(scene, type, object);
 	for (auto b : additionalBehaviors)
 		ent->AddBehavior(b(ent));
+
+	if (type == "Player")
+		Player = ent;
+
 	return ent;
 }

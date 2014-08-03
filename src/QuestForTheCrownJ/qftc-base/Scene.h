@@ -16,10 +16,9 @@ namespace qfcbase
 		/////////////////////////////////////
 		// Attributes
 		/////////////////////////////////////
-		protected:
+		private:
 			std::vector<std::shared_ptr<Entity>> entities;
-			std::stack<std::shared_ptr<Entity>> toRemove;
-			std::stack<std::shared_ptr<Entity>> toAdd;
+		protected:
 			bool allowStacking;
 			bool abortScene;
 			std::weak_ptr<Game> parent;
@@ -39,8 +38,6 @@ namespace qfcbase
 		public:
 			virtual void Update(double dt);
 
-			void AddRemoveEntities();
-
 			virtual void Draw(sf::RenderWindow* renderer);
 
 			void AddEntity(std::shared_ptr<Entity> e);
@@ -57,5 +54,9 @@ namespace qfcbase
 
 			bool UpdateAborted();
 			void AbortUpdate();
+			void RemoveAllEntities();
+
+		private:
+			void SortEntities();
 	};
 }

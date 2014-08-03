@@ -26,7 +26,7 @@ namespace qfcbase
 		private:
 			int id;
 			bool bgmStarted = false;
-			tmx::MapLoader* map;
+			std::shared_ptr<tmx::MapLoader> map;
 			int neighbors[NEIGHBOUR_COUNT];
 			std::vector<Entity*> players;
 			LevelCollection* collectionParent;
@@ -67,7 +67,7 @@ namespace qfcbase
 				return title;
 			}
 
-			tmx::MapLoader* Map()
+			std::shared_ptr<tmx::MapLoader> Map()
 			{
 				return map;
 			}

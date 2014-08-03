@@ -8,6 +8,7 @@ using namespace qfcbase;
 // Constructors
 /////////////////////////////////////
 Scene::Scene(std::weak_ptr<Game> parent, bool allowStacking)
+	: entities_mutex()
 {
 	this->parent = parent;
 	this->allowStacking = allowStacking;
@@ -24,22 +25,10 @@ Scene::~Scene()
 /////////////////////////////////////
 void Scene::Update(double dt)
 {
-	AddRemoveEntities();
-
-	// Updates entities.
-	// Changed this so toRemove doesn't fuck up everything.
-	//for (const auto& e : entities)
-	int pastSize = toRemove.size();
-	for (int i = 0; i < entities.size(); i++)
+	for (const auto& e : GetEntities())
 	{
-		entities[i]->Update(dt);
+		e->Update(dt);
 		
-		if (pastSize < toRemove.size())
-		{
-			i--;
-			pastSize = toRemove.size();
-		}
-
 		if (abortScene)
 		{
 			abortScene = false;
@@ -55,28 +44,38 @@ bool IsBehind(const std::shared_ptr<Entity>& a, const std::shared_ptr<Entity>& b
 
 void Scene::Draw(sf::RenderWindow* renderer)
 {
-	std::lock_guard<std::mutex> lock(entities_mutex);
-	std::sort(entities.begin(), entities.end(), IsBehind);
+	SortEntities();
 
-	for (const auto& e : entities)
+	for (const auto& e : GetEntities())
 	{
 		e->Draw(renderer);
 	}
 }
 
+void Scene::SortEntities()
+{
+	std::lock_guard<std::mutex> lock(entities_mutex);
+	std::sort(entities.begin(), entities.end(), IsBehind);
+}
+
 void Scene::AddEntity(std::shared_ptr<Entity> e)
 {
+	std::lock_guard<std::mutex> lock(entities_mutex);
 	e->scene = getptr();
-	toAdd.push(e);
+	entities.push_back(e);
 }
 
 void Scene::RemoveEntity(std::shared_ptr<Entity> e)
 {
-	toRemove.push(e);
-
-	// Had to copy here, it was causing problems on AddRemoveEntities. 
+	std::lock_guard<std::mutex> lock(entities_mutex);
 	auto position = std::find(entities.begin(), entities.end(), e);
 	if (position != entities.end()) entities.erase(position);
+}
+
+void Scene::RemoveAllEntities()
+{
+	std::lock_guard<std::mutex> lock(entities_mutex);
+	entities.clear();
 }
 
 std::vector<std::shared_ptr<Entity>> Scene::GetEntities()
@@ -115,30 +114,6 @@ std::weak_ptr<Game> Scene::GetParent()
 }
 
 void Scene::OnResume() { }
-
-void qfcbase::Scene::AddRemoveEntities()
-{
-	std::lock_guard<std::mutex> lock(entities_mutex);
-	// Remove entities to be removed.
-	while (!toRemove.empty())
-	{
-		auto e = toRemove.top();
-		toRemove.pop();
-
-		// Hope this fixes...
-		//auto position = std::find(entities.begin(), entities.end(), e);
-		//if (position != entities.end()) entities.erase(position);
-	}
-
-	// Add entities to be added
-	while (!toAdd.empty())
-	{
-		auto e = toAdd.top();
-		toAdd.pop();
-
-		entities.push_back(e);
-	}
-}
 
 bool qfcbase::Scene::UpdateAborted()
 {

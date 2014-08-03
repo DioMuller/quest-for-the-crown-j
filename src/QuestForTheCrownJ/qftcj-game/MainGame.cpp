@@ -4,6 +4,7 @@
 
 #include "AudioPlayer.h"
 #include "BattleScene.h"
+#include "GameEntityFactory.h"
 
 using namespace qfcgame;
 using namespace qfcbase;
@@ -48,11 +49,13 @@ void MainGame::LoadScene(std::shared_ptr<Scene> s, bool stack)
 	if(currentScene) currentScene->AbortUpdate();
 
 	currentScene = s;
-	currentScene->AddRemoveEntities();
 }
 
 void MainGame::UnstackScene(std::shared_ptr<qfcbase::Entity> entity)
 {
+	if (entity != GameEntityFactory::Player)
+		return;
+
 	if (pastScenes.size() > 0)
 	{
 		currentScene = (std::shared_ptr<Scene>)pastScenes.top();
@@ -73,7 +76,7 @@ void MainGame::StartConfront(std::shared_ptr<Entity> e1, std::shared_ptr<Entity>
 		return;
 
 	e1Scene->RemoveEntity(e2);
-	auto battle = std::make_shared<qfcbase::BattleScene>(e1Scene->GetParent());
+	auto battle = std::make_shared<qfcbase::BattleScene>(getptr());
 
 	if (battle->PlayerJoin(e1) &&
 		battle->AddMonster(e2))
