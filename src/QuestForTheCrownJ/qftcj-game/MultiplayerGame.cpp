@@ -58,9 +58,9 @@ MultiplayerGame::~MultiplayerGame()
 {
 }
 
-void MultiplayerGame::Connect(int localPort, std::string auth_token)
+void MultiplayerGame::Connect(std::string server_addr, std::string auth_token)
 {
-	clientChannel.Connect(localPort, "127.0.0.1", 12345);
+	clientChannel.Connect(0, server_addr, 12345);
 	clientChannel.auth_token = auth_token;
 	clientChannel.onEntity = [this](const ServerSendEntity& info) {
 		std::lock_guard<std::mutex> lock_create(ent_update_mutex);

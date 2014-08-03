@@ -12,9 +12,12 @@ void main(array<String^>^ args) {
 	if (form.ShowDialog() == System::Windows::Forms::DialogResult::OK)
 	{
 		IntPtr authCodeNativePtr = System::Runtime::InteropServices::Marshal::StringToHGlobalAnsi(form.AuthCode);
-
 		std::string auth_code = static_cast<char*>(authCodeNativePtr.ToPointer());
-		system(("qftcj-game.exe " + auth_code).c_str());
+
+		IntPtr serverIpNativePtr = System::Runtime::InteropServices::Marshal::StringToHGlobalAnsi(form.tbServerAddress->Text);
+		std::string server_addr = static_cast<char*>(serverIpNativePtr.ToPointer());
+
+		system(("qftcj-game.exe " + auth_code + " " + server_addr).c_str());
 		form.Close();
 	}
 }
