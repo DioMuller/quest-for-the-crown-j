@@ -191,12 +191,10 @@ void ServerChannel::Listen(int port)
 void ServerChannel::SendEntity(int map_id, int id, EntityType type, sf::Vector2f pos, std::string animation, std::shared_ptr<sockaddr_in> addr, int addr_size)
 {
 	ServerSendEntity data;
-	data.animation = NetHelper::EncodeAnimation(animation);
-	data.map_id = map_id;
-	data.entity.type = type;
-	data.entity.entityId = id;
-	data.position.x = pos.x;
-	data.position.y = pos.y;
-
+	data.entity.info.type = type;
+	data.entity.info.id = id;
+	data.entity.location.map_id = map_id;
+	data.entity.location.position = pos;
+	data.entity.view.animation = NetHelper::EncodeAnimation(animation);
 	Send(data, addr, addr_size);
 }

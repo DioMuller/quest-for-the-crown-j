@@ -33,9 +33,9 @@ namespace qfcnet
 		void GetPlayer(
 			std::function<void(ServerResponsePlayerInfo&)> completed,
 			std::function<void(std::exception&)> error);
-		void SendPlayerPosition(std::string animation, int x, int y);
-		void SendPlayerFullPosition(std::string map_name, int x, int y);
-		void GetEntities(std::string screen_name);
+		void SendPlayerPosition(std::string animation, int map_id, sf::Vector2f position);
+		//void SendPlayerFullPosition(std::string map_name, int x, int y);
+		void GetEntities();
 
 		template <typename T>
 		void Send(T data)

@@ -9,16 +9,10 @@ namespace qfcbase
 	class Behavior
 	{
 		/////////////////////////////////////
-		// Attributes
-		/////////////////////////////////////
-		private:
-			std::weak_ptr<Entity> parent;
-
-		/////////////////////////////////////
 		// Properties
 		/////////////////////////////////////
 		public:
-			propget(std::weak_ptr<Entity>, parent, Parent);
+			autoprop(public, public, std::weak_ptr<Entity>, parent, Parent);
 
 		/////////////////////////////////////
 		// Constructors

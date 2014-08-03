@@ -37,7 +37,7 @@ void Level::GoToNeighbour(std::shared_ptr<Entity> entity, Direction direction)
 	else if (direction == Direction::NORTH) entity->Sprite->Position = sf::Vector2f(entity->Sprite->Position.x, map->GetMapSize().y - entity->Sprite->Area.height);
 	else if (direction == Direction::SOUTH) entity->Sprite->Position = sf::Vector2f(entity->Sprite->Position.x, entity->Sprite->Area.height);
 
-	LoadMap(LevelCollection::GetNeighbour(id, direction));
+	LoadMap(LevelCollection::GetNeighbour(id, direction)->mapFile);
 	this->AddEntity(entity); // Since all entities are removed.
 }
 
@@ -57,7 +57,7 @@ void Level::LoadMap(std::string tmxFile)
 
 	RemoveAllEntities();
 
-	LevelInfo* info = LevelCollection::GetLevel(tmxFile);
+	auto info = LevelCollection::GetLevel(tmxFile);
 
 	if (info)
 	{

@@ -5,6 +5,7 @@
 #include "AudioPlayer.h"
 #include "BattleScene.h"
 #include "GameEntityFactory.h"
+#include "KeyboardInput.h"
 
 using namespace qfcgame;
 using namespace qfcbase;
@@ -115,7 +116,22 @@ void qfcgame::MainGame::GoToNeighbour(std::shared_ptr<qfcbase::Entity> entity, q
 
 void qfcgame::MainGame::SetPlayer(std::shared_ptr<qfcbase::Entity> player)
 {
+	if (this->player)
+	{
+		player->RemoveBehavior(controllable_behavior);
+	}
+
 	this->player = player;
+
+	if (this->player)
+	{
+		if (!controllable_behavior)
+			controllable_behavior = std::make_shared<Controllable>(this->player, std::make_shared<KeyboardInput>());
+		else
+			controllable_behavior->Parent = this->player;
+
+		this->player->AddBehavior(controllable_behavior);
+	}
 }
 
 //void Scene::UnloadScene()

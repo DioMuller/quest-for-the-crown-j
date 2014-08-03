@@ -195,32 +195,32 @@ void ClientChannel::GetPlayer(
 	}).detach();
 }
 
-void ClientChannel::SendPlayerPosition(std::string animation, int x, int y)
+void ClientChannel::SendPlayerPosition(std::string animation, int map_id, sf::Vector2f position)
 {
 	std::thread([=]() {
 		ClientSendPlayerPosition data;
 		strcpy_s(data.header.authKey, sizeof(data.header.authKey), auth_token.c_str());
-		data.position.x = x;
-		data.position.y = y;
-		data.animation = NetHelper::EncodeAnimation(animation);
+		data.location.map_id = map_id;
+		data.location.position = position;
+		data.view.animation = NetHelper::EncodeAnimation(animation);
 		Send(data);
 	}).detach();
 }
 
-void ClientChannel::SendPlayerFullPosition(std::string map_name, int x, int y)
+/*void ClientChannel::SendPlayerFullPosition(int map_id, sf::Vector2f position)
 {
 	ClientSendPlayerFullPosition data;
 	std::thread([=]() {
 		ClientSendPlayerFullPosition data;
 		strcpy_s(data.header.authKey, sizeof(data.header.authKey), auth_token.c_str());
-		strcpy_s(data.player.map_name, sizeof(data.player.map_name), map_name.c_str());
-		data.player.position.x = x;
-		data.player.position.y = y;
+		data.location.map_id = map_id;
+		data.location.position = position;
+		data.view
 		Send(data);
 	}).detach();
-}
+}*/
 
-void ClientChannel::GetEntities(std::string screen_name)
+void ClientChannel::GetEntities()
 {
 	//std::thread([=]() {
 		ClientRequestEntities data;

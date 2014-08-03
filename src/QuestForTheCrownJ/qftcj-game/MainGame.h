@@ -4,6 +4,7 @@
 #include "ClientChannel.h"
 #include "Scene.h"
 #include "Level.h"
+#include "Controllable.h"
 
 namespace qfcgame
 {
@@ -19,6 +20,7 @@ namespace qfcgame
 		bool endScene;
 		bool sceneStacked;
 		std::shared_ptr<qfcbase::Entity> player;
+		std::shared_ptr<qfcgame::Controllable> controllable_behavior;
 	protected:
 		std::shared_ptr<qfcbase::Scene> currentScene;
 

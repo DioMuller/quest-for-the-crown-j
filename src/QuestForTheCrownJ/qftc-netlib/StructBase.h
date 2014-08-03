@@ -40,15 +40,27 @@ typedef struct s_header
 	PacketType type;
 } Header;
 
+
 typedef struct s_entity_header
 {
-	int entityId;
+	int id;
 	EntityType type;
 } EntityHeader;
 
-typedef struct s_player_full_position
+typedef struct s_entity_location
 {
-	char map_name[255];
-	sf::Vector2i position;
+	int map_id;
+	sf::Vector2f position;
+} EntityLocation;
+
+typedef struct s_entity_view
+{
 	int animation;
-} PlayerFullPosition;
+} EntityView;
+
+typedef struct s_entity_info
+{
+	EntityHeader info;
+	EntityLocation location;
+	EntityView view;
+} EntityInfo;

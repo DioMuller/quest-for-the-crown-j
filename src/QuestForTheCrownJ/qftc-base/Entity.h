@@ -61,6 +61,8 @@ namespace qfcbase
 			virtual void Draw(sf::RenderWindow* renderer);
 
 			void AddBehavior(std::shared_ptr<Behavior> b);
+			void RemoveBehavior(std::shared_ptr<Behavior> b);
+
 			void Walk(sf::Vector2f direction, double dt);
 			virtual void CollideWith(std::shared_ptr<Entity> e);
 

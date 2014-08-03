@@ -43,6 +43,12 @@ void Entity::AddBehavior(std::shared_ptr<Behavior> b)
 	behaviors.push_back(b);
 }
 
+void Entity::RemoveBehavior(std::shared_ptr<Behavior> b)
+{
+	auto pos = std::find(behaviors.begin(), behaviors.end(), b);
+	behaviors.erase(pos);
+}
+
 void Entity::Walk(sf::Vector2f direction, double dt)
 {
 	auto offset = sf::Vector2f((float)(speed * direction.x * dt), (float)(speed * direction.y * dt));

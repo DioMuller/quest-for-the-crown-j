@@ -20,15 +20,15 @@ namespace qfcbase
 		// Attributes
 		/////////////////////////////////////
 		private:
-			static std::vector<LevelInfo*> levels;
+			static std::vector<std::shared_ptr<LevelInfo>> levels;
 
 		/////////////////////////////////////
 		// Constructors
 		/////////////////////////////////////
 		public:
 			static void AddLevel(int id, std::string level, std::string music, std::string title, int neighbours[4]);
-			static LevelInfo* GetLevel(int id);
-			static LevelInfo* GetLevel(std::string mapfile);
-			static std::string GetNeighbour(int level, Direction direction);
+			static std::shared_ptr<LevelInfo> GetLevel(int id);
+			static std::shared_ptr<LevelInfo> GetLevel(std::string mapfile);
+			static std::shared_ptr<LevelInfo> GetNeighbour(int level, Direction direction);
 	};
 }

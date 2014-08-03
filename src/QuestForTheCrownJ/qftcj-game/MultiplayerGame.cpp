@@ -38,10 +38,11 @@ std::shared_ptr<qfcbase::Entity> MultiplayerGame::CreateEntity(int id, EntityTyp
 
 	if (player_entity_id == entity->Id)
 	{
-		entity->AddBehavior(std::make_shared<Controllable>(entity, std::make_shared<KeyboardInput>()));
 		entity->AddBehavior(std::make_shared<WatchPosition>(entity, [&](std::shared_ptr<Entity> e) {
+			auto scene = std::dynamic_pointer_cast<Level>(e->Scene().lock());
+			if (!scene) return;
 			if (e->Sprite->CurrentAnimation != "")
-				clientChannel.SendPlayerPosition(e->Sprite->CurrentAnimation, e->Sprite->Position.x, e->Sprite->Position.y);
+				clientChannel.SendPlayerPosition(e->Sprite->CurrentAnimation, scene->Id(), e->Sprite->Position);
 		}, NET_SECONDS_PER_FRAME));
 	}
 
@@ -62,24 +63,37 @@ void MultiplayerGame::Connect(std::string server_addr, std::string auth_token)
 {
 	clientChannel.Connect(0, server_addr, 12345);
 	clientChannel.auth_token = auth_token;
-	clientChannel.onEntity = [this](const ServerSendEntity& info) {
+	clientChannel.onEntity = [this](const ServerSendEntity& data) {
 		std::lock_guard<std::mutex> lock_create(ent_update_mutex);
+		auto level = std::dynamic_pointer_cast<Level>(currentScene);
+		if (!level)
+			return;
 
-		auto updateEntity = currentScene->GetEntity(info.entity.entityId);
+		auto updateEntity = currentScene->GetEntity(data.entity.info.id);
+
+		if (data.entity.location.map_id != level->Id())
+		{
+			if (updateEntity)
+				currentScene->RemoveEntity(updateEntity);
+			return;
+		}
+
+		auto position = data.entity.location.position;
+
 		if (!updateEntity) {
-			Log::Debug((std::string)"Created Entity: " + std::to_string(info.entity.entityId) + " " + std::to_string(info.entity.type));
-			auto entity = CreateEntity(info.entity.entityId, info.entity.type, info.position.x, info.position.y);
+			Log::Debug((std::string)"Created Entity: " + std::to_string(data.entity.info.id) + " " + std::to_string(data.entity.info.type));
+			auto entity = CreateEntity(data.entity.info.id, data.entity.info.type, position.x, position.y);
 			currentScene->AddEntity(entity);
 
-			if (player_entity_id == info.entity.entityId)
+			if (player_entity_id == data.entity.info.id)
 				SetPlayer(entity);
 		}
 		else {
-			if (info.entity.entityId != player_entity_id)
+			if (data.entity.info.id != player_entity_id)
 			{
-				updateEntity->Sprite->Position = sf::Vector2f(info.position.x, info.position.y);
-				if(info.animation >= 0)
-					updateEntity->Sprite->SetCurrentAnimation(NetHelper::DecodeAnimation(info.animation));
+				updateEntity->Sprite->Position = sf::Vector2f(position.x, position.y);
+				if(data.entity.view.animation >= 0)
+					updateEntity->Sprite->SetCurrentAnimation(NetHelper::DecodeAnimation(data.entity.view.animation));
 			}
 		}
 	};
@@ -87,12 +101,14 @@ void MultiplayerGame::Connect(std::string server_addr, std::string auth_token)
 
 void MultiplayerGame::RefreshSceneFromServer()
 {
-	clientChannel.GetPlayer([=](ServerResponsePlayerInfo& info) {
-		auto scene = LevelLoader::LoadMap(this->getptr(), 1, (std::string)"Content/maps/" + (std::string)info.player.map_name + (std::string)".tmx");
+	clientChannel.GetPlayer([=](ServerResponsePlayerInfo& data) {
+		auto level_info = LevelCollection::GetLevel(data.entity.location.map_id);
+
+		auto scene = LevelLoader::LoadMap(this->getptr(), 1, level_info->mapFile);
 		LoadScene(scene, false);
-		this->player_entity_id = info.entity.entityId;
-		clientChannel.GetEntities(info.player.map_name);
-		Log::Debug((std::string)"Map loaded: " + std::string(info.player.map_name));
+		this->player_entity_id = data.entity.info.id;
+		clientChannel.GetEntities();
+		Log::Debug((std::string)"Map loaded: " + level_info->mapFile);
 	}, [&](std::exception& ex) {
 		Log::Error(ex.what());
 	});

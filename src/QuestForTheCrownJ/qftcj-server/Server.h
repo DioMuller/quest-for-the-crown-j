@@ -34,16 +34,15 @@ namespace qfcserver {
 			LoggedUser GetUserInfo(const qfcbase::Entity& entity);
 
 			LauncherLoginResponse HandleLoginInfo(const LauncherLoginInfo& login_info, std::shared_ptr<sockaddr_in> sender, int sender_size);
-			std::shared_ptr<qfcbase::Hero> CreatePlayerEntity(std::string map_name, std::string animation, float x, float y);
+			std::shared_ptr<qfcbase::Hero> CreatePlayerEntity(int map_id, std::string animation, float x, float y);
 
-			void SetEntityPosition(std::shared_ptr<qfcbase::Entity> player_entity, std::string map_file, std::string animation, float x, float y);
+			void SetEntityPosition(std::shared_ptr<qfcbase::Entity> player_entity, int map_id, std::string animation, float x, float y);
 
-			int next_player_id;
 			void HandleRequestPlayerInfo(LoggedUser& user);
 			std::string GetUserAuthCode(std::shared_ptr<qfcbase::Entity> entity);
 			void SendEntitiesToPlayer(LoggedUser user);
 			std::map<std::string, LoggedUser> logged_users;
-			std::map<std::string, std::shared_ptr<ServerLevel>> loaded_levels;
+			std::map<int, std::shared_ptr<ServerLevel>> loaded_levels;
 
 			bool IsPlayer(const qfcbase::Entity& entity);
 			std::string GetMapFile(std::string mapName);

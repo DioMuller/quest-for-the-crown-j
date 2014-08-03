@@ -14,17 +14,14 @@ SERVER_BATTLE_TURN
 typedef struct s_server_send_entity
 {
 	Header header = { { PacketType::SERVER_SEND_ENTITY } };
-	int map_id;
-	EntityHeader entity;
-	sf::Vector2f position;
-	int animation;
+	EntityInfo entity;
 } ServerSendEntity;
 
+// TODO: Remove duplicated struct
 typedef struct s_server_response_player_info
 {
 	Header header = { { PacketType::SERVER_RESPONSE_PLAYER_INFO } };
-	EntityHeader entity;
-	PlayerFullPosition player;
+	EntityInfo entity;
 } ServerResponsePlayerInfo;
 
 typedef struct s_server_battle_start
