@@ -74,11 +74,12 @@ void BattleScene::Draw(sf::RenderWindow* renderer)
 	sstream << "1 Attack " << std::endl
 		<< "2 Magic" << std::endl
 		<< "3 Use Potion" << std::endl
-		<< "4 Run" << std::endl;
+		<< "4 Run" << std::endl
+		<< std::endl << std::endl;
 
-	for (i = 0; i < MAX_MESSAGES; i++)
+	for (auto message : lastMessages )
 	{
-		sstream << lastMessages[i] << std::endl;
+		sstream << message << std::endl;
 	}
 	str = sstream.str();
 	text.setString(str);
@@ -205,24 +206,30 @@ void BattleScene::ExecuteTurn()
 	{
 		case BattleAction::ATTACK:
 			PrintMessage(entity->category + " attacked " + target->category);
-			PrintMessage("Damage: " + std::to_string(value));
+			PrintMessage("Damage " + std::to_string(value));
 
 			target->ChangeHP(-value);
 			break;
 		case BattleAction::SPECIAL:
 			PrintMessage(entity->category + " special attacked " + target->category);
-			PrintMessage("Damage: " + std::to_string(value));
+			PrintMessage("Damage " + std::to_string(value));
 
 			target->ChangeHP(-value);
 			break;
 		case BattleAction::ITEM:
 			PrintMessage(entity->category + " used potion on " + target->category);
-			PrintMessage("Cured: " + std::to_string(value));
+			PrintMessage("Cured " + std::to_string(value));
 
 			target->ChangeHP(value);
 			break;
 		case BattleAction::RUN:
 			PrintMessage(entity->category + " ran away!");
+			RemoveEntity(entity);
+			if (entity->Type() == BattleEntityType::ENEMY) enemyCount--;
+			else if (entity->Type() == BattleEntityType::PLAYER)
+			{
+
+			}
 			break;
 		case BattleAction::NOACTION:
 			break;
@@ -244,7 +251,6 @@ void BattleScene::ExecuteTurn()
 void BattleScene::PrintMessage(std::string message)
 {
 	Log::Message(message);
-	lastMessages[currentMessage] = message;
-	currentMessage++;
-	currentMessage %= MAX_MESSAGES;
+	lastMessages.push_back(message);
+	while (lastMessages.size() > MAX_MESSAGES) lastMessages.pop_front();
 }

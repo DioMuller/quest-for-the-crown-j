@@ -2,6 +2,7 @@
 #include "Scene.h"
 #include "BattleEntity.h"
 #include <SFML/Graphics/Text.hpp>
+#include <deque>
 
 #define MAX_BATTLE_PLAYERS 1
 #define MAX_BATTLE_ENEMIES 1
@@ -43,8 +44,7 @@ namespace qfcbase
 			double time;
 			double lastAttack;
 			BattleAction playerAction;
-			std::string lastMessages[MAX_MESSAGES]; // TODO: Change to Queue
-			int currentMessage = 0;
+			std::deque<std::string> lastMessages;
 			sf::Text text;
 
 		/////////////////////////////////////
