@@ -45,6 +45,8 @@ void MainGame::LoadScene(std::shared_ptr<Scene> s, bool stack)
 		pastScenes.push(currentScene);
 	}
 
+	if(currentScene) currentScene->AbortUpdate();
+
 	currentScene = s;
 	currentScene->AddRemoveEntities();
 }

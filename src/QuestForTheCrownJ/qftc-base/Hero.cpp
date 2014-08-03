@@ -78,6 +78,8 @@ void Hero::CollideWith(std::shared_ptr<Entity> e)
 		auto sceneInst = scene.lock();
 		if (!sceneInst) return;
 
+		sceneInst->AbortUpdate();
+
 		auto game = sceneInst->GetParent().lock();
 		if (!game) return;
 

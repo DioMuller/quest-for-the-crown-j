@@ -11,6 +11,7 @@ Scene::Scene(std::weak_ptr<Game> parent, bool allowStacking)
 {
 	this->parent = parent;
 	this->allowStacking = allowStacking;
+	abortScene = false;
 }
 
 
@@ -38,6 +39,12 @@ void Scene::Update(double dt)
 		{
 			i--;
 			pastSize = toRemove.size();
+		}
+
+		if (abortScene)
+		{
+			abortScene = false;
+			break;
 		}
 	}
 }
@@ -112,4 +119,14 @@ void qfcbase::Scene::AddRemoveEntities()
 
 		entities.push_back(e);
 	}
+}
+
+bool qfcbase::Scene::UpdateAborted()
+{
+	return abortScene;
+}
+
+void qfcbase::Scene::AbortUpdate()
+{
+	abortScene = true;
 }

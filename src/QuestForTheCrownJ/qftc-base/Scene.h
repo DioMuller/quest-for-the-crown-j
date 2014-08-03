@@ -20,6 +20,7 @@ namespace qfcbase
 			std::stack<std::shared_ptr<Entity>> toRemove;
 			std::stack<std::shared_ptr<Entity>> toAdd;
 			bool allowStacking;
+			bool abortScene;
 			std::weak_ptr<Game> parent;
 
 		/////////////////////////////////////
@@ -48,5 +49,8 @@ namespace qfcbase
 			//void UnloadScene();
 			std::weak_ptr<Game> GetParent();
 			virtual void OnResume();
+
+			bool UpdateAborted();
+			void AbortUpdate();
 	};
 }

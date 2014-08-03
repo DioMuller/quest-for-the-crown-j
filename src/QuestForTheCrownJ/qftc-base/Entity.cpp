@@ -1,6 +1,7 @@
 #include "Entity.h"
 #include "Level.h"
 #include "SFHelper.h"
+#include "Log.h"
 
 using namespace qfcbase;
 
@@ -91,6 +92,8 @@ bool Entity::ValidPosition(sf::Vector2f offset)
 	if ( level )
 	{
 		auto map = level->Map();
+
+		if (sceneInst->UpdateAborted())
 
 		for (auto layer : map->GetLayers())
 		{
