@@ -207,19 +207,6 @@ void ClientChannel::SendPlayerPosition(std::string animation, int map_id, sf::Ve
 	}).detach();
 }
 
-/*void ClientChannel::SendPlayerFullPosition(int map_id, sf::Vector2f position)
-{
-	ClientSendPlayerFullPosition data;
-	std::thread([=]() {
-		ClientSendPlayerFullPosition data;
-		strcpy_s(data.header.authKey, sizeof(data.header.authKey), auth_token.c_str());
-		data.location.map_id = map_id;
-		data.location.position = position;
-		data.view
-		Send(data);
-	}).detach();
-}*/
-
 void ClientChannel::GetEntities()
 {
 	//std::thread([=]() {

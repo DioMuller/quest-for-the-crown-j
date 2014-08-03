@@ -16,7 +16,6 @@ namespace qfcnet
 		std::function<LauncherLoginResponse(const LauncherLoginInfo&, std::shared_ptr<sockaddr_in>, int)> handleLoginInfo;
 		std::function<void(const ClientRequestPlayerInfo&)> handleRequestPlayer;
 		std::function<void(const ClientSendPlayerPosition&)> handlePlayerPosition;
-		std::function<void(const ClientSendPlayerFullPosition&)> handlePlayerFullPosition;
 		std::function<void(const ClientRequestEntities&)> handleRequestEntities;
 
 	public:

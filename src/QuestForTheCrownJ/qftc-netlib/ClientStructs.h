@@ -19,14 +19,6 @@ typedef struct s_client_request_entities
 	ClientHeader header = { { PacketType::CLIENT_REQUEST_ENTITIES } };
 } ClientRequestEntities;
 
-// TODO: Remove unused struct
-typedef struct s_client_send_player_full_position
-{
-	ClientHeader header = { { PacketType::CLIENT_SEND_PLAYER_FULL_POSITION } };
-	EntityLocation location;
-	EntityView view;
-} ClientSendPlayerFullPosition;
-
 typedef struct s_client_send_player_position
 {
 	ClientHeader header = { { PacketType::CLIENT_SEND_PLAYER_POSITION } };

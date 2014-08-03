@@ -35,7 +35,7 @@ Server::Server(int port)
 		throw std::exception(("Can't open database.sqlite: " + (std::string)sqlite3_errmsg(db)).c_str());
 
 	channel->onClientMessage = [this](const ClientHeader& header, std::shared_ptr<sockaddr_in> sender, int sender_size) {
-		if (logged_users.count(header.authKey) <= 0)
+		if (!IsLogged(header.authKey))
 			return;
 		auto user = logged_users[header.authKey];
 		user.address = sender;
@@ -50,7 +50,13 @@ Server::Server(int port)
 		HandleRequestPlayerInfo(user);
 	};
 	channel->handlePlayerPosition = [this](const ClientSendPlayerPosition& data) {
+		if (!IsLogged(data.header.authKey))
+			return;
+
 		auto user = logged_users[data.header.authKey];
+		if (!user.game_entity)
+			return;
+
 		SetEntityPosition(user.game_entity, data.location.map_id, NetHelper::DecodeAnimation(data.view.animation), data.location.position.x, data.location.position.y);
 
 		ServerSendEntity resp;
@@ -65,10 +71,6 @@ Server::Server(int port)
 			if (other.first != (std::string)data.header.authKey)
 				channel->Send(resp, other.second.address, other.second.address_size);
 		}
-	};
-	channel->handlePlayerFullPosition = [this](const ClientSendPlayerFullPosition& data) {
-		auto clientData = logged_users[data.header.authKey];
-		SetEntityPosition(clientData.game_entity, data.location.map_id, NetHelper::DecodeAnimation(data.view.animation), data.location.position.x, data.location.position.y);
 	};
 	channel->handleRequestEntities = [this](const ClientRequestEntities& data) {
 		auto user = logged_users[data.header.authKey];
@@ -204,8 +206,12 @@ LauncherLoginResponse Server::HandleLoginInfo(const LauncherLoginInfo& login_inf
 
 	// Caso não exista, cria um usuário padrão
 	if (!user_exists) {
+		map_id = 5;
+		int initialPosX = rand() % 500 + 300;
+		int initialPosY = rand() % 500 + 300;
+
 		std::stringstream createPlayerSql;
-		createPlayerSql << "INSERT INTO players(map, x, y) VALUES(1, 320, 256)";
+		createPlayerSql << "INSERT INTO players(map, x, y) VALUES(" << map_id << ", " << initialPosX << ", " << initialPosY << ")";
 		sqlite3_exec(db, createPlayerSql.str(), nullptr);
 		playerId = sqlite3_last_insert_rowid(db);
 
@@ -215,8 +221,7 @@ LauncherLoginResponse Server::HandleLoginInfo(const LauncherLoginInfo& login_inf
 		userId = sqlite3_last_insert_rowid(db);
 		resp.authenticated = true;
 
-		map_id = 1;
-		playerEntity = CreatePlayerEntity(map_id, "stopped_down", 320, 256);
+		playerEntity = CreatePlayerEntity(map_id, "stopped_down", initialPosX, initialPosY);
 	}
 
 	// Caso autenticado, gera auth_code e guarda usuário como logado.
@@ -248,8 +253,6 @@ LauncherLoginResponse Server::HandleLoginInfo(const LauncherLoginInfo& login_inf
 
 	return resp;
 }
-
-// TODO: Remove unused? GetMap (from id/name)
 
 void qfcserver::Server::HandleRequestPlayerInfo(LoggedUser& user)
 {
@@ -366,16 +369,6 @@ std::shared_ptr<Entity> qfcserver::Server::GenerateEntity(std::weak_ptr<Scene> s
 #pragma endregion
 
 #pragma region Helpers
-std::string Server::GetMapFile(std::string mapName)
-{
-	return (std::string)"Content/maps/" + mapName + (std::string)".tmx";
-}
-
-std::string Server::GetMapName(std::string mapFile)
-{
-	return mapFile.substr(13, mapFile.length() - 17); // Content/maps/ .tmx
-}
-
 std::string Server::GetUserAuthCode(std::shared_ptr<qfcbase::Entity> entity)
 {
 	for (auto& user : logged_users) {
@@ -396,6 +389,11 @@ std::shared_ptr<Hero> qfcserver::Server::CreatePlayerEntity(int map_id, std::str
 bool qfcserver::Server::IsPlayer(const Entity& entity)
 {
 	return true;
+}
+
+bool qfcserver::Server::IsLogged(std::string authKey)
+{
+	return logged_users.count(authKey) > 0;
 }
 
 #pragma endregion

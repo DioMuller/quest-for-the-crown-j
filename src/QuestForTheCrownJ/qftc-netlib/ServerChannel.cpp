@@ -149,22 +149,6 @@ void ServerChannel::Listen(int port)
 				handlePlayerPosition(*data);
 			}
 			break;
-		case PacketType::CLIENT_SEND_PLAYER_FULL_POSITION:
-			if (size != sizeof(ClientSendPlayerFullPosition))
-			{
-				Log::Error("Invalid packet size for CLIENT_SEND_PLAYER_FULL_POSITION: " + size);
-				continue;
-			}
-			if (!handlePlayerPosition)
-			{
-				Log::Debug("No handler for CLIENT_SEND_PLAYER_FULL_POSITION");
-				continue;
-			}
-			else {
-				auto data = (ClientSendPlayerFullPosition*)buffer;
-				handlePlayerFullPosition(*data);
-			}
-			break;
 		default:
 			Log::Debug(std::string("Unknown message type: ") + std::to_string(clientHeader->header.type));
 			break;

@@ -45,8 +45,7 @@ namespace qfcserver {
 			std::map<int, std::shared_ptr<ServerLevel>> loaded_levels;
 
 			bool IsPlayer(const qfcbase::Entity& entity);
-			std::string GetMapFile(std::string mapName);
-			std::string GetMapName(std::string mapFile);
 			void SendEntityToUsers(int id, EntityType type, int x, int y);
+			bool IsLogged(std::string authKey);
 	};
 }
