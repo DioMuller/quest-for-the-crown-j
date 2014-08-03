@@ -27,9 +27,18 @@ void Scene::Update(double dt)
 
 
 	// Updates entities.
-	for (const auto& e : entities)
+	// Changed this so toRemove doesn't fuck up everything.
+	//for (const auto& e : entities)
+	int pastSize = toRemove.size();
+	for (int i = 0; i < entities.size(); i++)
 	{
-		e->Update(dt);
+		entities[i]->Update(dt);
+		
+		if (pastSize < toRemove.size())
+		{
+			i--;
+			pastSize = toRemove.size();
+		}
 	}
 }
 
@@ -57,6 +66,10 @@ void Scene::AddEntity(std::shared_ptr<Entity> e)
 void Scene::RemoveEntity(std::shared_ptr<Entity> e)
 {
 	toRemove.push(e);
+
+	// Had to copy here, it was causing problems on AddRemoveEntities. 
+	auto position = std::find(entities.begin(), entities.end(), e);
+	if (position != entities.end()) entities.erase(position);
 }
 
 std::vector<std::shared_ptr<Entity>> Scene::GetEntities(std::string category)
@@ -86,8 +99,9 @@ void qfcbase::Scene::AddRemoveEntities()
 		auto e = toRemove.top();
 		toRemove.pop();
 
-		auto position = std::find(entities.begin(), entities.end(), e);
-		if (position != entities.end()) entities.erase(position);
+		// Hope this fixes...
+		//auto position = std::find(entities.begin(), entities.end(), e);
+		//if (position != entities.end()) entities.erase(position);
 	}
 
 	// Add entities to be added

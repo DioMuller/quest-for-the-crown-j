@@ -85,12 +85,6 @@ void qfcgame::MainGame::GoToNeighbour(std::shared_ptr<qfcbase::Entity> entity, q
 	level->GoToNeighbour(entity, direction);
 }
 
-//void Scene::LoadScene(Scene* scene)
-//{
-//	if (allowStacking && parent->IsCurrentScene(this))
-//		parent->LoadScene(scene, true);
-//}
-//
 //void Scene::UnloadScene()
 //{
 //	parent->UnstackScene();
