@@ -17,6 +17,7 @@ typedef struct s_server_send_entity
 	int map_id;
 	EntityHeader entity;
 	sf::Vector2f position;
+	int animation;
 } ServerSendEntity;
 
 typedef struct s_server_response_player_info

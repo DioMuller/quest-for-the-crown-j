@@ -50,4 +50,5 @@ typedef struct s_player_full_position
 {
 	char map_name[255];
 	sf::Vector2i position;
+	int animation;
 } PlayerFullPosition;

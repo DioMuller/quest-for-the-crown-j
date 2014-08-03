@@ -6,6 +6,7 @@
 #include "Log.h"
 #include "NetDefinitions.h"
 #include "AuthStructs.h"
+#include "NetHelper.h"
 
 using namespace qfcbase;
 using namespace qfcnet;
@@ -187,9 +188,10 @@ void ServerChannel::Listen(int port)
 	}
 }
 
-void ServerChannel::SendEntity(int map_id, int id, EntityType type, sf::Vector2f pos, std::shared_ptr<sockaddr_in> addr, int addr_size)
+void ServerChannel::SendEntity(int map_id, int id, EntityType type, sf::Vector2f pos, std::string animation, std::shared_ptr<sockaddr_in> addr, int addr_size)
 {
 	ServerSendEntity data;
+	data.animation = NetHelper::EncodeAnimation(animation);
 	data.map_id = map_id;
 	data.entity.type = type;
 	data.entity.entityId = id;

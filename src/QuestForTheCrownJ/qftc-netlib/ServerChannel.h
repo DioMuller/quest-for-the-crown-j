@@ -31,7 +31,7 @@ namespace qfcnet
 				Log::Error("Send error: " + std::to_string(WSAGetLastError()));
 		}
 
-		void SendEntity(int map_id, int id, EntityType type, sf::Vector2f pos, std::shared_ptr<sockaddr_in> addr, int addr_size);
+		void SendEntity(int map_id, int id, EntityType type, sf::Vector2f pos, std::string animation, std::shared_ptr<sockaddr_in> addr, int addr_size);
 	private:
 		bool stop_listen;
 		std::thread listen_thread;

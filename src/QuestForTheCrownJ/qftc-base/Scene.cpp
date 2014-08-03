@@ -39,7 +39,7 @@ bool IsBehind(const std::shared_ptr<Entity>& a, const std::shared_ptr<Entity>& b
 
 void Scene::Draw(sf::RenderWindow* renderer)
 {
-	std::unique_lock<std::mutex>(entities_mutex);
+	std::lock_guard<std::mutex> lock(entities_mutex);
 	std::sort(entities.begin(), entities.end(), IsBehind);
 
 	for (const auto& e : entities)
@@ -71,7 +71,7 @@ std::vector<std::shared_ptr<Entity>> Scene::GetEntities(std::string category)
 
 std::shared_ptr<Entity> Scene::GetEntity(int id)
 {
-	std::unique_lock<std::mutex>(entities_mutex);
+	std::lock_guard<std::mutex> lock(entities_mutex);
 	for (int i = 0; i < entities.size(); i++)
 	{
 		auto ent = entities[i];
@@ -83,7 +83,7 @@ std::shared_ptr<Entity> Scene::GetEntity(int id)
 
 std::vector<std::shared_ptr<Entity>> Scene::GetEntities(std::function<bool(const std::shared_ptr<Entity>&)> predicate)
 {
-	std::unique_lock<std::mutex>(entities_mutex);
+	std::lock_guard<std::mutex> lock(entities_mutex);
 	std::vector<std::shared_ptr<Entity>> bar;
 	std::copy_if(entities.begin(), entities.end(), std::back_inserter(bar), predicate);
 	return bar;
@@ -98,7 +98,7 @@ void Scene::OnResume() { }
 
 void qfcbase::Scene::AddRemoveEntities()
 {
-	std::unique_lock<std::mutex>(entities_mutex);
+	std::lock_guard<std::mutex> lock(entities_mutex);
 	// Remove entities to be removed.
 	while (!toRemove.empty())
 	{

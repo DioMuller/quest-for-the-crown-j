@@ -10,6 +10,7 @@
 #include "Definitions.h"
 #include "Window.h"
 #include "NetDefinitions.h"
+#include "NetHelper.h"
 
 using namespace qfcgame;
 using namespace qfcbase;
@@ -39,7 +40,8 @@ std::shared_ptr<qfcbase::Entity> MultiplayerGame::CreateEntity(int id, EntityTyp
 	{
 		entity->AddBehavior(std::make_shared<Controllable>(entity, std::make_shared<KeyboardInput>()));
 		entity->AddBehavior(std::make_shared<WatchPosition>(entity, [&](std::shared_ptr<Entity> e) {
-			clientChannel.SendPlayerPosition(e->Sprite->Position.x, e->Sprite->Position.y);
+			if (e->Sprite->CurrentAnimation != "")
+				clientChannel.SendPlayerPosition(e->Sprite->CurrentAnimation, e->Sprite->Position.x, e->Sprite->Position.y);
 		}, NET_SECONDS_PER_FRAME));
 	}
 
@@ -48,6 +50,7 @@ std::shared_ptr<qfcbase::Entity> MultiplayerGame::CreateEntity(int id, EntityTyp
 
 MultiplayerGame::MultiplayerGame()
 {
+	Log::SetVerboseLevel(LOG_ALL);
 }
 
 
@@ -60,16 +63,21 @@ void MultiplayerGame::Connect(int localPort, std::string auth_token)
 	clientChannel.Connect(localPort, "127.0.0.1", 12345);
 	clientChannel.auth_token = auth_token;
 	clientChannel.onEntity = [this](const ServerSendEntity& info) {
-		std::unique_lock<std::mutex> lock_create(ent_update_mutex);
+		std::lock_guard<std::mutex> lock_create(ent_update_mutex);
 
-		auto updateEntities = currentScene->GetEntity(info.entity.entityId);
-		if (!updateEntities) {
+		auto updateEntity = currentScene->GetEntity(info.entity.entityId);
+		if (!updateEntity) {
+			Log::Debug((std::string)"Created Entity: " + std::to_string(info.entity.entityId) + " " + std::to_string(info.entity.type));
 			auto entity = CreateEntity(info.entity.entityId, info.entity.type, info.position.x, info.position.y);
 			currentScene->AddEntity(entity);
 		}
 		else {
 			if (info.entity.entityId != player_entity_id)
-				updateEntities->Sprite->Position = sf::Vector2f(info.position.x, info.position.y);
+			{
+				updateEntity->Sprite->Position = sf::Vector2f(info.position.x, info.position.y);
+				if(info.animation >= 0)
+					updateEntity->Sprite->SetCurrentAnimation(NetHelper::DecodeAnimation(info.animation));
+			}
 		}
 	};
 }

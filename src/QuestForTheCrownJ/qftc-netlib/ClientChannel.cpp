@@ -8,6 +8,7 @@
 #include "Hero.h"
 #include "Slime.h"
 #include "ClientStructs.h"
+#include "NetHelper.h"
 
 using namespace qfcnet;
 using namespace qfcbase;
@@ -76,14 +77,13 @@ void qfcnet::ClientChannel::Listen()
 		if (size < 0)
 		{
 			Log::Error(std::string("Error on receive: ") + std::to_string(WSAGetLastError()));
-			std::this_thread::sleep_for(std::chrono::microseconds((long long)((SECONDS_PER_FRAME) * (1000 * 1000))));
+			std::this_thread::sleep_for(std::chrono::microseconds((long long)((NET_SECONDS_PER_FRAME) * (1000 * 1000))));
 			continue;
 		}
 
 		buffer[size] = '\0';
 
 		Header* header = (Header*)buffer;
-		Log::Debug((std::string)"Message: " + std::to_string(header->type));
 		switch (header->type)
 		{
 		case PacketType::LAUNCHER_LOGIN_RESPONSE:
@@ -195,13 +195,14 @@ void ClientChannel::GetPlayer(
 	}).detach();
 }
 
-void ClientChannel::SendPlayerPosition(int x, int y)
+void ClientChannel::SendPlayerPosition(std::string animation, int x, int y)
 {
 	std::thread([=]() {
 		ClientSendPlayerPosition data;
 		strcpy_s(data.header.authKey, sizeof(data.header.authKey), auth_token.c_str());
 		data.position.x = x;
 		data.position.y = y;
+		data.animation = NetHelper::EncodeAnimation(animation);
 		Send(data);
 	}).detach();
 }

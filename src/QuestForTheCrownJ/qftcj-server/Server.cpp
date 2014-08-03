@@ -20,6 +20,7 @@
 #include "ServerHelper.h"
 #include "WatchPosition.h"
 #include "NetDefinitions.h"
+#include "NetHelper.h"
 
 using namespace qfcserver;
 using namespace qfcbase;
@@ -51,9 +52,10 @@ Server::Server(int port)
 	};
 	channel->handlePlayerPosition = [this](const ClientSendPlayerPosition& data) {
 		auto user = logged_users[data.header.authKey];
-		SetEntityPosition(user.game_entity, user.map_file, data.position.x, data.position.y);
+		SetEntityPosition(user.game_entity, user.map_file, NetHelper::DecodeAnimation(data.animation), data.position.x, data.position.y);
 
 		ServerSendEntity ent;
+		ent.animation = NetHelper::EncodeAnimation(user.game_entity->Sprite->CurrentAnimation);
 		ent.entity.entityId = user.game_entity->Id;
 		ent.entity.type = ServerHelper::GetEntityType(user.game_entity);
 		ent.map_id = std::dynamic_pointer_cast<Level>(user.game_entity->Scene().lock())->Id();
@@ -67,7 +69,7 @@ Server::Server(int port)
 	};
 	channel->handlePlayerFullPosition = [this](const ClientSendPlayerFullPosition& data) {
 		auto clientData = logged_users[data.header.authKey];
-		SetEntityPosition(clientData.game_entity, GetMapFile(data.player.map_name), data.player.position.x, data.player.position.y);
+		SetEntityPosition(clientData.game_entity, GetMapFile(data.player.map_name), NetHelper::DecodeAnimation(data.player.animation), data.player.position.x, data.player.position.y);
 	};
 	channel->handleRequestEntities = [this](const ClientRequestEntities& data) {
 		auto user = logged_users[data.header.authKey];
@@ -147,7 +149,7 @@ void qfcserver::Server::GoToNeighbour(std::shared_ptr<qfcbase::Entity> entity, q
 	// TODO: calc x, y based on direction
 	auto entityPosition = entity->Sprite->Position;
 
-	SetEntityPosition(entity, neighborMap, entityPosition.x, entityPosition.y);
+	SetEntityPosition(entity, neighborMap, entity->Sprite->CurrentAnimation, entityPosition.x, entityPosition.y);
 }
 
 
@@ -192,7 +194,7 @@ LauncherLoginResponse Server::HandleLoginInfo(const LauncherLoginInfo& login_inf
 
 		// Buscando informações do usuário
 		sqlite3_exec(db, std::string("SELECT maps.name, x, y FROM players JOIN maps ON maps.id=players.map WHERE players.id = ") + argv[1], [&](int c, char** v, char** n) {
-			playerEntity = CreatePlayerEntity(std::string(v[0]), std::atoi(v[1]), std::atoi(v[2]));
+			playerEntity = CreatePlayerEntity(std::string(v[0]), "stopped_down", std::atoi(v[1]), std::atoi(v[2]));
 			mapName = std::string(v[0]);
 		});
 
@@ -213,7 +215,7 @@ LauncherLoginResponse Server::HandleLoginInfo(const LauncherLoginInfo& login_inf
 		resp.authenticated = true;
 
 		mapName = "Overworld01";
-		playerEntity = CreatePlayerEntity(mapName, 320, 256);
+		playerEntity = CreatePlayerEntity(mapName, "stopped_down", 320, 256);
 	}
 
 	// Caso autenticado, gera auth_code e guarda usuário como logado.
@@ -263,7 +265,7 @@ void qfcserver::Server::HandleRequestPlayerInfo(LoggedUser& user)
 	channel->Send(resp, user.address, user.address_size);
 }
 
-void qfcserver::Server::SetEntityPosition(std::shared_ptr<qfcbase::Entity> entity, std::string map_file, float x, float y)
+void qfcserver::Server::SetEntityPosition(std::shared_ptr<qfcbase::Entity> entity, std::string map_file, std::string animation, float x, float y)
 {
 	auto find_entity = [entity](const std::shared_ptr<Entity>& e){ return e == entity; };
 	auto is_any_player = [&](const std::shared_ptr<Entity>& e){ return IsPlayer(*e); };
@@ -290,6 +292,8 @@ void qfcserver::Server::SetEntityPosition(std::shared_ptr<qfcbase::Entity> entit
 	}
 
 	entity->Sprite->Position = sf::Vector2f(x, y);
+	if (animation != "")
+		entity->Sprite->CurrentAnimation = animation;
 	std::shared_ptr<ServerLevel> level;
 	if (loaded_levels.count(map_file) == 0)
 	{
@@ -325,7 +329,7 @@ void qfcserver::Server::SendEntitiesToPlayer(LoggedUser user)
 			if (level)
 			{
 				EntityType type = ServerHelper::GetEntityType(ent);
-				channel->SendEntity(level->Id(), ent->Id, type, ent->Sprite->Position, user.address, user.address_size);
+				channel->SendEntity(level->Id(), ent->Id, type, ent->Sprite->Position, ent->Sprite->CurrentAnimation, user.address, user.address_size);
 			}
 		}
 	}
@@ -349,7 +353,7 @@ std::shared_ptr<Entity> qfcserver::Server::GenerateEntity(std::weak_ptr<Scene> s
 				for (auto user : logged_users)
 				{
 					if (user.second.game_entity != e)
-						channel->SendEntity(level->Id(), e->Id, ServerHelper::GetEntityType(e), e->Sprite->Position, user.second.address, user.second.address_size);
+						channel->SendEntity(level->Id(), e->Id, ServerHelper::GetEntityType(e), e->Sprite->Position, e->Sprite->CurrentAnimation, user.second.address, user.second.address_size);
 				}
 			}
 		}, NET_SECONDS_PER_FRAME));
@@ -379,14 +383,14 @@ std::string Server::GetUserAuthCode(std::shared_ptr<qfcbase::Entity> entity)
 	return std::string();
 }
 
-std::shared_ptr<Hero> qfcserver::Server::CreatePlayerEntity(std::string map_name, float x, float y)
+std::shared_ptr<Hero> qfcserver::Server::CreatePlayerEntity(std::string map_name, std::string animation, float x, float y)
 {
 	auto player_entity = std::make_shared<Hero>();
 	player_entity->Id = next_player_id++;
 	// TODO: Add Tracking behaviors
 
 	auto map_file = (std::string)"Content/maps/" + (std::string)map_name + (std::string)".tmx";
-	SetEntityPosition(player_entity, map_file, x, y);
+	SetEntityPosition(player_entity, map_file, animation, x, y);
 
 	return player_entity;
 }

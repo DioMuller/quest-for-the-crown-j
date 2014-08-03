@@ -29,6 +29,7 @@ typedef struct s_client_send_player_position
 {
 	ClientHeader header = { { PacketType::CLIENT_SEND_PLAYER_POSITION } };
 	sf::Vector2i position;
+	int animation;
 } ClientSendPlayerPosition;
 
 // Sends character status on the server.
