@@ -31,7 +31,7 @@ namespace qfcbase
 
 	class BattleScene : public Scene
 	{
-		private:
+		protected:
 			int currentTurn;
 			std::vector<Turn> turns;
 
@@ -40,12 +40,6 @@ namespace qfcbase
 
 			std::vector<std::shared_ptr<BattleEntity>> turnOrder;
 			
-			// To Single Player
-			double time;
-			double lastAttack;
-			BattleAction playerAction;
-			std::deque<std::string> lastMessages;
-			sf::Text text;
 
 		/////////////////////////////////////
 		// Constructors
@@ -58,7 +52,7 @@ namespace qfcbase
 		// Methods
 		/////////////////////////////////////
 		public:
-			void Update(double dt);
+			virtual void Update(double dt);
 			virtual void Draw(sf::RenderWindow* renderer);
 
 			bool PlayerJoin(std::shared_ptr<Entity> hero);
@@ -68,6 +62,6 @@ namespace qfcbase
 			virtual bool SelectAction(std::shared_ptr<BattleEntity> entity);
 			void ExecuteTurn();
 
-			void PrintMessage(std::string message);
+			virtual void PrintMessage(std::string message);
 	};
 }

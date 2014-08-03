@@ -1,7 +1,6 @@
 ﻿<?xml version="1.0" encoding="utf-8"?>
 <Project ToolsVersion="4.0" xmlns="http://schemas.microsoft.com/developer/msbuild/2003">
   <ItemGroup>
-    <ClCompile Include="server-main.cpp" />
     <ClCompile Include="sqlite3.c">
       <Filter>References\SQLite3</Filter>
     </ClCompile>
@@ -10,6 +9,12 @@
     </ClCompile>
     <ClCompile Include="Server.cpp">
       <Filter>Core</Filter>
+    </ClCompile>
+    <ClCompile Include="server-main.cpp">
+      <Filter>Scenes</Filter>
+    </ClCompile>
+    <ClCompile Include="ServerBattle.cpp">
+      <Filter>Scenes</Filter>
     </ClCompile>
   </ItemGroup>
   <ItemGroup>
@@ -30,6 +35,9 @@
     </ClInclude>
     <ClInclude Include="ServerHelper.h">
       <Filter>Helper</Filter>
+    </ClInclude>
+    <ClInclude Include="ServerBattle.h">
+      <Filter>Scenes</Filter>
     </ClInclude>
   </ItemGroup>
   <ItemGroup>
