@@ -3,8 +3,10 @@
 #include "BattleEntity.h"
 #include <SFML/Graphics/Text.hpp>
 
-#define MAX_BATTLE_PLAYERS 4
+#define MAX_BATTLE_PLAYERS 1
 #define MAX_BATTLE_ENEMIES 1
+
+#define MAX_MESSAGES 4
 
 namespace qfcbase
 {
@@ -29,10 +31,6 @@ namespace qfcbase
 	class BattleScene : public Scene
 	{
 		private:
-			double time;
-			double lastAttack;
-			sf::Text text;
-
 			int currentTurn;
 			std::vector<Turn> turns;
 
@@ -42,7 +40,12 @@ namespace qfcbase
 			std::vector<std::shared_ptr<BattleEntity>> turnOrder;
 			
 			// To Single Player
+			double time;
+			double lastAttack;
 			BattleAction playerAction;
+			std::string lastMessages[MAX_MESSAGES]; // TODO: Change to Queue
+			int currentMessage = 0;
+			sf::Text text;
 
 		/////////////////////////////////////
 		// Constructors
@@ -56,12 +59,15 @@ namespace qfcbase
 		/////////////////////////////////////
 		public:
 			void Update(double dt);
-			void Draw(sf::RenderWindow* renderer);
+			virtual void Draw(sf::RenderWindow* renderer);
 
 			bool PlayerJoin(std::shared_ptr<Entity> hero);
 			bool AddMonster(std::shared_ptr<Entity> monster);
 
 			void NextTurn();
-			virtual bool ExecuteTurn(std::shared_ptr<BattleEntity> entity);
+			virtual bool SelectAction(std::shared_ptr<BattleEntity> entity);
+			void ExecuteTurn();
+
+			void PrintMessage(std::string message);
 	};
 }

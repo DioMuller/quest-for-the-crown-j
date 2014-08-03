@@ -52,10 +52,15 @@ void BattleScene::Update(double dt)
 	else if (sf::Keyboard::isKeyPressed(sf::Keyboard::Num3)) playerAction = BattleAction::ITEM;
 	else if (sf::Keyboard::isKeyPressed(sf::Keyboard::Num4)) playerAction = BattleAction::RUN;
 	else playerAction = BattleAction::NOACTION;
+
+	// TODO: Correct Turn Treatment.
+	NextTurn();
 }
 
 void BattleScene::Draw(sf::RenderWindow* renderer)
 {
+	int i;
+
 	// Camera
 	sf::Vector2f screenSize = sf::Vector2f(renderer->getSize().x, renderer->getSize().y);
 	sf::Vector2f cameraPosition = sf::Vector2f(screenSize.x / 2, screenSize.y / 2);
@@ -66,14 +71,21 @@ void BattleScene::Draw(sf::RenderWindow* renderer)
 	std::string str;
 
 	// Battle Info Text
-	sstream << "Battle Time " << (int)time << std::endl
-		<< "Entities " << entities.size();
+	sstream << "1 Attack " << std::endl
+		<< "2 Magic" << std::endl
+		<< "3 Use Potion" << std::endl
+		<< "4 Run" << std::endl;
+
+	for (i = 0; i < MAX_MESSAGES; i++)
+	{
+		sstream << lastMessages[i] << std::endl;
+	}
 	str = sstream.str();
 	text.setString(str);
 	renderer->draw(text);
 
 	//	Players Text
-	for (int i = 0; i < entities.size(); i++)
+	for (i = 0; i < entities.size(); i++)
 	{
 		auto battleEntity = std::static_pointer_cast<BattleEntity>(entities[i]);
 		
@@ -85,8 +97,6 @@ void BattleScene::Draw(sf::RenderWindow* renderer)
 				battleEntity->DrawEntity(renderer, sf::Vector2f(350.0f + (i * 30.0f), 300.0f));
 		}
 	}
-	// TODO: Correct Turn Treatment.
-	NextTurn();
 }
 
 bool BattleScene::PlayerJoin(std::shared_ptr<Entity> hero)
@@ -109,6 +119,8 @@ bool BattleScene::AddMonster(std::shared_ptr<Entity> monster)
 
 void BattleScene::NextTurn()
 {
+	if (entities.size() == 0) return;
+
 	if (turnOrder.size() == 0)
 	{
 		for (auto entity : entities)
@@ -127,14 +139,13 @@ void BattleScene::NextTurn()
 	}
 
 	// TODO: Turn Logic!
-	if (ExecuteTurn(turnOrder[turnOrder.size() - 1])) currentTurn++;
+	if (SelectAction(turnOrder[turnOrder.size() - 1]))
+		ExecuteTurn();
 }
 
-bool BattleScene::ExecuteTurn(std::shared_ptr<BattleEntity> currentEntity)
+bool BattleScene::SelectAction(std::shared_ptr<BattleEntity> currentEntity)
 {
 	std::shared_ptr<BattleEntity> targetEntity;
-	std::shared_ptr<BattleEntity> entity, target;
-	int value;
 
 	if (time - lastAttack < 0.1)
 	{
@@ -174,6 +185,16 @@ bool BattleScene::ExecuteTurn(std::shared_ptr<BattleEntity> currentEntity)
 	}
 
 	turns.push_back(nextTurn);
+
+	return true;
+
+}
+
+void BattleScene::ExecuteTurn()
+{
+	std::shared_ptr<BattleEntity> entity, target;
+	int value;
+
 	turnOrder.pop_back();
 
 	entity = turns[currentTurn].entity;
@@ -182,31 +203,31 @@ bool BattleScene::ExecuteTurn(std::shared_ptr<BattleEntity> currentEntity)
 
 	switch (turns[currentTurn].action)
 	{
-	case BattleAction::ATTACK:
-		Log::Message(entity->category + " attacked " + target->category);
-		Log::Message("Damage: " + std::to_string(value));
+		case BattleAction::ATTACK:
+			PrintMessage(entity->category + " attacked " + target->category);
+			PrintMessage("Damage: " + std::to_string(value));
 
-		target->ChangeHP(-value);
-		break;
-	case BattleAction::SPECIAL:
-		Log::Message(entity->category + " special attacked " + target->category);
-		Log::Message("Damage: " + std::to_string(value));
+			target->ChangeHP(-value);
+			break;
+		case BattleAction::SPECIAL:
+			PrintMessage(entity->category + " special attacked " + target->category);
+			PrintMessage("Damage: " + std::to_string(value));
 
-		target->ChangeHP(-value);
-		break;
-	case BattleAction::ITEM:
-		Log::Message(entity->category + " used potion on " + target->category);
-		Log::Message("Cured: " + std::to_string(value));
+			target->ChangeHP(-value);
+			break;
+		case BattleAction::ITEM:
+			PrintMessage(entity->category + " used potion on " + target->category);
+			PrintMessage("Cured: " + std::to_string(value));
 
-		target->ChangeHP(value);
-		break;
-	case BattleAction::RUN:
-		Log::Message(entity->category + " ran away!");
-		break;
-	case BattleAction::NOACTION:
-		break;
-	default:
-		Log::Warning("Unknown Action!");
+			target->ChangeHP(value);
+			break;
+		case BattleAction::RUN:
+			PrintMessage(entity->category + " ran away!");
+			break;
+		case BattleAction::NOACTION:
+			break;
+		default:
+			Log::Warning("Unknown Action!");
 	}
 
 	if (target->CurrentHP() <= 0)
@@ -217,6 +238,13 @@ bool BattleScene::ExecuteTurn(std::shared_ptr<BattleEntity> currentEntity)
 		else if (target->Type() == BattleEntityType::PLAYER) playerCount--;
 	}
 
-	return true;
+	currentTurn++;
+}
 
+void BattleScene::PrintMessage(std::string message)
+{
+	Log::Message(message);
+	lastMessages[currentMessage] = message;
+	currentMessage++;
+	currentMessage %= MAX_MESSAGES;
 }
