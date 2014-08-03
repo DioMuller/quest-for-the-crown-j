@@ -18,6 +18,7 @@ namespace qfcgame
 		std::stack<std::shared_ptr<qfcbase::Scene>> pastScenes;
 		bool endScene;
 		bool sceneStacked;
+		std::shared_ptr<qfcbase::Entity> player;
 	protected:
 		std::shared_ptr<qfcbase::Scene> currentScene;
 
@@ -41,5 +42,9 @@ namespace qfcgame
 
 		void GoToNeighbour(std::shared_ptr<qfcbase::Entity> entity, qfcbase::Direction direction);
 		void StartConfront(std::shared_ptr<qfcbase::Entity> e1, std::shared_ptr<qfcbase::Entity> e2);
+		void SetPlayer(std::shared_ptr<qfcbase::Entity> player);
+
+	private:
+		void PositionCamera(sf::RenderWindow* renderer, sf::Vector2f cameraPosition);
 	};
 }

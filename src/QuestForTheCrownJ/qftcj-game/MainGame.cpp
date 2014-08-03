@@ -30,7 +30,30 @@ void MainGame::Update(double dt)
 void MainGame::Draw(sf::RenderWindow* renderer)
 {
 	if (currentScene != nullptr)
+	{
+		if (player)
+			PositionCamera(renderer, player->Sprite->Position);
+
 		currentScene->Draw(renderer);
+	}
+}
+
+void MainGame::PositionCamera(sf::RenderWindow* renderer, sf::Vector2f cameraPosition)
+{
+	sf::Vector2f screenSize = sf::Vector2f(renderer->getSize().x, renderer->getSize().y);
+	auto level = std::dynamic_pointer_cast<qfcbase::Level>(currentScene);
+
+	sf::Vector2u mapSize;
+	if (level)
+		mapSize = level->Map()->GetMapSize();
+
+	// Not on the same line because... It won't work. Not sure why.
+	cameraPosition.x = max(cameraPosition.x, screenSize.x / 2);
+	cameraPosition.x = min(cameraPosition.x, mapSize.x - screenSize.x / 2);
+	cameraPosition.y = max(cameraPosition.y, screenSize.y / 2);
+	cameraPosition.y = min(cameraPosition.y, mapSize.y - screenSize.y / 2);
+
+	renderer->setView(sf::View(cameraPosition, screenSize));
 }
 
 /////////////////////////////////////
@@ -53,7 +76,7 @@ void MainGame::LoadScene(std::shared_ptr<Scene> s, bool stack)
 
 void MainGame::UnstackScene(std::shared_ptr<qfcbase::Entity> entity)
 {
-	if (entity != GameEntityFactory::Player)
+	if (entity != player)
 		return;
 
 	if (pastScenes.size() > 0)
@@ -88,6 +111,11 @@ void qfcgame::MainGame::GoToNeighbour(std::shared_ptr<qfcbase::Entity> entity, q
 	// Hot-swap current level content.
 	auto level = std::dynamic_pointer_cast<Level>(entity->scene.lock());
 	level->GoToNeighbour(entity, direction);
+}
+
+void qfcgame::MainGame::SetPlayer(std::shared_ptr<qfcbase::Entity> player)
+{
+	this->player = player;
 }
 
 //void Scene::UnloadScene()

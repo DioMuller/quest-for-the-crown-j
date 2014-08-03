@@ -11,7 +11,6 @@ namespace qfcbase
 			~Hero();
 
 		public:
-			void Draw(sf::RenderWindow* renderer);
 			void CollideWith(std::shared_ptr<Entity> e);
     };
 }

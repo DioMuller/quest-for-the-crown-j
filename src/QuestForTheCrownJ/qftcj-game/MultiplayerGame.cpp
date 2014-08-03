@@ -70,6 +70,9 @@ void MultiplayerGame::Connect(int localPort, std::string auth_token)
 			Log::Debug((std::string)"Created Entity: " + std::to_string(info.entity.entityId) + " " + std::to_string(info.entity.type));
 			auto entity = CreateEntity(info.entity.entityId, info.entity.type, info.position.x, info.position.y);
 			currentScene->AddEntity(entity);
+
+			if (player_entity_id == info.entity.entityId)
+				SetPlayer(entity);
 		}
 		else {
 			if (info.entity.entityId != player_entity_id)
