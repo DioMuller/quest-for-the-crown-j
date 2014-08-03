@@ -4,6 +4,9 @@
     <Filter Include="Forms">
       <UniqueIdentifier>{0f301198-0e35-4584-b584-ea77dcbdb538}</UniqueIdentifier>
     </Filter>
+    <Filter Include="Resources">
+      <UniqueIdentifier>{1ba443b6-c40e-4eac-9c27-68ae8d521563}</UniqueIdentifier>
+    </Filter>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="Login.cpp">
@@ -18,5 +21,10 @@
   </ItemGroup>
   <ItemGroup>
     <EmbeddedResource Include="Login.resx" />
+  </ItemGroup>
+  <ItemGroup>
+    <Image Include="background.png">
+      <Filter>Resources</Filter>
+    </Image>
   </ItemGroup>
 </Project>
