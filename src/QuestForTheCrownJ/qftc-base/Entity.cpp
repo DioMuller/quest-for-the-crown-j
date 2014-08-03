@@ -93,7 +93,7 @@ bool Entity::ValidPosition(sf::Vector2f offset)
 	{
 		auto map = level->Map();
 
-		if (sceneInst->UpdateAborted())
+		if (sceneInst->UpdateAborted()) return true;
 
 		for (auto layer : map->GetLayers())
 		{
