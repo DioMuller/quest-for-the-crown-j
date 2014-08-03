@@ -42,6 +42,7 @@
     <ClInclude Include="NetDefinitions.h">
       <Filter>Definitions</Filter>
     </ClInclude>
+    <ClInclude Include="NetHelper.h" />
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="Hash.cpp">
@@ -56,5 +57,6 @@
     <ClCompile Include="ServerChannel.cpp">
       <Filter>Channels</Filter>
     </ClCompile>
+    <ClCompile Include="NetHelper.cpp" />
   </ItemGroup>
 </Project>

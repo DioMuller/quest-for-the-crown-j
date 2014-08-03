@@ -46,7 +46,7 @@ void Entity::AddBehavior(std::shared_ptr<Behavior> b)
 void Entity::Walk(sf::Vector2f direction, double dt)
 {
 	auto offset = sf::Vector2f((float)(speed * direction.x * dt), (float)(speed * direction.y * dt));
-	if (!ValidPosition(offset))
+	if (!ValidPosition(offset) && (ValidPosition(sf::Vector2f())))
 	{
 		auto check = sf::Vector2f(offset.x, 0);
 		if (ValidPosition(check))

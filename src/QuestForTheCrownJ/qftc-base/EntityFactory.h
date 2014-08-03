@@ -9,6 +9,12 @@ namespace qfcbase
 	class EntityFactory
 	{
 		/////////////////////////////////////
+		// Attributes
+		/////////////////////////////////////
+		private:
+			int _last_entity_id;
+
+		/////////////////////////////////////
 		// Constructors
 		/////////////////////////////////////
 		public:
@@ -20,5 +26,6 @@ namespace qfcbase
 		/////////////////////////////////////
 		public:
 			virtual std::shared_ptr<Entity> GenerateEntity(std::weak_ptr<Scene> scene, std::string name, tmx::MapObject object);
+			int GenerateId();
 	};
 }

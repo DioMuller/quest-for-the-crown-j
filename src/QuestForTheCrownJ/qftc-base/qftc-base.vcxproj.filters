@@ -129,6 +129,9 @@
     <ClCompile Include="BattleEntity.cpp">
       <Filter>Entities</Filter>
     </ClCompile>
+    <ClCompile Include="WatchPosition.cpp">
+      <Filter>Behaviors</Filter>
+    </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="Behavior.h">
@@ -228,6 +231,9 @@
     </ClInclude>
     <ClInclude Include="BattleEntity.h">
       <Filter>Entities</Filter>
+    </ClInclude>
+    <ClInclude Include="WatchPosition.h">
+      <Filter>Behaviors</Filter>
     </ClInclude>
   </ItemGroup>
   <ItemGroup>

@@ -26,7 +26,6 @@ void Scene::Update(double dt)
 {
 	AddRemoveEntities();
 
-
 	// Updates entities.
 	// Changed this so toRemove doesn't fuck up everything.
 	//for (const auto& e : entities)
@@ -56,6 +55,7 @@ bool IsBehind(const std::shared_ptr<Entity>& a, const std::shared_ptr<Entity>& b
 
 void Scene::Draw(sf::RenderWindow* renderer)
 {
+	std::lock_guard<std::mutex> lock(entities_mutex);
 	std::sort(entities.begin(), entities.end(), IsBehind);
 
 	for (const auto& e : entities)
@@ -79,13 +79,31 @@ void Scene::RemoveEntity(std::shared_ptr<Entity> e)
 	if (position != entities.end()) entities.erase(position);
 }
 
+std::vector<std::shared_ptr<Entity>> Scene::GetEntities()
+{
+	return GetEntities([](const std::shared_ptr<Entity>& e) { return true; });
+}
+
 std::vector<std::shared_ptr<Entity>> Scene::GetEntities(std::string category)
 {
 	return GetEntities([category](const std::shared_ptr<Entity>& e){return e->category == category; });
 }
 
+std::shared_ptr<Entity> Scene::GetEntity(int id)
+{
+	std::lock_guard<std::mutex> lock(entities_mutex);
+	for (int i = 0; i < entities.size(); i++)
+	{
+		auto ent = entities[i];
+		if (ent && ent->Id == id)
+			return ent;
+	}
+	return nullptr;
+}
+
 std::vector<std::shared_ptr<Entity>> Scene::GetEntities(std::function<bool(const std::shared_ptr<Entity>&)> predicate)
 {
+	std::lock_guard<std::mutex> lock(entities_mutex);
 	std::vector<std::shared_ptr<Entity>> bar;
 	std::copy_if(entities.begin(), entities.end(), std::back_inserter(bar), predicate);
 	return bar;
@@ -100,6 +118,7 @@ void Scene::OnResume() { }
 
 void qfcbase::Scene::AddRemoveEntities()
 {
+	std::lock_guard<std::mutex> lock(entities_mutex);
 	// Remove entities to be removed.
 	while (!toRemove.empty())
 	{

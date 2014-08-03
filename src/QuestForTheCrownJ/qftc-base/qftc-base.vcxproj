@@ -105,6 +105,7 @@
     <ClCompile Include="Slime.cpp" />
     <ClCompile Include="StringHelper.cpp" />
     <ClCompile Include="tinyxml2\tinyxml2.cpp" />
+    <ClCompile Include="WatchPosition.cpp" />
     <ClCompile Include="Window.cpp" />
   </ItemGroup>
   <ItemGroup>
@@ -141,6 +142,7 @@
     <ClInclude Include="Slime.h" />
     <ClInclude Include="StringHelper.h" />
     <ClInclude Include="tinyxml2\tinyxml2.h" />
+    <ClInclude Include="WatchPosition.h" />
     <ClInclude Include="Window.h" />
   </ItemGroup>
   <ItemGroup Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">

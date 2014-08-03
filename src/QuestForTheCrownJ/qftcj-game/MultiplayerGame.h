@@ -11,6 +11,8 @@ namespace qfcgame
 		////////////////////////////////////////
 	private:
 		qfcnet::ClientChannel clientChannel;
+		int player_entity_id;
+		std::mutex ent_update_mutex;
 
 		/////////////////////////////////////
 		// Constructors
@@ -24,6 +26,7 @@ namespace qfcgame
 		/////////////////////////////////////
 		void Connect(int localPort, std::string auth_token);
 		void RefreshSceneFromServer();
+		std::shared_ptr<qfcbase::Entity> CreateEntity(int id, EntityType type, float x, float y);
 		//void SetEntities(std::vector<ServerEntityInfo> entities);
 	};
 }

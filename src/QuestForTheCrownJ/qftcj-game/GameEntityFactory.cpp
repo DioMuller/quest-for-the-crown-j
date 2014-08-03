@@ -3,6 +3,8 @@
 #include "Slime.h"
 #include "KeyboardInput.h"
 #include "FollowBehavior.h"
+#include "Controllable.h"
+#include <queue>
 
 using namespace qfcbase;
 
@@ -24,28 +26,19 @@ GameEntityFactory::~GameEntityFactory()
 /////////////////////////////////////
 std::shared_ptr<qfcbase::Entity> GameEntityFactory::GenerateEntity(std::weak_ptr<qfcbase::Scene> scene, std::string type, tmx::MapObject object)
 {
-	std::shared_ptr<qfcbase::Entity> entity;
+	std::vector<std::function<std::shared_ptr<Behavior>(std::weak_ptr<Entity>)>> additionalBehaviors;
 
-	if (type == "Enemy" )
+	if (type == "Player")
 	{
-		entity = std::shared_ptr<qfcbase::Entity>(new Slime());
-		entity->AddBehavior(std::make_shared<FollowBehavior>(entity, "GoodGuy", 5, 32 * 4));
-		entity->category = "Enemy";
-		entity->scene = scene;
-	}
-	else if (type == "Player" && !hasPlayer)
-	{
-		entity = std::shared_ptr<qfcbase::Entity>(new Hero());
-		entity->category = "GoodGuy";
-		entity->scene = scene;
-
+		if (hasPlayer) return nullptr;
+		additionalBehaviors.push_back([](std::weak_ptr<Entity> e) {
+			return std::make_shared<qfcgame::Controllable>(e, std::make_shared<qfcgame::KeyboardInput>());
+		});
 		hasPlayer = true;
 	}
-	else
-	{
-		return nullptr;
-	}
 
-	entity->Sprite->Position = object.GetPosition();
-	return entity;
+	auto ent = EntityFactory::GenerateEntity(scene, type, object);
+	for (auto b : additionalBehaviors)
+		ent->AddBehavior(b(ent));
+	return ent;
 }

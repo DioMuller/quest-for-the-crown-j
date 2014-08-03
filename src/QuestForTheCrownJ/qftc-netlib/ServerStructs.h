@@ -11,27 +11,21 @@ SERVER_BATTLE_START,
 SERVER_BATTLE_TURN
 */
 
-typedef struct s_server_entity_info
+typedef struct s_server_send_entity
 {
-	Header header;
+	Header header = { { PacketType::SERVER_SEND_ENTITY } };
+	int map_id;
 	EntityHeader entity;
-	sf::Vector2i position;
-} ServerEntityInfo;
+	sf::Vector2f position;
+	int animation;
+} ServerSendEntity;
 
-typedef struct s_server_player_info
+typedef struct s_server_response_player_info
 {
-	Header header;
-	char map_name[255];
+	Header header = { { PacketType::SERVER_RESPONSE_PLAYER_INFO } };
 	EntityHeader entity;
-	sf::Vector2i position;
-} ServerPlayerInfo;
-
-typedef struct s_server_map_transition
-{
-	Header header;
-	EntityHeader entity;
-	std::string newMap;
-} ServerMapTransition;
+	PlayerFullPosition player;
+} ServerResponsePlayerInfo;
 
 typedef struct s_server_battle_start
 {
