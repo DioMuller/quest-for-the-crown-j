@@ -26,7 +26,7 @@ std::shared_ptr<Entity> GameEntityFactory::GenerateEntity(std::weak_ptr<Scene> s
 {
 	std::vector<std::function<std::shared_ptr<Behavior>(std::weak_ptr<Entity>)>> additionalBehaviors;
 
-	if (hasPlayer) return nullptr;
+	if (type == "Player" && hasPlayer) return nullptr;
 
 	auto ent = EntityFactory::GenerateEntity(scene, type, object);
 
