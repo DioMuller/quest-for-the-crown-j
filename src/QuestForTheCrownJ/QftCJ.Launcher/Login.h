@@ -129,6 +129,7 @@ namespace QftCJLauncher {
 			this->ButtonExit->TabIndex = 18;
 			this->ButtonExit->Text = L"Quit";
 			this->ButtonExit->UseVisualStyleBackColor = false;
+			this->ButtonExit->Click += gcnew System::EventHandler(this, &Login::ButtonExit_Click);
 			// 
 			// tbServerAddress
 			// 
@@ -199,6 +200,7 @@ namespace QftCJLauncher {
 			this->ButtonLogin->TabIndex = 10;
 			this->ButtonLogin->Text = L"Login";
 			this->ButtonLogin->UseVisualStyleBackColor = false;
+			this->ButtonLogin->Click += gcnew System::EventHandler(this, &Login::ButtonLogin_Click);
 			// 
 			// Login
 			// 
