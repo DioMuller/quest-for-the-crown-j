@@ -13,7 +13,7 @@
 #include "Log.h"
 
 std::shared_ptr<qfcgame::MainGame> CreateSinglePlayer();
-std::shared_ptr<qfcgame::MainGame> CreateMultiplayer(std::string auth_token);
+std::shared_ptr<qfcgame::MainGame> CreateMultiplayer(std::string server_addr, std::string auth_token);
 
 int main(int argc, char* argv[])
 {
@@ -34,7 +34,9 @@ int main(int argc, char* argv[])
 	else
 	{
 		std::string auth_token = argv[1];
-		game = CreateMultiplayer(auth_token);
+		std::string server_ip = argc > 2? argv[2] : "127.0.0.1";
+
+		game = CreateMultiplayer(server_ip, auth_token);
 	}
 
 	window->Run(game);
@@ -52,10 +54,10 @@ std::shared_ptr<qfcgame::MainGame> CreateSinglePlayer()
 	return game;
 }
 
-std::shared_ptr<qfcgame::MainGame> CreateMultiplayer(std::string auth_token)
+std::shared_ptr<qfcgame::MainGame> CreateMultiplayer(std::string server_addr, std::string auth_token)
 {
 	auto game = std::make_shared<qfcgame::MultiplayerGame>();
-	game->Connect(0, auth_token);
+	game->Connect(server_addr, auth_token);
 	game->RefreshSceneFromServer();
 	return game;
 }

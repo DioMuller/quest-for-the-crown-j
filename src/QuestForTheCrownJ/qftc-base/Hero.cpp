@@ -54,23 +54,6 @@ Hero::~Hero()
 {
 }
 
-
-void Hero::Draw(sf::RenderWindow* renderer)
-{
-	sf::Vector2f cameraPosition = Sprite->Position;
-	sf::Vector2f screenSize = sf::Vector2f(renderer->getSize().x, renderer->getSize().y);
-	sf::Vector2u mapSize = (dynamic_cast<qfcbase::Level*>(scene.lock().get()))->Map()->GetMapSize();
-
-	// Not on the same line because... It won't work. Not sure why.
-	cameraPosition.x = max(cameraPosition.x, screenSize.x / 2);
-	cameraPosition.x = min(cameraPosition.x, mapSize.x - screenSize.x /2);
-	cameraPosition.y = max(cameraPosition.y, screenSize.y / 2);
-	cameraPosition.y = min(cameraPosition.y, mapSize.y - screenSize.y / 2);
-
-	renderer->setView(sf::View(cameraPosition, screenSize ));
-	Entity::Draw(renderer);
-}
-
 void Hero::CollideWith(std::shared_ptr<Entity> e)
 {
 	if (e->category == "Enemy")
