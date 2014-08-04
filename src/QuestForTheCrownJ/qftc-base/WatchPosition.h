@@ -10,7 +10,14 @@ namespace qfcbase
 	class WatchPosition :
 		public qfcbase::Behavior
 	{
+	public:
+		int max_repeat = 3;
+
 	private:
+		sf::Vector2f last_position;
+		std::string last_animation;
+		int repeat_count = 0;
+
 		double current_time, min_time;
 		std::function<void(std::shared_ptr<Entity>)> onMove;
 

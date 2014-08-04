@@ -28,7 +28,7 @@ std::shared_ptr<Entity> EntityFactory::GenerateEntity(std::weak_ptr<Scene> scene
 	if (name == "Enemy")
 	{
 		entity = std::shared_ptr<qfcbase::Entity>(new Slime());
-		entity->AddBehavior(std::make_shared<FollowBehavior>(entity, "GoodGuy", 5, 32 * 4));
+		entity->AddBehavior<FollowBehavior>("GoodGuy", 5, 32 * 4);
 		entity->category = "Enemy";
 		entity->scene = scene;
 	}

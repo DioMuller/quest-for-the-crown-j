@@ -11,11 +11,12 @@
 #include "Window.h"
 #include "NetDefinitions.h"
 #include "NetHelper.h"
+#include "Walker.h"
 
 using namespace qfcgame;
 using namespace qfcbase;
 
-std::shared_ptr<qfcbase::Entity> MultiplayerGame::CreateEntity(int id, EntityType type, float x, float y)
+std::shared_ptr<qfcbase::Entity> MultiplayerGame::CreateEntity(int id, EntityType type, sf::Vector2f position)
 {
 	std::shared_ptr<qfcbase::Entity> entity;
 
@@ -32,18 +33,18 @@ std::shared_ptr<qfcbase::Entity> MultiplayerGame::CreateEntity(int id, EntityTyp
 	}
 
 	if (entity) {
-		entity->Sprite->Position = sf::Vector2f(x, y);
+		entity->Sprite->Position = position;
 		entity->Id = id;
 	}
 
 	if (player_entity_id == entity->Id)
 	{
-		entity->AddBehavior(std::make_shared<WatchPosition>(entity, [&](std::shared_ptr<Entity> e) {
+		entity->AddBehavior<WatchPosition>([&](std::shared_ptr<Entity> e) {
 			auto scene = std::dynamic_pointer_cast<Level>(e->Scene().lock());
 			if (!scene) return;
 			if (e->Sprite->CurrentAnimation != "")
 				clientChannel.SendPlayerPosition(e->Sprite->CurrentAnimation, scene->Id(), e->Sprite->Position);
-		}, NET_SECONDS_PER_FRAME));
+		}, NET_SECONDS_PER_FRAME);
 	}
 
 	return entity;
@@ -82,8 +83,10 @@ void MultiplayerGame::Connect(std::string server_addr, std::string auth_token)
 
 		if (!updateEntity) {
 			Log::Debug((std::string)"Created Entity: " + std::to_string(data.entity.info.id) + " " + std::to_string(data.entity.info.type));
-			auto entity = CreateEntity(data.entity.info.id, data.entity.info.type, position.x, position.y);
+			auto entity = CreateEntity(data.entity.info.id, data.entity.info.type, position);
 			currentScene->AddEntity(entity);
+
+			entity->AddBehavior<Walker>();
 
 			if (player_entity_id == data.entity.info.id)
 				SetPlayer(entity);
@@ -91,7 +94,11 @@ void MultiplayerGame::Connect(std::string server_addr, std::string auth_token)
 		else {
 			if (data.entity.info.id != player_entity_id)
 			{
-				updateEntity->Sprite->Position = sf::Vector2f(position.x, position.y);
+				auto walker = updateEntity->FindBehavior<Walker>();
+				if (walker)
+					walker->WalkTo(position);
+				else
+					updateEntity->Sprite->Position = sf::Vector2f(position.x, position.y);
 				if(data.entity.view.animation >= 0)
 					updateEntity->Sprite->SetCurrentAnimation(NetHelper::DecodeAnimation(data.entity.view.animation));
 			}

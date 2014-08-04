@@ -23,6 +23,7 @@
     <ClCompile Include="ClientBattle.cpp">
       <Filter>Scenes</Filter>
     </ClCompile>
+    <ClCompile Include="Walker.cpp" />
   </ItemGroup>
   <ItemGroup>
     <Filter Include="Core">
@@ -66,5 +67,6 @@
     <ClInclude Include="ClientBattle.h">
       <Filter>Scenes</Filter>
     </ClInclude>
+    <ClInclude Include="Walker.h" />
   </ItemGroup>
 </Project>

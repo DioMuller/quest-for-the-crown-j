@@ -26,7 +26,7 @@ namespace qfcgame
 		/////////////////////////////////////
 		void Connect(std::string server_addr, std::string auth_token);
 		void RefreshSceneFromServer();
-		std::shared_ptr<qfcbase::Entity> CreateEntity(int id, EntityType type, float x, float y);
+		std::shared_ptr<qfcbase::Entity> CreateEntity(int id, EntityType type, sf::Vector2f position);
 		//void SetEntities(std::vector<ServerEntityInfo> entities);
 	};
 }

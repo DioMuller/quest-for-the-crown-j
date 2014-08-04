@@ -44,7 +44,6 @@ namespace qfcserver {
 			std::map<std::string, LoggedUser> logged_users;
 			std::map<int, std::shared_ptr<ServerLevel>> loaded_levels;
 
-			bool IsPlayer(const qfcbase::Entity& entity);
 			void SendEntityToUsers(int id, EntityType type, int x, int y);
 			bool IsLogged(std::string authKey);
 	};

@@ -91,6 +91,7 @@
     <ClCompile Include="GameEntityFactory.cpp" />
     <ClCompile Include="MainGame.cpp" />
     <ClCompile Include="MultiplayerGame.cpp" />
+    <ClCompile Include="Walker.cpp" />
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="..\qftc-base\KeyboardInput.h" />
@@ -100,6 +101,7 @@
     <ClInclude Include="GameEntityFactory.h" />
     <ClInclude Include="MainGame.h" />
     <ClInclude Include="MultiplayerGame.h" />
+    <ClInclude Include="Walker.h" />
   </ItemGroup>
   <ItemGroup>
     <ProjectReference Include="..\qftc-base\qftc-base.vcxproj">

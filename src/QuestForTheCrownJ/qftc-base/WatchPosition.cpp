@@ -17,11 +17,29 @@ WatchPosition::~WatchPosition()
 
 void WatchPosition::Update(double dt)
 {
-	current_time += dt;
-	if (current_time > min_time)
+	if (current_time > 0)
+		current_time -= dt;
+
+	if (current_time > 0)
+		return;
+
+	auto ent = GetParent().lock();
+	if (!ent)
+		return;
+
+	if (ent->Sprite->Position == last_position && ent->Sprite->CurrentAnimation == last_animation)
 	{
-		current_time = 0;
-		if (auto ent = GetParent().lock())
-			onMove(ent);
+		if (repeat_count >= max_repeat)
+			return;
+		repeat_count++;
 	}
+	else
+	{
+		repeat_count = 0;
+	}
+
+	onMove(ent);
+	current_time = min_time;
+	last_position = ent->Sprite->Position;
+	last_animation = ent->Sprite->CurrentAnimation;
 }

@@ -62,6 +62,23 @@ namespace qfcbase
 
 			void AddBehavior(std::shared_ptr<Behavior> b);
 			void RemoveBehavior(std::shared_ptr<Behavior> b);
+			template<class Behavior, class... ArgTypes>
+			std::shared_ptr<Behavior> AddBehavior(ArgTypes&&... _Args)
+			{
+				auto b = std::make_shared<Behavior>(getptr(), _STD forward<ArgTypes>(_Args)...);
+				AddBehavior(b);
+				return b;
+			}
+			template <typename Behavior>
+			std::shared_ptr<Behavior> FindBehavior()
+			{
+				for (auto& b : behaviors)
+				{
+					if (auto desired = std::dynamic_pointer_cast<Behavior>(b))
+						return desired;
+				}
+				return nullptr;
+			}
 
 			void Walk(sf::Vector2f direction, double dt);
 			virtual void CollideWith(std::shared_ptr<Entity> e);
