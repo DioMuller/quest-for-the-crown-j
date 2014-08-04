@@ -32,6 +32,7 @@ namespace qfcbase
 			LevelCollection* collectionParent;
 			std::string bgm;
 			std::string title;
+			bool playBGM;
 
 		/////////////////////////////////////
 		// "Properties"
@@ -76,7 +77,7 @@ namespace qfcbase
 		// Constructors
 		/////////////////////////////////////
 		public:
-			Level(std::weak_ptr<Game> game, int id);
+			Level(std::weak_ptr<Game> game, int id, bool playBGM = true);
 			~Level();
 
 		/////////////////////////////////////

@@ -5,8 +5,10 @@
 
 using namespace qfcbase;
 
-Level::Level(std::weak_ptr<Game> game, int id) : Scene(game)
+Level::Level(std::weak_ptr<Game> game, int id, bool playBGM) : Scene(game)
 {
+	this->id = id;
+	this->playBGM = playBGM;
 }
 
 
@@ -70,7 +72,7 @@ void Level::LoadMap(std::string tmxFile)
 			SetNeighbor((Direction)i, info->neighbours[i]);
 		}
 
-		AudioPlayer::PlayBGM(bgm);
+		if(playBGM) AudioPlayer::PlayBGM(bgm);
 	}
 
 	auto layers = map->GetLayers();
@@ -90,5 +92,5 @@ void Level::LoadMap(std::string tmxFile)
 
 void Level::OnResume()
 {
-	AudioPlayer::PlayBGM(bgm);
+	if (playBGM) AudioPlayer::PlayBGM(bgm);
 }
