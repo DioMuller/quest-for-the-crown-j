@@ -26,6 +26,11 @@ typedef struct s_client_send_player_position
 	EntityView view;
 } ClientSendPlayerPosition;
 
+typedef struct c_client_send_disconnect
+{
+	ClientHeader header = { { PacketType::CLIENT_SEND_DISCONNECT } };
+} ClientSendDisconnect;
+
 // Sends character status on the server.
 typedef struct s_client_character_status
 {

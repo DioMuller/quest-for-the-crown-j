@@ -14,6 +14,7 @@
 #include "ClientStructs.h"
 #include "Definitions.h"
 #include "SHA1.h"
+#include "Scene.h"
 #include "LevelLoader.h"
 #include "Slime.h"
 #include "ServerEntityFactory.h"
@@ -41,6 +42,7 @@ Server::Server(int port)
 		user.address = sender;
 		user.address_size = sender_size;
 		logged_users[header.authKey] = user;
+		user.away_time = 0;
 	};
 	channel->handleLoginInfo = [this](const LauncherLoginInfo& info, std::shared_ptr<sockaddr_in> sender, int sender_size) {
 		return HandleLoginInfo(info, sender, sender_size);
@@ -75,6 +77,25 @@ Server::Server(int port)
 	channel->handleRequestEntities = [this](const ClientRequestEntities& data) {
 		auto user = logged_users[data.header.authKey];
 		SendEntitiesToPlayer(user);
+	};
+	channel->handlePlayerDisconnect = [this](const ClientSendDisconnect& data) {
+		std::string auth_key = data.header.authKey;
+		DisconnectPlayer(auth_key);
+
+	};
+	channel->handleConnectionClose = [this](std::shared_ptr<sockaddr_in> addr) {
+		std::string user_code;
+		for (auto usr : logged_users)
+		{
+			if (usr.second.address == addr)
+			{
+				user_code = usr.first;
+				break;
+			}
+		}
+
+		if (!user_code.empty())
+			DisconnectPlayer(user_code);
 	};
 }
 
@@ -114,35 +135,21 @@ void Server::UpdateLoop()
 	}
 }
 
-void sqlite3_exec(sqlite3* db, std::string sql, const std::function<void(int argc, char** argv, char** azColName)>& callback)
-{
-	char *zErrMsg = 0;
-	int res = sqlite3_exec(db, sql.c_str(), [](void* data, int argc, char** argv, char** azColName) {
-		auto c = (std::function<void(int argc, char** argv, char** azColName)>*)data;
-		if (c) (*c)(argc, argv, azColName);
-		return 0;
-	}, (void*)&callback, &zErrMsg);
-	if (res != SQLITE_OK)
-	{
-		auto ex = std::exception(zErrMsg);
-		sqlite3_free(zErrMsg);
-		throw ex;
-	}
-}
-
 #pragma region Game
-void qfcserver::Server::Update(double delta)
+void Server::Update(double delta)
 {
+	CheckPlayersTimeout(delta);
+
 	for (auto& level : loaded_levels)
 		level.second->Update(delta);
 }
 
-void qfcserver::Server::StartConfront(std::shared_ptr<qfcbase::Entity> e1, std::shared_ptr<qfcbase::Entity> e2)
+void Server::StartConfront(std::shared_ptr<qfcbase::Entity> e1, std::shared_ptr<qfcbase::Entity> e2)
 {
 
 }
 
-void qfcserver::Server::GoToNeighbour(std::shared_ptr<qfcbase::Entity> entity, qfcbase::Direction direction)
+void Server::GoToNeighbour(std::shared_ptr<qfcbase::Entity> entity, qfcbase::Direction direction)
 {
 	auto level = std::dynamic_pointer_cast<Level>(entity->scene.lock());
 	auto neighbor = LevelCollection::GetNeighbour(level->Id(), direction);
@@ -154,8 +161,7 @@ void qfcserver::Server::GoToNeighbour(std::shared_ptr<qfcbase::Entity> entity, q
 	SetEntityPosition(entity, neighbor->levelId, entity->Sprite->CurrentAnimation, entityPosition.x, entityPosition.y);
 }
 
-
-void qfcserver::Server::UnstackScene(std::shared_ptr<qfcbase::Entity> entity)
+void Server::UnstackScene(std::shared_ptr<qfcbase::Entity> entity)
 {
 
 }
@@ -184,7 +190,7 @@ LauncherLoginResponse Server::HandleLoginInfo(const LauncherLoginInfo& login_inf
 	getUserSql << "SELECT id, player_id, password FROM users WHERE login=\'" << login_info.login << "\'";
 
 	// Buscando usuário já existente
-	sqlite3_exec(db, getUserSql.str(), [&](int argc, char** argv, char** azColName) {
+	db_exec(getUserSql.str(), [&](int argc, char** argv, char** azColName) {
 		user_exists = true;
 
 		// Validando senha
@@ -196,7 +202,7 @@ LauncherLoginResponse Server::HandleLoginInfo(const LauncherLoginInfo& login_inf
 
 		// TODO: Remove unused maps table?
 		// Buscando informações do usuário
-		sqlite3_exec(db, std::string("SELECT map, x, y FROM players WHERE players.id = ") + argv[1], [&](int c, char** v, char** n) {
+		db_exec(std::string("SELECT map, x, y FROM players WHERE players.id = ") + argv[1], [&](int c, char** v, char** n) {
 			playerEntity = CreatePlayerEntity(std::atoi(v[0]), "stopped_down", std::atoi(v[1]), std::atoi(v[2]));
 			map_id = std::atoi(v[0]);
 		});
@@ -212,12 +218,12 @@ LauncherLoginResponse Server::HandleLoginInfo(const LauncherLoginInfo& login_inf
 
 		std::stringstream createPlayerSql;
 		createPlayerSql << "INSERT INTO players(map, x, y) VALUES(" << map_id << ", " << initialPosX << ", " << initialPosY << ")";
-		sqlite3_exec(db, createPlayerSql.str(), nullptr);
+		db_exec(createPlayerSql.str(), nullptr);
 		playerId = sqlite3_last_insert_rowid(db);
 
 		std::stringstream createUserSql;
 		createUserSql << "INSERT INTO users(login, password, player_id) VALUES(\'" << login_info.login << "\', \'" << login_info.hashedPassword << "\', " << playerId << ")";
-		sqlite3_exec(db, createUserSql.str(), nullptr);
+		db_exec(createUserSql.str(), nullptr);
 		userId = sqlite3_last_insert_rowid(db);
 		resp.authenticated = true;
 
@@ -254,7 +260,7 @@ LauncherLoginResponse Server::HandleLoginInfo(const LauncherLoginInfo& login_inf
 	return resp;
 }
 
-void qfcserver::Server::HandleRequestPlayerInfo(LoggedUser& user)
+void Server::HandleRequestPlayerInfo(LoggedUser& user)
 {
 	if (!user.game_entity)
 		return;
@@ -270,7 +276,7 @@ void qfcserver::Server::HandleRequestPlayerInfo(LoggedUser& user)
 	channel->Send(resp, user.address, user.address_size);
 }
 
-void qfcserver::Server::SetEntityPosition(std::shared_ptr<qfcbase::Entity> entity, int map_id, std::string animation, float x, float y)
+void Server::SetEntityPosition(std::shared_ptr<qfcbase::Entity> entity, int map_id, std::string animation, float x, float y)
 {
 	auto find_entity = [entity](const std::shared_ptr<Entity>& e){ return e == entity; };
 
@@ -325,7 +331,7 @@ void qfcserver::Server::SetEntityPosition(std::shared_ptr<qfcbase::Entity> entit
 	}
 }
 
-void qfcserver::Server::SendEntitiesToPlayer(LoggedUser user)
+void Server::SendEntitiesToPlayer(LoggedUser user)
 {
 	//user._thread.Post([this, user](){
 	auto scene = user.game_entity->Scene().lock();
@@ -346,7 +352,7 @@ void qfcserver::Server::SendEntitiesToPlayer(LoggedUser user)
 #pragma endregion
 
 #pragma region EntityFactory
-std::shared_ptr<Entity> qfcserver::Server::GenerateEntity(std::weak_ptr<Scene> scene, std::string name, tmx::MapObject object)
+std::shared_ptr<Entity> Server::GenerateEntity(std::weak_ptr<Scene> scene, std::string name, tmx::MapObject object)
 {
 	if (name == "Player")
 		return nullptr;
@@ -372,6 +378,21 @@ std::shared_ptr<Entity> qfcserver::Server::GenerateEntity(std::weak_ptr<Scene> s
 #pragma endregion
 
 #pragma region Helpers
+void Server::CheckPlayersTimeout(double dt)
+{
+	std::vector<std::string> timeout_players;
+
+	for (auto& user : logged_users)
+	{
+		user.second.away_time += dt;
+		if (user.second.away_time > 10)
+			timeout_players.push_back(user.first);
+	}
+
+	for (auto& user_code : timeout_players)
+		DisconnectPlayer(user_code);
+}
+
 std::string Server::GetUserAuthCode(std::shared_ptr<qfcbase::Entity> entity)
 {
 	for (auto& user : logged_users) {
@@ -381,7 +402,7 @@ std::string Server::GetUserAuthCode(std::shared_ptr<qfcbase::Entity> entity)
 	return std::string();
 }
 
-std::shared_ptr<Hero> qfcserver::Server::CreatePlayerEntity(int map_id, std::string animation, float x, float y)
+std::shared_ptr<Hero> Server::CreatePlayerEntity(int map_id, std::string animation, float x, float y)
 {
 	auto player_entity = std::make_shared<Hero>();
 	player_entity->Id = GenerateId();
@@ -390,9 +411,52 @@ std::shared_ptr<Hero> qfcserver::Server::CreatePlayerEntity(int map_id, std::str
 	return player_entity;
 }
 
-bool qfcserver::Server::IsLogged(std::string authKey)
+bool Server::IsLogged(std::string authKey)
 {
 	return logged_users.count(authKey) > 0;
 }
 
+void Server::db_exec(std::string sql, const std::function<void(int argc, char** argv, char** azColName)>& callback)
+{
+	char *zErrMsg = 0;
+	int res = sqlite3_exec(db, sql.c_str(), [](void* data, int argc, char** argv, char** azColName) {
+		auto c = (std::function<void(int argc, char** argv, char** azColName)>*)data;
+		if (c) (*c)(argc, argv, azColName);
+		return 0;
+	}, (void*)&callback, &zErrMsg);
+	if (res != SQLITE_OK)
+	{
+		auto ex = std::exception(zErrMsg);
+		sqlite3_free(zErrMsg);
+		throw ex;
+	}
+}
+
+void Server::DisconnectPlayer(std::string auth_key)
+{
+	auto user = logged_users[auth_key];
+	SavePlayer(user);
+	if (user.game_entity)
+	{
+		ServerSendEntityRemoved broadcast_data;
+		broadcast_data.entity_id = user.game_entity->Id;
+		for (auto usr : logged_users)
+			channel->Send(broadcast_data, usr.second.address, usr.second.address_size);
+
+		if (auto level = user.game_entity->Scene().lock())
+			level->RemoveEntity(user.game_entity);
+	}
+	logged_users.erase(auth_key);
+}
+
+void Server::SavePlayer(LoggedUser user)
+{
+	auto pos = user.game_entity->Sprite->Position;
+
+	std::ostringstream update_builder;
+	update_builder << "UPDATE players set map=" << user.map_id << ", x=" << static_cast<int>(pos.x) << ", y=" << static_cast<int>(pos.y) << " ";
+	update_builder << "WHERE id=" << user.player_id;
+
+	db_exec(update_builder.str(), [&](int c, char** v, char** n) { });
+}
 #pragma endregion

@@ -18,6 +18,7 @@ namespace qfcnet
 	public:
 		std::string auth_token;
 		std::function<void(ServerSendEntity&)> onEntity;
+		std::function<void(ServerSendEntityRemoved&)> onEntityRemoved;
 
 	public:
 		ClientChannel();

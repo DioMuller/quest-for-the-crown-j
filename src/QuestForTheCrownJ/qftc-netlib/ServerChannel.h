@@ -17,17 +17,20 @@ namespace qfcnet
 		std::function<void(const ClientRequestPlayerInfo&)> handleRequestPlayer;
 		std::function<void(const ClientSendPlayerPosition&)> handlePlayerPosition;
 		std::function<void(const ClientRequestEntities&)> handleRequestEntities;
+		std::function<void(const ClientSendDisconnect&)> handlePlayerDisconnect;
+		std::function<void(std::shared_ptr<sockaddr_in>)> handleConnectionClose;
 
 	public:
 		ServerChannel(int port);
 		~ServerChannel();
 
 		template <typename T>
-		void Send(T data, std::shared_ptr<sockaddr_in> addr, int addr_size)
+		int Send(T data, std::shared_ptr<sockaddr_in> addr, int addr_size)
 		{
 			int r = sendto(channel_socket, (char*)&data, sizeof(data), 0, (SOCKADDR*)addr.get(), addr_size);
 			if (r <= 0)
 				Log::Error("Send error: " + std::to_string(WSAGetLastError()));
+			return r;
 		}
 
 		void SendEntity(int map_id, int id, EntityType type, sf::Vector2f pos, std::string animation, std::shared_ptr<sockaddr_in> addr, int addr_size);

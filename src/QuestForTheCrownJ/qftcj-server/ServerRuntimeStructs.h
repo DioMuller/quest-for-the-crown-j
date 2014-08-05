@@ -9,5 +9,5 @@ typedef struct s_logged_user
 	std::shared_ptr<qfcbase::Entity> game_entity;
 	std::shared_ptr<sockaddr_in> address;
 	int address_size;
-	// last command date time
+	double away_time;
 } LoggedUser;

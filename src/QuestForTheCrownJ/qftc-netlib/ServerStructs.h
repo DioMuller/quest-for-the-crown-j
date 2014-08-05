@@ -17,6 +17,12 @@ typedef struct s_server_send_entity
 	EntityInfo entity;
 } ServerSendEntity;
 
+typedef struct s_server_send_entity_removed
+{
+	Header header = { { PacketType::SERVER_SEND_ENTITY_REMOVED } };
+	int entity_id;
+} ServerSendEntityRemoved;
+
 // TODO: Remove duplicated struct
 typedef struct s_server_response_player_info
 {

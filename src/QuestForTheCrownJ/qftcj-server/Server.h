@@ -17,6 +17,9 @@ namespace qfcserver {
 	{
 		public:
 			Server(int port);
+
+			void DisconnectPlayer(std::string auth_key);
+
 			~Server();
 
 			void Run();
@@ -29,6 +32,9 @@ namespace qfcserver {
 		private:
 			sqlite3* db;
 			std::shared_ptr<qfcnet::ServerChannel> channel;
+			std::map<std::string, LoggedUser> logged_users;
+			std::map<int, std::shared_ptr<ServerLevel>> loaded_levels;
+
 			void UpdateLoop();
 
 			LoggedUser GetUserInfo(const qfcbase::Entity& entity);
@@ -41,10 +47,11 @@ namespace qfcserver {
 			void HandleRequestPlayerInfo(LoggedUser& user);
 			std::string GetUserAuthCode(std::shared_ptr<qfcbase::Entity> entity);
 			void SendEntitiesToPlayer(LoggedUser user);
-			std::map<std::string, LoggedUser> logged_users;
-			std::map<int, std::shared_ptr<ServerLevel>> loaded_levels;
 
 			void SendEntityToUsers(int id, EntityType type, int x, int y);
 			bool IsLogged(std::string authKey);
+			void db_exec(std::string sql, const std::function<void(int argc, char** argv, char** azColName)>& callback);
+			void CheckPlayersTimeout(double dt);
+			void SavePlayer(LoggedUser user);
 	};
 }

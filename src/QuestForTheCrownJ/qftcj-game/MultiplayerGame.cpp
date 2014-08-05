@@ -99,10 +99,15 @@ void MultiplayerGame::Connect(std::string server_addr, std::string auth_token)
 					walker->WalkTo(position);
 				else
 					updateEntity->Sprite->Position = sf::Vector2f(position.x, position.y);
-				if(data.entity.view.animation >= 0)
+				if (data.entity.view.animation >= 0)
 					updateEntity->Sprite->SetCurrentAnimation(NetHelper::DecodeAnimation(data.entity.view.animation));
 			}
 		}
+	};
+	clientChannel.onEntityRemoved = [this](const ServerSendEntityRemoved data) {
+		auto removedEntity = currentScene->GetEntity(data.entity_id);
+		if (removedEntity)
+			currentScene->RemoveEntity(removedEntity);
 	};
 }
 

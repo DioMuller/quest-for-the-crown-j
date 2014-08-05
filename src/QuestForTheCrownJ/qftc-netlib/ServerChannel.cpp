@@ -149,6 +149,22 @@ void ServerChannel::Listen(int port)
 				handlePlayerPosition(*data);
 			}
 			break;
+		case PacketType::CLIENT_SEND_DISCONNECT:
+			if (size != sizeof(ClientSendDisconnect))
+			{
+				Log::Error("Invalid packet size for CLIENT_SEND_DISCONNECT: " + size);
+				continue;
+			}
+			if (!handlePlayerDisconnect)
+			{
+				Log::Debug("No handler for CLIENT_SEND_DISCONNECT");
+				continue;
+			}
+			else {
+				auto data = (ClientSendDisconnect*)buffer;
+				handlePlayerDisconnect(*data);
+			}
+			break;
 		default:
 			Log::Debug(std::string("Unknown message type: ") + std::to_string(clientHeader->header.type));
 			break;
@@ -180,5 +196,7 @@ void ServerChannel::SendEntity(int map_id, int id, EntityType type, sf::Vector2f
 	data.entity.location.map_id = map_id;
 	data.entity.location.position = pos;
 	data.entity.view.animation = NetHelper::EncodeAnimation(animation);
-	Send(data, addr, addr_size);
+	int r = Send(data, addr, addr_size);
+	if (r == WSAECONNRESET)
+		handleConnectionClose(addr);
 }

@@ -24,6 +24,10 @@ ClientChannel::~ClientChannel()
 {
 	stop_listen = true;
 
+	ClientSendDisconnect send;
+	strcpy_s(send.header.authKey, sizeof(send.header.authKey), auth_token.c_str());
+	Send(send);
+
 	if (channel_socket)
 		closesocket(channel_socket);
 
@@ -133,11 +137,28 @@ void qfcnet::ClientChannel::Listen()
 				onEntity(*info);
 			}
 			break;
+		case PacketType::SERVER_SEND_ENTITY_REMOVED:
+			if (size != sizeof(ServerSendEntityRemoved))
+			{
+				Log::Error((std::string)"Invalid packet size for SERVER_SEND_ENTITY_REMOVED: " + std::to_string(size));
+				continue;
+			}
+			if (!onEntityRemoved)
+			{
+				Log::Debug("No handler for SERVER_SEND_ENTITY_REMOVED");
+				continue;
+			}
+			else {
+				auto info = (ServerSendEntityRemoved*)buffer;
+				onEntityRemoved(*info);
+			}
+			break;
 		default:
 			Log::Debug((std::string)"Unknown message type: " + std::to_string(header->type));
 			break;
 		}
 	}
+
 	WSACleanup();
 }
 
