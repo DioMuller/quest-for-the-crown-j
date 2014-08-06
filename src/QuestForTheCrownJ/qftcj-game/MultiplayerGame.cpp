@@ -12,6 +12,7 @@
 #include "NetDefinitions.h"
 #include "NetHelper.h"
 #include "Walker.h"
+#include "ClientBattle.h"
 
 using namespace qfcgame;
 using namespace qfcbase;
@@ -124,4 +125,18 @@ void MultiplayerGame::RefreshSceneFromServer()
 	}, [&](std::exception& ex) {
 		Log::Error(ex.what());
 	});
+}
+
+void MultiplayerGame::StartConfront(std::shared_ptr<Entity> e1, std::shared_ptr<Entity> e2)
+{
+	auto e1Scene = e1->scene.lock();
+	if (!e1Scene)
+		return;
+
+	e1Scene->RemoveEntity(e2);
+	auto battle = std::make_shared<ClientBattle>(getptr());
+
+	if (battle->PlayerJoin(e1) &&
+		battle->AddMonster(e2))
+		LoadScene(battle, true);
 }

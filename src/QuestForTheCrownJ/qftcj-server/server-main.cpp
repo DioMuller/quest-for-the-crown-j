@@ -16,6 +16,10 @@ int main(int argc, char* argv[])
 	Log::SetVerboseLevel(LOG_ALL);
 	Log::Debug("Initializing game server");
 
+	// Disables SFML errors messages, since we don't want all the "Could not load image" errors.
+	std::cerr.rdbuf(0);
+	sf::err().rdbuf(0);
+
 	while (true)
 	{
 		try

@@ -10,12 +10,10 @@
     <ClCompile Include="Server.cpp">
       <Filter>Core</Filter>
     </ClCompile>
-    <ClCompile Include="server-main.cpp">
-      <Filter>Scenes</Filter>
-    </ClCompile>
     <ClCompile Include="ServerBattle.cpp">
       <Filter>Scenes</Filter>
     </ClCompile>
+    <ClCompile Include="server-main.cpp" />
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="sqlite3.h">

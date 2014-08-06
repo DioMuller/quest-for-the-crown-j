@@ -28,5 +28,6 @@ namespace qfcgame
 		void RefreshSceneFromServer();
 		std::shared_ptr<qfcbase::Entity> CreateEntity(int id, EntityType type, sf::Vector2f position);
 		//void SetEntities(std::vector<ServerEntityInfo> entities);
+		void StartConfront(std::shared_ptr<qfcbase::Entity> e1, std::shared_ptr<qfcbase::Entity> e2);
 	};
 }
