@@ -1,5 +1,6 @@
 #pragma once
 #include "MainGame.h"
+#include "StructBase.h"
 
 namespace qfcgame
 {
@@ -26,7 +27,7 @@ namespace qfcgame
 		/////////////////////////////////////
 		void Connect(std::string server_addr, std::string auth_token);
 		void RefreshSceneFromServer();
-		std::shared_ptr<qfcbase::Entity> CreateEntity(int id, EntityType type, sf::Vector2f position);
+		std::shared_ptr<qfcbase::Entity> CreateEntity(EntityHeader info, sf::Vector2f position);
 		//void SetEntities(std::vector<ServerEntityInfo> entities);
 		void StartConfront(std::shared_ptr<qfcbase::Entity> e1, std::shared_ptr<qfcbase::Entity> e2);
 	};

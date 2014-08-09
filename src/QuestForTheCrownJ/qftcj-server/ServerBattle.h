@@ -3,7 +3,7 @@
 
 namespace qfcserver
 {
-	class ServerBattle : qfcbase::BattleScene
+	class ServerBattle : public qfcbase::BattleScene
 	{
 		/////////////////////////////////////
 		// Constructors

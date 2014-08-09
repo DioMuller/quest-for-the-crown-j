@@ -132,6 +132,7 @@ bool Entity::ValidPosition(sf::Vector2f offset)
 	for (auto e : entCollisions)
 	{
 		this->CollideWith(e);
+		e->CollideWith(getptr());
 	}
 
 	return entCollisions.size() <= 0;

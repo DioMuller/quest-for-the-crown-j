@@ -1,5 +1,7 @@
 #pragma once
 #include <WinSock2.h>
+#include <vector>
+#include <mutex>
 
 #include "sqlite3.h"
 #include "ServerChannel.h"
@@ -9,6 +11,7 @@
 #include "Hero.h"
 #include "ServerRuntimeStructs.h"
 #include "EntityFactory.h"
+#include "ServerBattle.h"
 
 namespace qfcserver {
 	class Server :
@@ -34,10 +37,11 @@ namespace qfcserver {
 			std::shared_ptr<qfcnet::ServerChannel> channel;
 			std::map<std::string, LoggedUser> logged_users;
 			std::map<int, std::shared_ptr<ServerLevel>> loaded_levels;
+			std::map<int/*EntityID*/, std::shared_ptr<qfcserver::ServerBattle>> entity_battles;
+			std::vector<std::shared_ptr<qfcserver::ServerBattle>> ongoing_battles;
+			std::mutex mtx_battles;
 
 			void UpdateLoop();
-
-			LoggedUser GetUserInfo(const qfcbase::Entity& entity);
 
 			LauncherLoginResponse HandleLoginInfo(const LauncherLoginInfo& login_info, std::shared_ptr<sockaddr_in> sender, int sender_size);
 			std::shared_ptr<qfcbase::Hero> CreatePlayerEntity(int map_id, std::string animation, float x, float y);
@@ -53,5 +57,7 @@ namespace qfcserver {
 			void db_exec(std::string sql, const std::function<void(int argc, char** argv, char** azColName)>& callback);
 			void CheckPlayersTimeout(double dt);
 			void SavePlayer(LoggedUser user);
+			void AddToBattle(std::shared_ptr<ServerBattle> battle, std::shared_ptr<qfcbase::Entity> entity);
+			std::shared_ptr<ServerLevel> LoadLevel(int map_id);
 	};
 }

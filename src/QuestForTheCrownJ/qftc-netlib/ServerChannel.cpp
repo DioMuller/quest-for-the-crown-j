@@ -7,6 +7,7 @@
 #include "NetDefinitions.h"
 #include "AuthStructs.h"
 #include "NetHelper.h"
+#include "..\qftcj-server\ServerHelper.h"
 
 using namespace qfcbase;
 using namespace qfcnet;
@@ -70,7 +71,9 @@ void ServerChannel::Listen(int port)
 
 		if (size < 0)
 		{
-			Log::Error(std::string("Error on receive: ") + std::to_string(WSAGetLastError()));
+			auto error = WSAGetLastError();
+			if (error != 10054)
+				Log::Error(std::string("Error on receive: ") + std::to_string(error));
 			std::this_thread::sleep_for(std::chrono::microseconds((long long)((NET_SECONDS_PER_FRAME)* (1000 * 1000))));
 			continue;
 		}
@@ -188,14 +191,15 @@ void ServerChannel::Listen(int port)
 	}
 }
 
-void ServerChannel::SendEntity(int map_id, int id, EntityType type, sf::Vector2f pos, std::string animation, std::shared_ptr<sockaddr_in> addr, int addr_size)
+void ServerChannel::SendEntity(std::shared_ptr<Level> level, std::shared_ptr<Entity> entity, std::shared_ptr<sockaddr_in> addr, int addr_size)
 {
 	ServerSendEntity data;
-	data.entity.info.type = type;
-	data.entity.info.id = id;
-	data.entity.location.map_id = map_id;
-	data.entity.location.position = pos;
-	data.entity.view.animation = NetHelper::EncodeAnimation(animation);
+	data.entity.info.type = ServerHelper::GetEntityType(entity);
+	data.entity.info.id = entity->Id;
+	data.entity.info.category = NetHelper::EncodeCategory(entity->category);
+	data.entity.location.map_id = level->Id();
+	data.entity.location.position = entity->Sprite->Position;
+	data.entity.view.animation = NetHelper::EncodeAnimation(entity->Sprite->CurrentAnimation);
 	int r = Send(data, addr, addr_size);
 	if (r == WSAECONNRESET)
 		handleConnectionClose(addr);

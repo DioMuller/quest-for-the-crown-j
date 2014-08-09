@@ -65,6 +65,7 @@ Server::Server(int port)
 		broadcast_data.entity.view.animation = NetHelper::EncodeAnimation(user.game_entity->Sprite->CurrentAnimation);
 		broadcast_data.entity.info.id = user.game_entity->Id;
 		broadcast_data.entity.info.type = ServerHelper::GetEntityType(user.game_entity);
+		broadcast_data.entity.info.category = NetHelper::EncodeCategory(user.game_entity->category);
 		broadcast_data.entity.location.map_id = std::dynamic_pointer_cast<Level>(user.game_entity->Scene().lock())->Id();
 		broadcast_data.entity.location.position = user.game_entity->Sprite->Position;
 
@@ -140,13 +141,48 @@ void Server::Update(double delta)
 {
 	CheckPlayersTimeout(delta);
 
+	for (auto& battle : ongoing_battles)
+		battle->Update(delta);
+
 	for (auto& level : loaded_levels)
 		level.second->Update(delta);
 }
 
 void Server::StartConfront(std::shared_ptr<qfcbase::Entity> e1, std::shared_ptr<qfcbase::Entity> e2)
 {
+	std::lock_guard<std::mutex> lock(mtx_battles);
+	Log::Debug((std::string)"Battle: " + std::to_string(e1->Id) + " VS " + std::to_string(e2->Id));
 
+	std::shared_ptr<ServerBattle> battle;
+	if (entity_battles.count(e1->Id) > 0) {
+		battle = entity_battles[e1->Id];
+		if (entity_battles.count(e2->Id) <= 0)
+			AddToBattle(battle, e2);
+	}
+	else if (entity_battles.count(e2->Id) > 0) {
+		battle = entity_battles[e2->Id];
+		if (entity_battles.count(e1->Id) <= 0)
+			AddToBattle(battle, e1);
+	}
+	else {
+		battle = std::make_shared<ServerBattle>(getptr());
+		AddToBattle(battle, e1);
+		AddToBattle(battle, e2);
+
+		ongoing_battles.push_back(battle);
+		entity_battles[e1->Id] = battle;
+		entity_battles[e2->Id] = battle;
+	}
+
+	e2->Scene().lock()->RemoveEntity(e2);
+}
+
+void Server::AddToBattle(std::shared_ptr<ServerBattle> battle, std::shared_ptr<Entity> entity)
+{
+	if (entity->category == "GoodGuy")
+		battle->PlayerJoin(entity);
+	else
+		battle->AddMonster(entity);
 }
 
 void Server::GoToNeighbour(std::shared_ptr<qfcbase::Entity> entity, qfcbase::Direction direction)
@@ -163,7 +199,22 @@ void Server::GoToNeighbour(std::shared_ptr<qfcbase::Entity> entity, qfcbase::Dir
 
 void Server::UnstackScene(std::shared_ptr<qfcbase::Entity> entity)
 {
+	std::lock_guard<std::mutex> lock(mtx_battles);
+	if (entity_battles.count(entity->Id) <= 0)
+		return;
 
+	auto battle = entity_battles[entity->Id];
+	auto found = battle->GetEntities([entity](std::shared_ptr<Entity> e) {
+		auto bEnt = std::dynamic_pointer_cast<BattleEntity>(e);
+		return bEnt->GetParent() == entity;
+	});
+	for (auto bEnt : found)
+		battle->RemoveEntity(bEnt);
+	if (battle->IsEmpty())
+	{
+		entity_battles.erase(entity->Id);
+		ongoing_battles.erase(std::remove(ongoing_battles.begin(), ongoing_battles.end(), battle), ongoing_battles.end());
+	}
 }
 #pragma endregion
 
@@ -172,7 +223,7 @@ LauncherLoginResponse Server::HandleLoginInfo(const LauncherLoginInfo& login_inf
 {
 	// Log
 	std::stringstream logBuilder;
-	logBuilder << "Login: " << login_info.login << " (" << login_info.hashedPassword << ")";
+	logBuilder << "Login: " << login_info.login;
 	Log::Message(logBuilder.str());
 
 	s_launcher_login_response resp;
@@ -267,9 +318,9 @@ void Server::HandleRequestPlayerInfo(LoggedUser& user)
 
 	ServerResponsePlayerInfo resp;
 	auto pos = user.game_entity->Sprite->Position;
-	// TODO: Player entity types
-	resp.entity.info.type = EntityType::ENTITY_HERO;
+	resp.entity.info.type = ServerHelper::GetEntityType(user.game_entity);
 	resp.entity.info.id = user.game_entity->Id;
+	resp.entity.info.category = NetHelper::EncodeCategory(user.game_entity->category);
 	resp.entity.location.map_id = user.map_id;
 	resp.entity.location.position = pos;
 
@@ -304,17 +355,8 @@ void Server::SetEntityPosition(std::shared_ptr<qfcbase::Entity> entity, int map_
 	entity->Sprite->Position = sf::Vector2f(x, y);
 	if (animation != "")
 		entity->Sprite->CurrentAnimation = animation;
-	std::shared_ptr<ServerLevel> level;
-	if (loaded_levels.count(map_id) == 0)
-	{
-		level = std::make_shared<ServerLevel>(getptr(), 1);
-		level->LoadMap(LevelCollection::GetLevel(map_id)->mapFile);
+	auto level = LoadLevel(map_id);
 
-		loaded_levels[map_id] = level;
-	}
-	else {
-		level = loaded_levels[map_id];
-	}
 
 	level->AddEntity(entity);
 
@@ -343,7 +385,7 @@ void Server::SendEntitiesToPlayer(LoggedUser user)
 			if (level)
 			{
 				EntityType type = ServerHelper::GetEntityType(ent);
-				channel->SendEntity(level->Id(), ent->Id, type, ent->Sprite->Position, ent->Sprite->CurrentAnimation, user.address, user.address_size);
+				channel->SendEntity(level, ent, user.address, user.address_size);
 			}
 		}
 	}
@@ -367,7 +409,7 @@ std::shared_ptr<Entity> Server::GenerateEntity(std::weak_ptr<Scene> scene, std::
 				for (auto user : logged_users)
 				{
 					if (user.second.game_entity != e)
-						channel->SendEntity(level->Id(), e->Id, ServerHelper::GetEntityType(e), e->Sprite->Position, e->Sprite->CurrentAnimation, user.second.address, user.second.address_size);
+						channel->SendEntity(level, e, user.second.address, user.second.address_size);
 				}
 			}
 		}, NET_SECONDS_PER_FRAME);
@@ -445,8 +487,12 @@ void Server::DisconnectPlayer(std::string auth_key)
 
 		if (auto level = user.game_entity->Scene().lock())
 			level->RemoveEntity(user.game_entity);
+
+		UnstackScene(user.game_entity);
 	}
 	logged_users.erase(auth_key);
+
+	Log::Debug(std::string("Client disconnected: ") + auth_key);
 }
 
 void Server::SavePlayer(LoggedUser user)
@@ -459,4 +505,16 @@ void Server::SavePlayer(LoggedUser user)
 
 	db_exec(update_builder.str(), [&](int c, char** v, char** n) { });
 }
+
+std::shared_ptr<ServerLevel> qfcserver::Server::LoadLevel(int map_id)
+{
+	if (loaded_levels.count(map_id) == 0)
+	{
+		auto level = std::make_shared<ServerLevel>(getptr(), 1);
+		level->LoadMap(LevelCollection::GetLevel(map_id)->mapFile);
+		loaded_levels[map_id] = level;
+	}
+	return loaded_levels[map_id];
+}
+
 #pragma endregion

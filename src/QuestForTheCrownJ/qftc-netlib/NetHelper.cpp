@@ -1,4 +1,5 @@
 #include "NetHelper.h"
+#include "Log.h"
 
 std::string NetHelper::DecodeAnimation(int info)
 {
@@ -37,4 +38,29 @@ int NetHelper::EncodeAnimation(std::string animation)
 		return 13;
 
 	return -1;
+}
+
+EntityCategory NetHelper::EncodeCategory(std::string category)
+{
+	if (category == "GoodGuy")
+		return EntityCategory::GOOD_GUY;
+	if (category == "Enemy")
+		return EntityCategory::ENEMY;
+
+	qfcbase::Log::Error((std::string)"Entity category not supported: " + category);
+	return EntityCategory::CATEGORY_UNKNOWN;
+}
+
+std::string NetHelper::DecodeCategory(EntityCategory category)
+{
+	switch (category)
+	{
+	case GOOD_GUY:
+		return "GoodGuy";
+	case ENEMY:
+		return "Enemy";
+	}
+
+	qfcbase::Log::Error((std::string)"Entity category not supported: " + std::to_string(category));
+	return "";
 }

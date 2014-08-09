@@ -30,9 +30,16 @@ enum PacketType
 
 enum EntityType
 {
-	UNKNOWN,
+	TYPE_UNKNOWN,
 	ENTITY_HERO,
 	ENTITY_SLIME
+};
+
+enum EntityCategory
+{
+	CATEGORY_UNKNOWN,
+	GOOD_GUY,
+	ENEMY
 };
 
 // Base header methods.
@@ -46,6 +53,7 @@ typedef struct s_entity_header
 {
 	int id;
 	EntityType type;
+	EntityCategory category;
 } EntityHeader;
 
 typedef struct s_entity_location

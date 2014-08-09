@@ -17,11 +17,11 @@
 using namespace qfcgame;
 using namespace qfcbase;
 
-std::shared_ptr<qfcbase::Entity> MultiplayerGame::CreateEntity(int id, EntityType type, sf::Vector2f position)
+std::shared_ptr<qfcbase::Entity> MultiplayerGame::CreateEntity(EntityHeader info, sf::Vector2f position)
 {
 	std::shared_ptr<qfcbase::Entity> entity;
 
-	switch (type)
+	switch (info.type)
 	{
 	case EntityType::ENTITY_HERO:
 		entity = std::make_shared<qfcbase::Hero>();
@@ -30,12 +30,14 @@ std::shared_ptr<qfcbase::Entity> MultiplayerGame::CreateEntity(int id, EntityTyp
 		entity = std::make_shared<qfcbase::Slime>();
 		break;
 	default:
-		Log::Error("Entity type not supported by client: " + type);
+		Log::Error((std::string)"Entity type not supported by client: " + std::to_string(info.type));
 	}
+
+	entity->category = NetHelper::DecodeCategory(info.category);
 
 	if (entity) {
 		entity->Sprite->Position = position;
-		entity->Id = id;
+		entity->Id = info.id;
 	}
 
 	if (player_entity_id == entity->Id)
@@ -84,7 +86,7 @@ void MultiplayerGame::Connect(std::string server_addr, std::string auth_token)
 
 		if (!updateEntity) {
 			Log::Debug((std::string)"Created Entity: " + std::to_string(data.entity.info.id) + " " + std::to_string(data.entity.info.type));
-			auto entity = CreateEntity(data.entity.info.id, data.entity.info.type, position);
+			auto entity = CreateEntity(data.entity.info, position);
 			currentScene->AddEntity(entity);
 
 			entity->AddBehavior<Walker>();

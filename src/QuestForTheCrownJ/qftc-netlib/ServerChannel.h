@@ -6,6 +6,7 @@
 #include "AuthStructs.h"
 #include "ClientStructs.h"
 #include "ServerStructs.h"
+#include "Level.h"
 
 namespace qfcnet
 {
@@ -33,7 +34,7 @@ namespace qfcnet
 			return r;
 		}
 
-		void SendEntity(int map_id, int id, EntityType type, sf::Vector2f pos, std::string animation, std::shared_ptr<sockaddr_in> addr, int addr_size);
+		void SendEntity(std::shared_ptr<qfcbase::Level> level, std::shared_ptr<qfcbase::Entity> entity, std::shared_ptr<sockaddr_in> addr, int addr_size);
 	private:
 		bool stop_listen;
 		std::thread listen_thread;
