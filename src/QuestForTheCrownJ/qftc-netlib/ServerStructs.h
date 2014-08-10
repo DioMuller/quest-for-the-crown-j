@@ -30,6 +30,8 @@ typedef struct s_server_response_player_info
 	EntityInfo entity;
 } ServerResponsePlayerInfo;
 
+
+// Battle
 typedef struct s_server_battle_start
 {
 	Header header;

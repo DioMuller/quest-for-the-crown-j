@@ -20,6 +20,9 @@ namespace qfcnet
 		std::function<void(ServerSendEntity&)> onEntity;
 		std::function<void(ServerSendEntityRemoved&)> onEntityRemoved;
 
+		std::function<void(ServerBattleStart&)> onBattleStart;
+		std::function<void(ServerBattleTurn&)> onTurnReceived;
+
 	public:
 		ClientChannel();
 

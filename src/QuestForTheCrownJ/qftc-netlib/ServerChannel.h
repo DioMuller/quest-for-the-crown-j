@@ -21,6 +21,9 @@ namespace qfcnet
 		std::function<void(const ClientSendDisconnect&)> handlePlayerDisconnect;
 		std::function<void(std::shared_ptr<sockaddr_in>)> handleConnectionClose;
 
+		//Battle
+		std::function<void(const ClientCharacterBattleNextTurn&)> handleCharacterRequestNextTurn;
+		std::function<void(const ClientCharacterBattleCommand&)> handleCharacterCommand;
 	public:
 		ServerChannel(int port);
 		~ServerChannel();

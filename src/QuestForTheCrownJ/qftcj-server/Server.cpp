@@ -98,6 +98,18 @@ Server::Server(int port)
 		if (!user_code.empty())
 			DisconnectPlayer(user_code);
 	};
+
+	// Battle
+
+	channel->handleCharacterRequestNextTurn = [this](const ClientCharacterBattleBegin data)
+	{
+		Log::Message("Received Battle Begin from Client " + std::to_string(data.entity.id));
+	};
+
+	channel->handleCharacterCommand = [this](const ClientCharacterBattleCommand data)
+	{
+		Log::Message("Received Command " + std::to_string(data.command) + " from Client " + std::to_string(data.entity.id));
+	};
 }
 
 Server::~Server()

@@ -112,6 +112,30 @@ void MultiplayerGame::Connect(std::string server_addr, std::string auth_token)
 		if (removedEntity)
 			currentScene->RemoveEntity(removedEntity);
 	};
+
+	clientChannel.onBattleStart = [this](const ServerBattleStart data) 
+	{
+		Log::Message("Received a Battle Start Message");
+		auto level = std::dynamic_pointer_cast<Level>(currentScene);
+		if (!level)
+		{
+			Log::Message("Not on a Level. Battle Message dropped.");
+			return;
+		}
+
+
+	};
+
+	clientChannel.onTurnReceived = [this](const ServerBattleTurn data)
+	{
+		Log::Message("Received a Turn Info Message");
+		auto level = std::dynamic_pointer_cast<BattleScene>(currentScene);
+		if (!level)
+		{
+			Log::Message("Not on a Level. Battle Message dropped.");
+			return;
+		}
+	};
 }
 
 void MultiplayerGame::RefreshSceneFromServer()
