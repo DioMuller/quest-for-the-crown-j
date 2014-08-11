@@ -101,14 +101,14 @@ Server::Server(int port)
 
 	// Battle
 
-	channel->handleCharacterRequestNextTurn = [this](const ClientCharacterBattleBegin data)
+	channel->handleCharacterRequestNextTurn = [this](const ClientCharacterBattleNextTurn data)
 	{
-		Log::Message("Received Battle Begin from Client " + std::to_string(data.entity.id));
+		Log::Message("Received Battle Begin from Client");
 	};
 
 	channel->handleCharacterCommand = [this](const ClientCharacterBattleCommand data)
 	{
-		Log::Message("Received Command " + std::to_string(data.command) + " from Client " + std::to_string(data.entity.id));
+		Log::Message("Received Command " + std::to_string(data.command) + " from Client.");
 	};
 }
 

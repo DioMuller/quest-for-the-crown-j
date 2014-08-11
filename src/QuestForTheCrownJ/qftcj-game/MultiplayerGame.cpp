@@ -166,3 +166,13 @@ void MultiplayerGame::StartConfront(std::shared_ptr<Entity> e1, std::shared_ptr<
 		battle->AddMonster(e2))
 		LoadScene(battle, true);
 }
+
+void MultiplayerGame::SendTurn(const ClientCharacterBattleCommand& turn)
+{
+	
+}
+
+void MultiplayerGame::RequestTurn(const ClientCharacterBattleNextTurn& request)
+{
+
+}

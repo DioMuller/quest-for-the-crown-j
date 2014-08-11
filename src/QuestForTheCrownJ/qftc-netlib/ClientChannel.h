@@ -9,6 +9,7 @@
 #include <thread>
 
 #include "ServerStructs.h"
+#include "ClientStructs.h"
 #include "AuthStructs.h"
 
 namespace qfcnet
@@ -39,6 +40,9 @@ namespace qfcnet
 			std::function<void(std::exception&)> error);
 		void SendPlayerPosition(std::string animation, int map_id, sf::Vector2f position);
 		void GetEntities();
+
+		void SendPlayerCommand(int turn_id, qftcbase::BattleCommand command, int additional_info);
+		void SendPlayerTurnRequest(int lastTurn);
 
 		template <typename T>
 		void Send(T data)

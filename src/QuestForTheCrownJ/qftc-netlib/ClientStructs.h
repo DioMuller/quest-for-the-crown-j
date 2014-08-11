@@ -61,8 +61,7 @@ typedef struct s_client_character_battle_begin
 // Request next turn info from the server.
 typedef struct s_client_character_next_turn
 {
-	ClientHeader clientHeader;
-	EntityHeader entity;
+	ClientHeader header = { { PacketType::CLIENT_BATTLE_NEXT_TURN } };
 	int battle_id;
 	int lastTurn;
 } ClientCharacterBattleNextTurn;
@@ -70,9 +69,7 @@ typedef struct s_client_character_next_turn
 
 typedef struct s_client_character_command
 {
-	ClientHeader clientHeader;
-	EntityHeader entity;
-	int battle_id;
+	ClientHeader header = { { PacketType::CLIENT_BATTLE_COMMAND } };
 	int turn_id;
 	qftcbase::BattleCommand command;
 	int additional_info; // Item id, Skill id.

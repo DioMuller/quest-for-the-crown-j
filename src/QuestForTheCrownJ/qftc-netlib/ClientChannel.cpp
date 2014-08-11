@@ -237,4 +237,28 @@ void ClientChannel::GetEntities()
 		Send(data);
 	//}).detach();
 }
+
+void ClientChannel::SendPlayerCommand(int turn_id, qftcbase::BattleCommand command, int additional_info)
+{
+	ClientCharacterBattleCommand data;
+	Log::Debug("SendPlayerCommand");
+	strcpy_s(data.header.authKey, sizeof(data.header.authKey), auth_token.c_str());
+
+	data.turn_id = turn_id;
+	data.command = command;
+	data.additional_info = additional_info;
+	Send(data);
+}
+
+void ClientChannel::SendPlayerTurnRequest(int lastTurn)
+{
+	ClientCharacterBattleNextTurn data;
+	Log::Debug("SendPlayerTurnRequest");
+	strcpy_s(data.header.authKey, sizeof(data.header.authKey), auth_token.c_str());
+
+	data.battle_id = 0;
+	data.lastTurn = lastTurn;
+
+	Send(data);
+}
 #pragma endregion Requests

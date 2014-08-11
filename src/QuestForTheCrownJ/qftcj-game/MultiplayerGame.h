@@ -1,6 +1,7 @@
 #pragma once
 #include "MainGame.h"
 #include "StructBase.h"
+#include "ClientStructs.h"
 
 namespace qfcgame
 {
@@ -30,5 +31,8 @@ namespace qfcgame
 		std::shared_ptr<qfcbase::Entity> CreateEntity(EntityHeader info, sf::Vector2f position);
 		//void SetEntities(std::vector<ServerEntityInfo> entities);
 		void StartConfront(std::shared_ptr<qfcbase::Entity> e1, std::shared_ptr<qfcbase::Entity> e2);
+
+		void SendTurn(const ClientCharacterBattleCommand& turn);
+		void RequestTurn(const ClientCharacterBattleNextTurn& request);
 	};
 }

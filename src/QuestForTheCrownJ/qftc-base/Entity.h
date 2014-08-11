@@ -95,6 +95,7 @@ namespace qfcbase
 		/////////////////////////////////////
 		public:
 			autoprop(public, public, int, id, Id);
+			autoprop(public, public, std::string, name, Name);
 			autoprop(public, protected, std::shared_ptr<AnimatedSprite>, sprite, Sprite);
 			autoprop(public, protected, float, speed, Speed);
 	};
