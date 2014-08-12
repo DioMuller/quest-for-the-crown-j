@@ -107,6 +107,9 @@ void qfcnet::ClientChannel::Listen()
 		case PacketType::SERVER_SEND_BATTLE_START:
 			HandlePacket("SERVER_SEND_BATTLE_START", onBattleStart, buffer, size);
 			break;
+		case PacketType::SERVER_BATTLE_TURN:
+			HandlePacket("SERVER_BATTLE_TURN", onTurnReceived, buffer, size);
+			break;
 		default:
 			Log::Debug((std::string)"Unknown message type: " + std::to_string(header->type));
 			break;

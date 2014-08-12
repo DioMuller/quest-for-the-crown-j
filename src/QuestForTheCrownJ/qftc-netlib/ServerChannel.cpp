@@ -116,6 +116,12 @@ void ServerChannel::Listen(int port)
 		case PacketType::CLIENT_SEND_DISCONNECT:
 			HandlePacket("CLIENT_SEND_DISCONNECT", handlePlayerDisconnect, buffer, size);
 			break;
+		case PacketType::CLIENT_BATTLE_COMMAND:
+			HandlePacket("CLIENT_BATTLE_COMMAND", handleCharacterCommand, buffer, size);
+			break;
+		case PacketType::CLIENT_BATTLE_NEXT_TURN:
+			HandlePacket("CLIENT_BATTLE_NEXT_TURN", handleCharacterRequestNextTurn, buffer, size);
+			break;
 		default:
 			Log::Debug(std::string("Unknown message type: ") + std::to_string(clientHeader->header.type));
 			break;
