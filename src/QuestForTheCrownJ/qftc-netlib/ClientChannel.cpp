@@ -91,67 +91,21 @@ void qfcnet::ClientChannel::Listen()
 		switch (header->type)
 		{
 		case PacketType::LAUNCHER_LOGIN_RESPONSE:
-			if (size != sizeof(s_launcher_login_response))
-			{
-				Log::Error((std::string)"Invalid packet size for LAUNCHER_LOGIN_RESPONSE: " + std::to_string(size));
-				continue;
-			}
-			if (!on_login_response)
-			{
-				Log::Error("Unexpected LAUNCHER_LOGIN_RESPONSE");
-				continue;
-			}
-			on_login_response(*(s_launcher_login_response*)(buffer));
+			HandlePacket("LAUNCHER_LOGIN_RESPONSE", on_login_response, buffer, size);
 			on_login_response = nullptr;
 			break;
 		case PacketType::SERVER_RESPONSE_PLAYER_INFO:
-			if (size != sizeof(ServerResponsePlayerInfo))
-			{
-				Log::Error((std::string)"Invalid packet size for SERVER_RESPONSE_PLAYER_INFO: " + std::to_string(size));
-				continue;
-			}
-			if (!on_playerinfo_response)
-			{
-				Log::Debug("No handler for SERVER_RESPONSE_PLAYER_INFO");
-				continue;
-			}
-			else {
-				auto info = (ServerResponsePlayerInfo*)buffer;
-				on_playerinfo_response(*info);
-				on_playerinfo_response = nullptr;
-			}
+			HandlePacket("SERVER_RESPONSE_PLAYER_INFO", on_playerinfo_response, buffer, size);
+			on_playerinfo_response = nullptr;
 			break;
 		case PacketType::SERVER_SEND_ENTITY:
-			if (size != sizeof(ServerSendEntity))
-			{
-				Log::Error((std::string)"Invalid packet size for SERVER_SEND_ENTITY: " + std::to_string(size));
-				continue;
-			}
-			if (!onEntity)
-			{
-				Log::Debug("No handler for SERVER_ENTITY_INFO");
-				continue;
-			}
-			else {
-				auto info = (ServerSendEntity*)buffer;
-				onEntity(*info);
-			}
+			HandlePacket("SERVER_SEND_ENTITY", onEntity, buffer, size);
 			break;
 		case PacketType::SERVER_SEND_ENTITY_REMOVED:
-			if (size != sizeof(ServerSendEntityRemoved))
-			{
-				Log::Error((std::string)"Invalid packet size for SERVER_SEND_ENTITY_REMOVED: " + std::to_string(size));
-				continue;
-			}
-			if (!onEntityRemoved)
-			{
-				Log::Debug("No handler for SERVER_SEND_ENTITY_REMOVED");
-				continue;
-			}
-			else {
-				auto info = (ServerSendEntityRemoved*)buffer;
-				onEntityRemoved(*info);
-			}
+			HandlePacket("SERVER_SEND_ENTITY_REMOVED", onEntityRemoved, buffer, size);
+			break;
+		case PacketType::SERVER_SEND_BATTLE_START:
+			HandlePacket("SERVER_SEND_BATTLE_START", onBattleStart, buffer, size);
 			break;
 		default:
 			Log::Debug((std::string)"Unknown message type: " + std::to_string(header->type));

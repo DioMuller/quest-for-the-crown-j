@@ -7,10 +7,12 @@
 #include "ClientStructs.h"
 #include "ServerStructs.h"
 #include "Level.h"
+#include "ChannelBase.h"
 
 namespace qfcnet
 {
-	class ServerChannel
+	class ServerChannel :
+		public ChannelBase
 	{
 	public:
 		std::function<void(const ClientHeader&, std::shared_ptr<sockaddr_in>, int sender_size)> onClientMessage;

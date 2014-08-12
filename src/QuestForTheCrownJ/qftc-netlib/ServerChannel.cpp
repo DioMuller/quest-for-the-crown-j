@@ -72,7 +72,7 @@ void ServerChannel::Listen(int port)
 		if (size < 0)
 		{
 			auto error = WSAGetLastError();
-			if (error != 10054)
+			if (error != 10054) // Disconnect
 				Log::Error(std::string("Error on receive: ") + std::to_string(error));
 			std::this_thread::sleep_for(std::chrono::microseconds((long long)((NET_SECONDS_PER_FRAME)* (1000 * 1000))));
 			continue;
@@ -105,68 +105,16 @@ void ServerChannel::Listen(int port)
 			}
 			break;
 		case PacketType::CLIENT_REQUEST_PLAYER_INFO:
-			if (size != sizeof(ClientRequestPlayerInfo))
-			{
-				Log::Error("Invalid packet size for CLIENT_REQUEST_PLAYER_INFO: " + size);
-				continue;
-			}
-			if (!handleRequestPlayer)
-			{
-				Log::Debug("No handler for CLIENT_REQUEST_PLAYER_INFO");
-				continue;
-			}
-			else {
-				auto data = (ClientRequestPlayerInfo*)buffer;
-				handleRequestPlayer(*data);
-			}
+			HandlePacket("CLIENT_REQUEST_PLAYER_INFO", handleRequestPlayer, buffer, size);
 			break;
 		case PacketType::CLIENT_REQUEST_ENTITIES:
-			if (size != sizeof(ClientRequestEntities))
-			{
-				Log::Error("Invalid packet size for CLIENT_REQUEST_ENTITIES: " + size);
-				continue;
-			}
-			if (!handleRequestEntities)
-			{
-				Log::Debug("No handler for CLIENT_REQUEST_ENTITIES");
-				continue;
-			}
-			else {
-				auto data = (ClientRequestEntities*)buffer;
-				handleRequestEntities(*data);
-			}
+			HandlePacket("CLIENT_REQUEST_ENTITIES", handleRequestEntities, buffer, size);
 			break;
 		case PacketType::CLIENT_SEND_PLAYER_POSITION:
-			if (size != sizeof(ClientSendPlayerPosition))
-			{
-				Log::Error("Invalid packet size for CLIENT_SEND_PLAYER_POSITION: " + size);
-				continue;
-			}
-			if (!handlePlayerPosition)
-			{
-				Log::Debug("No handler for CLIENT_SEND_PLAYER_POSITION");
-				continue;
-			}
-			else {
-				auto data = (ClientSendPlayerPosition*)buffer;
-				handlePlayerPosition(*data);
-			}
+			HandlePacket("CLIENT_SEND_PLAYER_POSITION", handlePlayerPosition, buffer, size);
 			break;
 		case PacketType::CLIENT_SEND_DISCONNECT:
-			if (size != sizeof(ClientSendDisconnect))
-			{
-				Log::Error("Invalid packet size for CLIENT_SEND_DISCONNECT: " + size);
-				continue;
-			}
-			if (!handlePlayerDisconnect)
-			{
-				Log::Debug("No handler for CLIENT_SEND_DISCONNECT");
-				continue;
-			}
-			else {
-				auto data = (ClientSendDisconnect*)buffer;
-				handlePlayerDisconnect(*data);
-			}
+			HandlePacket("CLIENT_SEND_DISCONNECT", handlePlayerDisconnect, buffer, size);
 			break;
 		default:
 			Log::Debug(std::string("Unknown message type: ") + std::to_string(clientHeader->header.type));
@@ -177,9 +125,6 @@ void ServerChannel::Listen(int port)
 				break;
 				case PacketType::CLIENT_CHARACTER_ITEM:
 				auto client_char_item = (s_client_character_item*)buffer;
-				break;
-				case PacketType::CLIENT_BATTLE_BEGIN:
-				auto client_char_battle_begin = (s_client_character_battle_begin*)buffer;
 				break;
 				case PacketType::CLIENT_BATTLE_NEXT_TURN:
 				auto client_character_next_turn = (s_client_character_next_turn*)buffer;

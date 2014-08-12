@@ -11,10 +11,12 @@
 #include "ServerStructs.h"
 #include "ClientStructs.h"
 #include "AuthStructs.h"
+#include "ChannelBase.h"
 
 namespace qfcnet
 {
-	class ClientChannel
+	class ClientChannel :
+		public ChannelBase
 	{
 	public:
 		std::string auth_token;
@@ -60,9 +62,8 @@ namespace qfcnet
 		sockaddr_in server_addr;
 		int server_addr_size;
 
-		std::function<void(LauncherLoginResponse)> on_login_response;
-		std::function<void(ServerResponsePlayerInfo)> on_playerinfo_response;
-
+		std::function<void(LauncherLoginResponse&)> on_login_response;
+		std::function<void(ServerResponsePlayerInfo&)> on_playerinfo_response;
 		void Listen();
 
 		void StartConnection(int localPort, std::string &serverAddress, int serverPort);

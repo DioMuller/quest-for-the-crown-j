@@ -7,7 +7,6 @@
 /*
 SERVER_ENTITY_POSITION,
 SERVER_MAP_TRANSITION,
-SERVER_BATTLE_START,
 SERVER_BATTLE_TURN
 */
 
@@ -34,7 +33,7 @@ typedef struct s_server_response_player_info
 // Battle
 typedef struct s_server_battle_start
 {
-	Header header;
+	Header header = { { PacketType::SERVER_SEND_BATTLE_START } };
 	EntityHeader entity;
 	int battle_id;
 } ServerBattleStart;
