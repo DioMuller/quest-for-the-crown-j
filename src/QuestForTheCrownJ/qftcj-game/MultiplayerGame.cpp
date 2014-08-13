@@ -129,12 +129,14 @@ void MultiplayerGame::Connect(std::string server_addr, std::string auth_token)
 	clientChannel.onTurnReceived = [this](const ServerBattleTurn data)
 	{
 		Log::Message("Received a Turn Info Message");
-		auto level = std::dynamic_pointer_cast<BattleScene>(currentScene);
+		auto level = std::dynamic_pointer_cast<ClientBattle>(currentScene);
 		if (!level)
 		{
 			Log::Message("Not on a Level. Battle Message dropped.");
 			return;
 		}
+
+		level->ReceiveTurn(data.command, data.additional_info, data.target_id);
 	};
 }
 
@@ -167,9 +169,9 @@ void MultiplayerGame::StartConfront(std::shared_ptr<Entity> e1, std::shared_ptr<
 		LoadScene(battle, true);
 }
 
-void MultiplayerGame::SendTurn(int turn_id, qfcbase::BattleAction command, int additional_info)
+void MultiplayerGame::SendTurn(int turn_id, qfcbase::BattleAction command, int target_id, int additional_info)
 {
-	clientChannel.SendPlayerCommand(turn_id, command, additional_info);
+	clientChannel.SendPlayerCommand(turn_id, command, target_id, additional_info);
 }
 
 void MultiplayerGame::RequestTurn(int lastTurn)

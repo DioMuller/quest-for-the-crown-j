@@ -14,6 +14,7 @@ namespace qfcgame
 			qfcbase::BattleAction playerAction;
 			std::deque<std::string> lastMessages;
 			sf::Text text;
+			int lastTurn;
 
 		/////////////////////////////////////
 		// Constructors
@@ -32,6 +33,8 @@ namespace qfcgame
 			void PrintMessage(std::string message);
 
 			void RequestTurn();
-			void SendTurn(qfcbase::BattleAction command, int additional_info);
+			void SendTurn(qfcbase::BattleAction command, int target, int additional_info);
+
+			void ReceiveTurn(qfcbase::BattleAction command, int additional_info, int target_id);
 	};
 }

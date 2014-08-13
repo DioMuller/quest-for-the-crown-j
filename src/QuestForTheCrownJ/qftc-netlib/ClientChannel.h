@@ -43,7 +43,7 @@ namespace qfcnet
 		void SendPlayerPosition(std::string animation, int map_id, sf::Vector2f position);
 		void GetEntities();
 
-		void SendPlayerCommand(int turn_id, qfcbase::BattleAction command, int additional_info);
+		void SendPlayerCommand(int turn_id, qfcbase::BattleAction command, int target_id, int additional_info);
 		void SendPlayerTurnRequest(int lastTurn);
 
 		template <typename T>

@@ -117,7 +117,7 @@ bool ClientBattle::SelectAction(std::shared_ptr<qfcbase::BattleEntity> currentEn
 		// TODO: Potions.
 
 		nextTurn = Turn{ currentTurn, currentEntity, targetEntity, playerAction, 3 + rand() % 5 };
-		SendTurn(playerAction, nextTurn.value);
+		SendTurn(playerAction, targetEntity->GetParent()->Id, nextTurn.value);
 		break;
 	case BattleEntityType::ENEMY:
 		RequestTurn();
@@ -149,12 +149,31 @@ void ClientBattle::RequestTurn()
 	}
 }
 
-void ClientBattle::SendTurn(BattleAction command, int additional_info)
+void ClientBattle::SendTurn(BattleAction command, int target, int additional_info)
 {
 	auto sceneParent = std::dynamic_pointer_cast<MultiplayerGame>(parent.lock());
 
 	if (sceneParent)
 	{
-		sceneParent->SendTurn(currentTurn, command, additional_info);
+		sceneParent->SendTurn(currentTurn, command, target, additional_info);
 	}
+}
+
+void ClientBattle::ReceiveTurn(qfcbase::BattleAction command, int additional_info, int target_id)
+{
+	std::shared_ptr<BattleEntity> currentEntity = nullptr;
+	std::shared_ptr<BattleEntity> targetEntity = nullptr;
+
+	for (auto entity : GetEntities())
+	{
+		auto bent = std::static_pointer_cast<BattleEntity>(entity);
+		if ( bent )
+		{
+			if (bent->Type() == BattleEntityType::PLAYER) currentEntity = bent;
+			if (bent->GetParent()->Id == target_id) targetEntity == bent;
+		}
+	}
+
+	if ( currentEntity && targetEntity )
+		turns.push_back(Turn{ currentTurn + 1, currentEntity, targetEntity, command, additional_info });
 }

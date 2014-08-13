@@ -106,7 +106,8 @@ void BattleScene::ExecuteTurn()
 	target = turns[currentTurn].target;
 	value = turns[currentTurn].value;
 
-	if (!target) return;
+	if (currentTurn < turns.size() - 1) return;
+	//if (!target) return;
 
 	switch (turns[currentTurn].action)
 	{
