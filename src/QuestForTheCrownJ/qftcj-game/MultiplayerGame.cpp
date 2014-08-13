@@ -167,7 +167,7 @@ void MultiplayerGame::StartConfront(std::shared_ptr<Entity> e1, std::shared_ptr<
 		LoadScene(battle, true);
 }
 
-void MultiplayerGame::SendTurn(int turn_id, qftcbase::BattleCommand command, int additional_info)
+void MultiplayerGame::SendTurn(int turn_id, qfcbase::BattleAction command, int additional_info)
 {
 	clientChannel.SendPlayerCommand(turn_id, command, additional_info);
 }

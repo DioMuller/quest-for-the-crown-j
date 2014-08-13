@@ -43,6 +43,6 @@ typedef struct s_server_battle_turn
 	Header header;
 	EntityHeader entity;
 	int turn_id;
-	qftcbase::BattleCommand command;
+	qfcbase::BattleAction command;
 	int additional_info; // Item id, Skill id.
 } ServerBattleTurn;

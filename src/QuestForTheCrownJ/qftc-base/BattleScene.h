@@ -3,6 +3,7 @@
 #include "BattleEntity.h"
 #include <SFML/Graphics/Text.hpp>
 #include <deque>
+#include "BattleDefinitions.h"
 
 #define MAX_BATTLE_PLAYERS 1
 #define MAX_BATTLE_ENEMIES 1
@@ -11,15 +12,6 @@
 
 namespace qfcbase
 {
-	enum BattleAction
-	{
-		ATTACK = 0,
-		SPECIAL = 1,
-		ITEM = 2,
-		RUN = 3,
-		NOACTION = -1
-	};
-
 	typedef struct structTurn
 	{
 		int id; // Turn Count

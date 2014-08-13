@@ -106,6 +106,8 @@ void BattleScene::ExecuteTurn()
 	target = turns[currentTurn].target;
 	value = turns[currentTurn].value;
 
+	if (!target) return;
+
 	switch (turns[currentTurn].action)
 	{
 		case BattleAction::ATTACK:

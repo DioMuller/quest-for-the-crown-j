@@ -1,6 +1,7 @@
 #include "ClientBattle.h"
 #include "GameAssets.h"
 #include "AudioPlayer.h"
+#include "MultiplayerGame.h"
 
 #include <sstream>
 #include <SFML/Window/Keyboard.hpp>
@@ -116,9 +117,11 @@ bool ClientBattle::SelectAction(std::shared_ptr<qfcbase::BattleEntity> currentEn
 		// TODO: Potions.
 
 		nextTurn = Turn{ currentTurn, currentEntity, targetEntity, playerAction, 3 + rand() % 5 };
+		SendTurn(playerAction, nextTurn.value);
 		break;
 	case BattleEntityType::ENEMY:
-		nextTurn = Turn{ currentTurn, currentEntity, targetEntity, BattleAction::ATTACK, 3 + rand() % 5 };
+		RequestTurn();
+		//nextTurn = Turn{ currentTurn, currentEntity, targetEntity, BattleAction::ATTACK, 3 + rand() % 5 };
 		break;
 	default:
 		return false;
@@ -134,4 +137,24 @@ void ClientBattle::PrintMessage(std::string message)
 	BattleScene::PrintMessage(message);
 	lastMessages.push_back(message);
 	while (lastMessages.size() > MAX_MESSAGES) lastMessages.pop_front();
+}
+
+void ClientBattle::RequestTurn()
+{
+	auto sceneParent = std::dynamic_pointer_cast<MultiplayerGame>(parent.lock());
+
+	if (sceneParent)
+	{
+		sceneParent->RequestTurn(currentTurn);
+	}
+}
+
+void ClientBattle::SendTurn(BattleAction command, int additional_info)
+{
+	auto sceneParent = std::dynamic_pointer_cast<MultiplayerGame>(parent.lock());
+
+	if (sceneParent)
+	{
+		sceneParent->SendTurn(currentTurn, command, additional_info);
+	}
 }

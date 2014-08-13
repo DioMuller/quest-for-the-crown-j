@@ -97,7 +97,7 @@ std::vector<std::shared_ptr<Entity>> Scene::GetEntities(std::string category)
 std::shared_ptr<Entity> Scene::GetEntity(int id)
 {
 	std::lock_guard<std::mutex> lock(entities_mutex);
-	for (int i = 0; i < entities.size(); i++)
+	for (unsigned int i = 0; i < entities.size(); i++)
 	{
 		auto ent = entities[i];
 		if (ent && ent->Id == id)

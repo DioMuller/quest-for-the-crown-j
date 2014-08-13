@@ -195,7 +195,7 @@ void ClientChannel::GetEntities()
 	//}).detach();
 }
 
-void ClientChannel::SendPlayerCommand(int turn_id, qftcbase::BattleCommand command, int additional_info)
+void ClientChannel::SendPlayerCommand(int turn_id, qfcbase::BattleAction command, int additional_info)
 {
 	ClientCharacterBattleCommand data;
 	Log::Debug("SendPlayerCommand");

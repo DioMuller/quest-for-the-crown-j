@@ -103,7 +103,7 @@ Server::Server(int port)
 
 	channel->handleCharacterRequestNextTurn = [this](const ClientCharacterBattleNextTurn data)
 	{
-		Log::Message("Received Battle Begin from Client");
+		Log::Message("Received Next Turn Request from Client");
 	};
 
 	channel->handleCharacterCommand = [this](const ClientCharacterBattleCommand data)

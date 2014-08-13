@@ -30,5 +30,8 @@ namespace qfcgame
 			
 			bool SelectAction(std::shared_ptr<qfcbase::BattleEntity> entity);
 			void PrintMessage(std::string message);
+
+			void RequestTurn();
+			void SendTurn(qfcbase::BattleAction command, int additional_info);
 	};
 }

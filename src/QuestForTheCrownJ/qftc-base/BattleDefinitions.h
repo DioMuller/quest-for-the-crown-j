@@ -1,12 +1,12 @@
 #pragma once
-namespace qftcbase
+namespace qfcbase
 {
-	enum BattleCommand
+	enum BattleAction
 	{
-		ATTACK,
-		DEFEND,
-		USE_ITEM,
-		USE_SKILL,
-		RUN
+		ATTACK = 0,
+		SPECIAL = 1,
+		ITEM = 2,
+		RUN = 3,
+		NOACTION = -1
 	};
 } 
