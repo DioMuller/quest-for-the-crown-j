@@ -13,6 +13,9 @@ namespace qfcserver
 			~ServerBattle();
 		public:
 			virtual bool SelectAction(std::shared_ptr<qfcbase::BattleEntity> entity);
+
+			void SendTurn(qfcbase::BattleAction command, int target, int additional_info);
+			void ReceiveTurn(qfcbase::BattleAction command, int additional_info, int target_id);
 	};
 }
 

@@ -53,7 +53,9 @@ void ClientBattle::Draw(sf::RenderWindow* renderer)
 	std::string str;
 
 	// Battle Info Text
-	sstream << "1 Attack " << std::endl
+	sstream 
+		<< "Turn: " << currentTurn << std::endl
+		<< "1 Attack " << std::endl
 		<< "2 Magic" << std::endl
 		<< "3 Use Potion" << std::endl
 		<< "4 Run" << std::endl

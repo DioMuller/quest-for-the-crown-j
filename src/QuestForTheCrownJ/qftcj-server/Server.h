@@ -59,5 +59,6 @@ namespace qfcserver {
 			void SavePlayer(LoggedUser user);
 			void AddToBattle(std::shared_ptr<ServerBattle> battle, std::shared_ptr<qfcbase::Entity> entity);
 			std::shared_ptr<ServerLevel> LoadLevel(int map_id);
+			void SendTurn(int turn_id, qfcbase::BattleAction command, int target_id, int additional_info);
 	};
 }

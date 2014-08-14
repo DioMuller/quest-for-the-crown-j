@@ -529,4 +529,9 @@ std::shared_ptr<ServerLevel> qfcserver::Server::LoadLevel(int map_id)
 	return loaded_levels[map_id];
 }
 
+void qfcserver::Server::SendTurn(int turn_id, qfcbase::BattleAction command, int target_id, int additional_info)
+{
+	// TODO: SEND Turn data.
+}
+
 #pragma endregion
