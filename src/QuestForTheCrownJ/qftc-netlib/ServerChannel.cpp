@@ -155,3 +155,16 @@ void ServerChannel::SendEntity(std::shared_ptr<Level> level, std::shared_ptr<Ent
 	if (r == WSAECONNRESET)
 		handleConnectionClose(addr);
 }
+
+
+void ServerChannel::SendServerCommand(int turn_id, qfcbase::BattleAction command, int target_id, int additional_info, std::shared_ptr<sockaddr_in> addr, int addr_size)
+{
+	ServerBattleTurn data;
+	Log::Debug("SendPlayerCommand");
+
+	data.turn_id = turn_id;
+	data.command = command;
+	data.additional_info = additional_info;
+	data.target_id = target_id;
+	Send(data, addr, addr_size);
+}
