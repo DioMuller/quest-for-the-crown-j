@@ -40,7 +40,14 @@ bool ServerBattle::SelectAction(std::shared_ptr<qfcbase::BattleEntity> currentEn
 		break;
 	case BattleEntityType::ENEMY:
 		nextTurn = Turn{ currentTurn, currentEntity, targetEntity, (rand()%3 == 1) ? BattleAction::SPECIAL : BattleAction::ATTACK, 3 + rand() % 5 };
-		SendTurn(nextTurn.action, nextTurn.target->Id, nextTurn.value);
+
+		for (auto entity : GetEntities())
+		{
+			auto be = std::static_pointer_cast<BattleEntity>(entity);
+
+			if (be)
+				SendTurn(nextTurn.action, nextTurn.target->Id, nextTurn.value, be->GetParent());
+		}
 		break;
 	default:
 		return false;
@@ -51,13 +58,13 @@ bool ServerBattle::SelectAction(std::shared_ptr<qfcbase::BattleEntity> currentEn
 	return true;
 }
 
-void ServerBattle::SendTurn(qfcbase::BattleAction command, int target, int additional_info)
+void ServerBattle::SendTurn(qfcbase::BattleAction command, int target, int additional_info, std::shared_ptr<Entity> currentEntity)
 {
 	auto sceneParent = std::dynamic_pointer_cast<Server>(parent.lock());
 
 	if (sceneParent)
 	{
-		sceneParent->SendTurn(currentTurn, command, target, additional_info);
+		sceneParent->SendTurn(currentTurn, command, target, additional_info, currentEntity);
 	}
 }
 

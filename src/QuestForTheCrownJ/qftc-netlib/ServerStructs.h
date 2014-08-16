@@ -40,7 +40,7 @@ typedef struct s_server_battle_start
 
 typedef struct s_server_battle_turn
 {
-	Header header;
+	Header header = { { PacketType::SERVER_BATTLE_TURN } };
 	EntityHeader entity;
 	int turn_id;
 	qfcbase::BattleAction command;

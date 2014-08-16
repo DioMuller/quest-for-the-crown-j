@@ -266,7 +266,7 @@ LauncherLoginResponse Server::HandleLoginInfo(const LauncherLoginInfo& login_inf
 		// TODO: Remove unused maps table?
 		// Buscando informações do usuário
 		db_exec(std::string("SELECT map, x, y FROM players WHERE players.id = ") + argv[1], [&](int c, char** v, char** n) {
-			playerEntity = CreatePlayerEntity(std::atoi(v[0]), "stopped_down", std::atoi(v[1]), std::atoi(v[2]));
+			playerEntity = CreatePlayerEntity(std::atoi(v[0]), "stopped_down", (float) std::atoi(v[1]), (float) std::atoi(v[2]));
 			map_id = std::atoi(v[0]);
 		});
 
@@ -290,7 +290,7 @@ LauncherLoginResponse Server::HandleLoginInfo(const LauncherLoginInfo& login_inf
 		userId = sqlite3_last_insert_rowid(db);
 		resp.authenticated = true;
 
-		playerEntity = CreatePlayerEntity(map_id, "stopped_down", initialPosX, initialPosY);
+		playerEntity = CreatePlayerEntity(map_id, "stopped_down", (float)initialPosX, (float)initialPosY);
 	}
 
 	// Caso autenticado, gera auth_code e guarda usuário como logado.
@@ -529,9 +529,14 @@ std::shared_ptr<ServerLevel> qfcserver::Server::LoadLevel(int map_id)
 	return loaded_levels[map_id];
 }
 
-void qfcserver::Server::SendTurn(int turn_id, qfcbase::BattleAction command, int target_id, int additional_info)
+void qfcserver::Server::SendTurn(int turn_id, qfcbase::BattleAction command, int target_id, int additional_info, std::shared_ptr<Entity> entity)
 {
 	// TODO: SEND Turn data.
+	for (auto usr : logged_users)
+	{
+		if (usr.second.game_entity->Id == entity->Id)
+			channel->SendServerCommand(turn_id, command, target_id, additional_info, usr.second.address, usr.second.address_size);
+	}
 }
 
 #pragma endregion
