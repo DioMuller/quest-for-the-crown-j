@@ -113,6 +113,12 @@ void MultiplayerGame::Connect(std::string server_addr, std::string auth_token)
 			currentScene->RemoveEntity(removedEntity);
 	};
 
+	clientChannel.onEntityName = [this](const ServerSendEntityName& data) {
+		auto updateEntity = currentScene->GetEntity(data.entity_id);
+		if (updateEntity)
+			updateEntity->Name = data.name;
+	};
+
 	clientChannel.onBattleStart = [this](const ServerBattleStart data) 
 	{
 		Log::Message("Received a Battle Start Message");

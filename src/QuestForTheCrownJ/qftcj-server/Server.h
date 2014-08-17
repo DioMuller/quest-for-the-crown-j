@@ -44,7 +44,7 @@ namespace qfcserver {
 			void UpdateLoop();
 
 			LauncherLoginResponse HandleLoginInfo(const LauncherLoginInfo& login_info, std::shared_ptr<sockaddr_in> sender, int sender_size);
-			std::shared_ptr<qfcbase::Hero> CreatePlayerEntity(int map_id, std::string animation, float x, float y);
+			std::shared_ptr<qfcbase::Hero> CreatePlayerEntity(std::string name, int map_id, std::string animation, float x, float y);
 
 			void SetEntityPosition(std::shared_ptr<qfcbase::Entity> player_entity, int map_id, std::string animation, float x, float y);
 

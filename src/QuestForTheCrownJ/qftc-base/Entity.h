@@ -41,6 +41,8 @@ namespace qfcbase
 		private:
 			std::vector<std::shared_ptr<Behavior>> behaviors;
 			std::string lastDirectionName;
+			sf::Text nameText;
+			sf::Font nameFont;
 		public:
 			std::weak_ptr<qfcbase::Scene> scene;
 			std::string category;
@@ -87,6 +89,9 @@ namespace qfcbase
 			{
 				return scene;
 			}
+
+			std::string GetName() const { return nameText.getString(); }
+			void SetName(const std::string& name) { nameText.setString(name); }
 		private:
 			bool ValidPosition(sf::Vector2f offset);
 
@@ -94,8 +99,8 @@ namespace qfcbase
 		// Properties
 		/////////////////////////////////////
 		public:
+			getsetdecl(std::string, Name);
 			autoprop(public, public, int, id, Id);
-			autoprop(public, public, std::string, name, Name);
 			autoprop(public, protected, std::shared_ptr<AnimatedSprite>, sprite, Sprite);
 			autoprop(public, protected, float, speed, Speed);
 	};

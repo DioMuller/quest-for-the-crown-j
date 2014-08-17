@@ -286,7 +286,7 @@ LauncherLoginResponse Server::HandleLoginInfo(const LauncherLoginInfo& login_inf
 		// TODO: Remove unused maps table?
 		// Buscando informações do usuário
 		db_exec(std::string("SELECT map, x, y FROM players WHERE players.id = ") + argv[1], [&](int c, char** v, char** n) {
-			playerEntity = CreatePlayerEntity(std::atoi(v[0]), "stopped_down", (float) std::atoi(v[1]), (float) std::atoi(v[2]));
+			playerEntity = CreatePlayerEntity(login_info.login, std::atoi(v[0]), "stopped_down", (float)std::atoi(v[1]), (float)std::atoi(v[2]));
 			map_id = std::atoi(v[0]);
 		});
 
@@ -310,7 +310,7 @@ LauncherLoginResponse Server::HandleLoginInfo(const LauncherLoginInfo& login_inf
 		userId = sqlite3_last_insert_rowid(db);
 		resp.authenticated = true;
 
-		playerEntity = CreatePlayerEntity(map_id, "stopped_down", (float)initialPosX, (float)initialPosY);
+		playerEntity = CreatePlayerEntity(login_info.login, map_id, "stopped_down", (float)initialPosX, (float)initialPosY);
 	}
 
 	// Caso autenticado, gera auth_code e guarda usuário como logado.
@@ -476,11 +476,12 @@ std::string Server::GetUserAuthCode(std::shared_ptr<qfcbase::Entity> entity)
 	return std::string();
 }
 
-std::shared_ptr<Hero> Server::CreatePlayerEntity(int map_id, std::string animation, float x, float y)
+std::shared_ptr<Hero> Server::CreatePlayerEntity(std::string name, int map_id, std::string animation, float x, float y)
 {
 	auto player_entity = std::make_shared<Hero>();
 	player_entity->Id = GenerateId();
 	player_entity->category = "GoodGuy";
+	player_entity->Name = name;
 	SetEntityPosition(player_entity, map_id, animation, x, y);
 	return player_entity;
 }

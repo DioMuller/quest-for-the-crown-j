@@ -29,6 +29,12 @@ typedef struct s_server_response_player_info
 	EntityInfo entity;
 } ServerResponsePlayerInfo;
 
+typedef struct s_server_send_entity_name
+{
+	Header header = { { PacketType::SERVER_SEND_ENTITY_NAME } };
+	int entity_id;
+	char name[255];
+} ServerSendEntityName;
 
 // Battle
 typedef struct s_server_battle_start
