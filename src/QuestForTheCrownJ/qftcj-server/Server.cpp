@@ -36,6 +36,7 @@ Server::Server(int port)
 		throw std::exception(("Can't open database.sqlite: " + (std::string)sqlite3_errmsg(db)).c_str());
 
 	channel->onClientMessage = [this](const ClientHeader& header, std::shared_ptr<sockaddr_in> sender, int sender_size) {
+		std::lock_guard<std::mutex> lock(mtx_users);
 		auto user = GetUser(header.authKey);
 		if (!user) return;
 
@@ -44,14 +45,17 @@ Server::Server(int port)
 		user->away_time = 0;
 	};
 	channel->handleLoginInfo = [this](const LauncherLoginInfo& info, std::shared_ptr<sockaddr_in> sender, int sender_size) {
+		std::lock_guard<std::mutex> lock(mtx_users);
 		return HandleLoginInfo(info, sender, sender_size);
 	};
 	channel->handleRequestPlayer = [this](const ClientRequestPlayerInfo& data) {
+		std::lock_guard<std::mutex> lock(mtx_users);
 		auto user = GetUser(data.header.authKey);
 		if (!user) return;
 		HandleRequestPlayerInfo(user);
 	};
 	channel->handlePlayerPosition = [this](const ClientSendPlayerPosition& data) {
+		std::lock_guard<std::mutex> lock(mtx_users);
 		auto user = GetUser(data.header.authKey);
 		if (!user) return;
 
@@ -72,16 +76,20 @@ Server::Server(int port)
 		}
 	};
 	channel->handleRequestEntities = [this](const ClientRequestEntities& data) {
+		std::lock_guard<std::mutex> lock(mtx_users);
 		auto user = GetUser(data.header.authKey);
 		if (!user) return;
 		SendEntitiesToPlayer(user);
 	};
 	channel->handlePlayerDisconnect = [this](const ClientSendDisconnect& data) {
+		std::lock_guard<std::mutex> lock(mtx_users);
 		std::string auth_key = data.header.authKey;
 		DisconnectPlayer(auth_key);
 
 	};
 	channel->handleConnectionClose = [this](std::shared_ptr<sockaddr_in> addr) {
+		std::lock_guard<std::mutex> lock(mtx_users);
+
 		std::string user_code;
 		for (auto usr : logged_users)
 		{
@@ -100,6 +108,7 @@ Server::Server(int port)
 
 	channel->handleCharacterRequestNextTurn = [this](const ClientCharacterBattleNextTurn data)
 	{
+		std::lock_guard<std::mutex> lock(mtx_users);
 		Log::Message("Received Next Turn Request from Client");
 
 		auto user = GetUser(data.header.authKey);
@@ -158,6 +167,7 @@ void Server::UpdateLoop()
 #pragma region Game
 void Server::Update(double delta)
 {
+	std::lock_guard<std::mutex> lock(mtx_users);
 	CheckPlayersTimeout(delta);
 
 	for (auto& battle : ongoing_battles)
@@ -278,7 +288,6 @@ LauncherLoginResponse Server::HandleLoginInfo(const LauncherLoginInfo& login_inf
 		userId = std::stoll(argv[0]);
 		playerId = std::stoll(argv[1]);
 
-		// TODO: Remove unused maps table?
 		// Buscando informações do usuário
 		db_exec(std::string("SELECT map, x, y, gold, potions FROM players WHERE players.id = ") + argv[1], [&](int c, char** v, char** n) {
 			playerEntity = CreatePlayerEntity(login_info.login, std::atoi(v[0]), "stopped_down", (float)std::atoi(v[1]), (float)std::atoi(v[2]));
@@ -344,11 +353,12 @@ void Server::HandleRequestPlayerInfo(std::shared_ptr<LoggedUser> user)
 {
 	ServerResponsePlayerInfo resp;
 	auto pos = user->game_entity->Sprite->Position;
-	resp.entity.info.type = ServerHelper::GetEntityType(user->game_entity);
-	resp.entity.info.id = user->game_entity->Id;
-	resp.entity.info.category = NetHelper::EncodeCategory(user->game_entity->category);
-	resp.entity.location.map_id = user->map_id;
-	resp.entity.location.position = pos;
+	resp.send_entity.entity.info.type = ServerHelper::GetEntityType(user->game_entity);
+	resp.send_entity.entity.info.id = user->game_entity->Id;
+	resp.send_entity.entity.info.category = NetHelper::EncodeCategory(user->game_entity->category);
+	resp.send_entity.entity.location.map_id = user->map_id;
+	resp.send_entity.entity.location.position = pos;
+	resp.items = user->game_entity->items;
 
 	channel->Send(resp, user->address, user->address_size);
 }
@@ -558,7 +568,11 @@ void qfcserver::Server::AddToPlayer(std::shared_ptr<Entity> entity, int gold, in
 
 	entity->items.gold += gold;
 	entity->items.potions += potions;
-	db_exec("UPDATE players SET gold=" + std::to_string(entity->items.gold) + (std::string)", potions=" + std::to_string(entity->items.potions) + " WHERE id=" + std::to_string(user->player_id), nullptr);
+	db_exec("UPDATE players SET gold=" + std::to_string(entity->items.gold) + (std::string)", potions=" + std::to_string(entity->items.potions) + " WHERE id=" + std::to_string(user->player_id), [=](int argc, char** argv, char** azClName) {
+		Log::Debug(static_cast<std::string>("[Updated Player ") + std::to_string(entity->Id) + static_cast<std::string>(" Items]"));
+		Log::Debug("Gold: " + std::to_string(entity->items.gold));
+		Log::Debug("Potions: " + std::to_string(entity->items.potions));
+	});
 }
 
 #pragma endregion

@@ -3,6 +3,7 @@
 #include <SFML/System/Vector2.hpp>
 #include "BattleDefinitions.h"
 #include "StructBase.h"
+#include "Entity.h"
 
 /*
 SERVER_ENTITY_POSITION,
@@ -22,11 +23,10 @@ typedef struct s_server_send_entity_removed
 	int entity_id;
 } ServerSendEntityRemoved;
 
-// TODO: Remove duplicated struct
 typedef struct s_server_response_player_info
 {
-	Header header = { { PacketType::SERVER_RESPONSE_PLAYER_INFO } };
-	EntityInfo entity;
+	ServerSendEntity send_entity;
+	qfcbase::Items items;
 } ServerResponsePlayerInfo;
 
 typedef struct s_server_send_entity_name

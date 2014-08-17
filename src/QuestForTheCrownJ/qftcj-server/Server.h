@@ -40,6 +40,7 @@ namespace qfcserver {
 			std::map<int/*EntityID*/, std::shared_ptr<qfcserver::ServerBattle>> entity_battles;
 			std::vector<std::shared_ptr<qfcserver::ServerBattle>> ongoing_battles;
 			std::mutex mtx_battles;
+			std::mutex mtx_users;
 
 			void UpdateLoop();
 
