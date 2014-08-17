@@ -174,14 +174,16 @@ void Server::StartConfront(std::shared_ptr<qfcbase::Entity> e1, std::shared_ptr<
 {
 	std::lock_guard<std::mutex> lock(mtx_battles);
 
+	// TODO: Uncomment messages.
 	Log::Debug((std::string)"Battle: " + std::to_string(e1->Id) + " VS " + std::to_string(e2->Id));
 
-	if (entity_battles.count(e1->Id) > 0 || entity_battles.count(e2->Id) > 0)
+/*	if( (entity_battles.count(e1->Id) > 0 && entity_battles[e1->Id]) || (entity_battles.count(e2->Id) > 0 && entity_battles[e2->Id]) )
 	{
-		// Hope this fixes the goddamn bug.
+	    // Hope this fixes the goddamn bug.
 		Log::Debug("Ignored, one of more entities are already on battle.");
 		return;
 	}
+*/
 
 	std::shared_ptr<ServerBattle> battle;
 	if (entity_battles.count(e1->Id) > 0) {
@@ -552,7 +554,7 @@ void qfcserver::Server::SendTurn(int turn_id, qfcbase::BattleAction command, int
 	for (auto usr : logged_users)
 	{
 		if (usr.second.game_entity->Id == entity->Id)
-			channel->SendServerCommand(turn_id, command, target_id, additional_info, usr.second.address, usr.second.address_size);
+			channel->SendServerCommand(turn_id, command, entity->Id, target_id, additional_info, usr.second.address, usr.second.address_size);
 	}
 }
 

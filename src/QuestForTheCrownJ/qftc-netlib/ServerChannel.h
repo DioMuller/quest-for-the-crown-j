@@ -40,7 +40,7 @@ namespace qfcnet
 		}
 
 		void SendEntity(std::shared_ptr<qfcbase::Level> level, std::shared_ptr<qfcbase::Entity> entity, std::shared_ptr<sockaddr_in> addr, int addr_size);
-		void SendServerCommand(int turn_id, qfcbase::BattleAction command, int target_id, int additional_info, std::shared_ptr<sockaddr_in> addr, int addr_size);
+		void SendServerCommand(int turn_id, qfcbase::BattleAction command, int entity_id, int target_id, int additional_info, std::shared_ptr<sockaddr_in> addr, int addr_size);
 	private:
 		bool stop_listen;
 		std::thread listen_thread;

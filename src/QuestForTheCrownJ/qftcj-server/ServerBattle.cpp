@@ -47,7 +47,7 @@ bool ServerBattle::SelectAction(std::shared_ptr<qfcbase::BattleEntity> currentEn
 			auto be = std::static_pointer_cast<BattleEntity>(entity);
 
 			if (be)
-				SendTurn(nextTurn.action, nextTurn.target->Id, nextTurn.value, be->GetParent());
+				SendTurn(nextTurn.action, nextTurn.target->GetParent()->Id, nextTurn.value, be->GetParent());
 		}
 
 		Log::Debug("Pushing back turn " + std::to_string(currentTurn));
@@ -87,7 +87,7 @@ void ServerBattle::SendTurnToClients(int turn_id)
 				auto be = std::static_pointer_cast<BattleEntity>(entity);
 
 				if (be)
-					SendTurn(turn.action, turn.target->Id, turn.value, be->GetParent());
+					SendTurn(turn.action, turn.target->GetParent()->Id, turn.value, be->GetParent());
 			}
 
 			return;
