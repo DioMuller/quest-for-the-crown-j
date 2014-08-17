@@ -173,7 +173,15 @@ void Server::Update(double delta)
 void Server::StartConfront(std::shared_ptr<qfcbase::Entity> e1, std::shared_ptr<qfcbase::Entity> e2)
 {
 	std::lock_guard<std::mutex> lock(mtx_battles);
+
 	Log::Debug((std::string)"Battle: " + std::to_string(e1->Id) + " VS " + std::to_string(e2->Id));
+
+	if (entity_battles.count(e1->Id) > 0 || entity_battles.count(e2->Id) > 0)
+	{
+		// Hope this fixes the goddamn bug.
+		Log::Debug("Ignored, one of more entities are already on battle.");
+		return;
+	}
 
 	std::shared_ptr<ServerBattle> battle;
 	if (entity_battles.count(e1->Id) > 0) {

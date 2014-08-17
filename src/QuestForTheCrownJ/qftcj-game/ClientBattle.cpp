@@ -128,9 +128,10 @@ bool ClientBattle::SelectAction(std::shared_ptr<qfcbase::BattleEntity> currentEn
 		{
 			for (auto turn : receivedTurns)
 			{
-				if (turn.id == currentTurn + 1 && turn.entity->Type() == BattleEntityType::ENEMY)
+				if (turn.id == currentTurn && turn.entity->Type() == BattleEntityType::ENEMY)
 				{
-
+					turns.push_back(turn);
+					return true;
 				}
 			}
 		}
