@@ -66,6 +66,6 @@ namespace qfcserver {
 			std::shared_ptr<ServerLevel> LoadLevel(int map_id);
 			void AddToPlayer(std::shared_ptr<qfcbase::Entity> entity, int gold, int potions);
 		public:
-			void SendTurn(int turn_id, qfcbase::BattleAction command, int target_id, int additional_info, std::shared_ptr<qfcbase::Entity> entity);
+			void SendTurn(int turn_id, qfcbase::BattleAction command, int entity_id, int target_id, int additional_info, std::shared_ptr<qfcbase::Entity> entity);
 	};
 }

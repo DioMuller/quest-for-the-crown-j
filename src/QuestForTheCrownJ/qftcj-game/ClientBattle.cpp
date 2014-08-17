@@ -182,7 +182,7 @@ void ClientBattle::ReceiveTurn(qfcbase::BattleAction command, int turn_id, int a
 		if ( bent )
 		{
 			if (bent->GetParent()->Id == entity_id) currentEntity = bent;
-			if (bent->GetParent()->Id == target_id) targetEntity == bent;
+			if (bent->GetParent()->Id == target_id) targetEntity = bent;
 		}
 	}
 

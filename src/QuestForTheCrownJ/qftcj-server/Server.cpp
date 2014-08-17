@@ -106,7 +106,7 @@ Server::Server(int port)
 
 		if (battle)
 		{
-			battle->ReceiveTurn(data.command, data.additional_info, data.target_id);
+			battle->ReceiveTurn(data.turn_id, data.command, data.additional_info, data.entity_id, data.target_id);
 		}
 	};
 }
@@ -175,12 +175,12 @@ void Server::StartConfront(std::shared_ptr<qfcbase::Entity> e1, std::shared_ptr<
 */
 
 	std::shared_ptr<ServerBattle> battle;
-	if (entity_battles.count(e1->Id) > 0) {
+	if (entity_battles.count(e1->Id) > 0 && entity_battles[e1->Id] != nullptr) {
 		battle = entity_battles[e1->Id];
 		if (entity_battles.count(e2->Id) <= 0)
 			AddToBattle(battle, e2);
 	}
-	else if (entity_battles.count(e2->Id) > 0) {
+	else if (entity_battles.count(e2->Id) > 0 && entity_battles[e2->Id] != nullptr) {
 		battle = entity_battles[e2->Id];
 		if (entity_battles.count(e1->Id) <= 0)
 			AddToBattle(battle, e1);
@@ -569,12 +569,12 @@ std::shared_ptr<ServerLevel> qfcserver::Server::LoadLevel(int map_id)
 	return loaded_levels[map_id];
 }
 
-void qfcserver::Server::SendTurn(int turn_id, qfcbase::BattleAction command, int target_id, int additional_info, std::shared_ptr<Entity> entity)
+void qfcserver::Server::SendTurn(int turn_id, qfcbase::BattleAction command, int entity_id, int target_id,  int additional_info, std::shared_ptr<Entity> entity)
 {
 	auto user = GetUser(entity);
 	if (!user) return;
 
-	channel->SendServerCommand(turn_id, command, entity->Id, target_id, additional_info, user->address, user->address_size);
+	channel->SendServerCommand(turn_id, command, entity_id, target_id, additional_info, user->address, user->address_size);
 }
 
 void qfcserver::Server::AddToPlayer(std::shared_ptr<Entity> entity, int gold, int potions)
