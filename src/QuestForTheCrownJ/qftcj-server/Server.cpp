@@ -551,4 +551,14 @@ void qfcserver::Server::SendTurn(int turn_id, qfcbase::BattleAction command, int
 	}
 }
 
+void qfcserver::Server::AddToPlayer(std::shared_ptr<Entity> entity, int gold, int potions)
+{
+	auto user = GetUser(entity);
+	if (!user) return;
+
+	entity->items.gold += gold;
+	entity->items.potions += potions;
+	db_exec("UPDATE players SET gold=" + std::to_string(entity->items.gold) + (std::string)", potions=" + std::to_string(entity->items.potions) + " WHERE id=" + std::to_string(user->player_id), nullptr);
+}
+
 #pragma endregion

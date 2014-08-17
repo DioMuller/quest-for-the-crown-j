@@ -31,6 +31,12 @@ namespace qfcbase
 #endif
 	} Status;
 
+	typedef struct struct_items
+	{
+		int gold = 0;
+		int potions = 0;
+	} Items;
+
 	class Scene;
 
 	class Entity : public Shareable<Entity>
@@ -47,6 +53,7 @@ namespace qfcbase
 			std::weak_ptr<qfcbase::Scene> scene;
 			std::string category;
 			Status status;
+			Items items;
 
 		/////////////////////////////////////
 		// Constructors
