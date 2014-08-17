@@ -65,7 +65,8 @@ void Entity::AddBehavior(std::shared_ptr<Behavior> b)
 void Entity::RemoveBehavior(std::shared_ptr<Behavior> b)
 {
 	auto pos = std::find(behaviors.begin(), behaviors.end(), b);
-	behaviors.erase(pos);
+	if (pos != behaviors.end())
+		behaviors.erase(pos);
 }
 
 void Entity::Walk(sf::Vector2f direction, double dt)
