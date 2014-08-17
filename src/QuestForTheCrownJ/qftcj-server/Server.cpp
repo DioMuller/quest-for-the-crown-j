@@ -541,7 +541,6 @@ std::shared_ptr<ServerLevel> qfcserver::Server::LoadLevel(int map_id)
 
 void qfcserver::Server::SendTurn(int turn_id, qfcbase::BattleAction command, int target_id, int additional_info, std::shared_ptr<Entity> entity)
 {
-	// TODO: SEND Turn data.
 	for (auto usr : logged_users)
 	{
 		if (usr.second.game_entity->Id == entity->Id)

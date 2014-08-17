@@ -36,6 +36,7 @@ bool ServerBattle::SelectAction(std::shared_ptr<qfcbase::BattleEntity> currentEn
 	{
 	case BattleEntityType::PLAYER:
 		//TODO: Check if there is a player queued.
+		//Log::Debug("Player Turn - No change");
 		return false;
 		break;
 	case BattleEntityType::ENEMY:
@@ -49,6 +50,7 @@ bool ServerBattle::SelectAction(std::shared_ptr<qfcbase::BattleEntity> currentEn
 				SendTurn(nextTurn.action, nextTurn.target->Id, nextTurn.value, be->GetParent());
 		}
 
+		Log::Debug("Pushing back turn " + std::to_string(currentTurn));
 		turns.push_back(nextTurn);
 
 		return true;
@@ -76,7 +78,7 @@ void ServerBattle::ReceiveTurn(qfcbase::BattleAction command, int additional_inf
 
 void ServerBattle::SendTurnToClients(int turn_id)
 {
-	for each (auto turn in turns)
+	for (auto turn : turns)
 	{
 		if (turn.id == turn_id)
 		{

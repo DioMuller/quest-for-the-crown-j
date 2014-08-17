@@ -15,6 +15,7 @@ namespace qfcgame
 			std::deque<std::string> lastMessages;
 			sf::Text text;
 			int lastTurn;
+			std::vector<qfcbase::Turn> receivedTurns;
 
 		/////////////////////////////////////
 		// Constructors
@@ -35,6 +36,6 @@ namespace qfcgame
 			void RequestTurn();
 			void SendTurn(qfcbase::BattleAction command, int target, int additional_info);
 
-			void ReceiveTurn(qfcbase::BattleAction command, int additional_info, int target_id);
+			void ReceiveTurn(qfcbase::BattleAction command, int turn_id, int additional_info, int target_id);
 	};
 }

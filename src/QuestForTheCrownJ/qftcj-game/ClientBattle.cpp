@@ -124,6 +124,13 @@ bool ClientBattle::SelectAction(std::shared_ptr<qfcbase::BattleEntity> currentEn
 		return true;
 		break;
 	case BattleEntityType::ENEMY:
+		if (receivedTurns.size() > 0)
+		{
+			for (auto turn : receivedTurns)
+			{
+
+			}
+		}
 		RequestTurn();
 		return false;
 		//nextTurn = Turn{ currentTurn, currentEntity, targetEntity, BattleAction::ATTACK, 3 + rand() % 5 };
@@ -160,7 +167,7 @@ void ClientBattle::SendTurn(BattleAction command, int target, int additional_inf
 	}
 }
 
-void ClientBattle::ReceiveTurn(qfcbase::BattleAction command, int additional_info, int target_id)
+void ClientBattle::ReceiveTurn(qfcbase::BattleAction command, int turn_id, int additional_info, int target_id)
 {
 	std::shared_ptr<BattleEntity> currentEntity = nullptr;
 	std::shared_ptr<BattleEntity> targetEntity = nullptr;
@@ -176,5 +183,5 @@ void ClientBattle::ReceiveTurn(qfcbase::BattleAction command, int additional_inf
 	}
 
 	if ( currentEntity && targetEntity )
-		turns.push_back(Turn{ currentTurn + 1, currentEntity, targetEntity, command, additional_info });
+		receivedTurns.push_back(Turn{ turn_id, currentEntity, targetEntity, command, additional_info });
 }
