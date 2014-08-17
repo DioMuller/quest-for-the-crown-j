@@ -99,6 +99,15 @@ Server::Server(int port)
 	channel->handleCharacterCommand = [this](const ClientCharacterBattleCommand data)
 	{
 		Log::Message("Received Command " + std::to_string(data.command) + " from Client.");
+		auto user = GetUser(data.header.authKey);
+		if (!user) return;
+
+		auto battle = entity_battles[user->game_entity->Id];
+
+		if (battle)
+		{
+			battle->ReceiveTurn(data.command, data.additional_info, data.target_id);
+		}
 	};
 }
 
@@ -154,14 +163,16 @@ void Server::StartConfront(std::shared_ptr<qfcbase::Entity> e1, std::shared_ptr<
 {
 	std::lock_guard<std::mutex> lock(mtx_battles);
 
+	// TODO: Uncomment messages.
 	Log::Debug((std::string)"Battle: " + std::to_string(e1->Id) + " VS " + std::to_string(e2->Id));
 
-	if (entity_battles.count(e1->Id) > 0 || entity_battles.count(e2->Id) > 0)
+/*	if( (entity_battles.count(e1->Id) > 0 && entity_battles[e1->Id]) || (entity_battles.count(e2->Id) > 0 && entity_battles[e2->Id]) )
 	{
-		// Hope this fixes the goddamn bug.
+	    // Hope this fixes the goddamn bug.
 		Log::Debug("Ignored, one of more entities are already on battle.");
 		return;
 	}
+*/
 
 	std::shared_ptr<ServerBattle> battle;
 	if (entity_battles.count(e1->Id) > 0) {
@@ -563,7 +574,7 @@ void qfcserver::Server::SendTurn(int turn_id, qfcbase::BattleAction command, int
 	auto user = GetUser(entity);
 	if (!user) return;
 
-	channel->SendServerCommand(turn_id, command, target_id, additional_info, user->address, user->address_size);
+	channel->SendServerCommand(turn_id, command, entity->Id, target_id, additional_info, user->address, user->address_size);
 }
 
 void qfcserver::Server::AddToPlayer(std::shared_ptr<Entity> entity, int gold, int potions)

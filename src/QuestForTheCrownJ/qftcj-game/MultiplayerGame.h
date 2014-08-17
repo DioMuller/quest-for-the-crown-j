@@ -35,7 +35,7 @@ namespace qfcgame
 		//void SetEntities(std::vector<ServerEntityInfo> entities);
 		void StartConfront(std::shared_ptr<qfcbase::Entity> e1, std::shared_ptr<qfcbase::Entity> e2);
 
-		void SendTurn(int turn_id, qfcbase::BattleAction command, int target_id, int additional_info);
+		void SendTurn(int turn_id, qfcbase::BattleAction command, int entity_id, int target_id, int additional_info);
 		void RequestTurn(int lastTurn);
 	};
 }

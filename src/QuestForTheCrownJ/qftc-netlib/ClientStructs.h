@@ -72,6 +72,7 @@ typedef struct s_client_character_command
 	ClientHeader header = { { PacketType::CLIENT_BATTLE_COMMAND } };
 	int turn_id;
 	qfcbase::BattleAction command;
+	int entity_id;
 	int target_id;
 	int additional_info; // Item id, Skill id.
 } ClientCharacterBattleCommand;

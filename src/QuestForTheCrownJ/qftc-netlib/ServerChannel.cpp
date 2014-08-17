@@ -165,7 +165,7 @@ void ServerChannel::SendEntity(std::shared_ptr<Level> level, std::shared_ptr<Ent
 }
 
 
-void ServerChannel::SendServerCommand(int turn_id, qfcbase::BattleAction command, int target_id, int additional_info, std::shared_ptr<sockaddr_in> addr, int addr_size)
+void ServerChannel::SendServerCommand(int turn_id, qfcbase::BattleAction command, int entity_id, int target_id, int additional_info, std::shared_ptr<sockaddr_in> addr, int addr_size)
 {
 	ServerBattleTurn data;
 	Log::Debug("SendServerCommand");
@@ -173,6 +173,7 @@ void ServerChannel::SendServerCommand(int turn_id, qfcbase::BattleAction command
 	// This Shouldn't happen, buttt...
 	data.header.type = PacketType::SERVER_BATTLE_TURN;
 
+	data.entity.id = entity_id;
 	data.turn_id = turn_id;
 	data.command = command;
 	data.additional_info = additional_info;
