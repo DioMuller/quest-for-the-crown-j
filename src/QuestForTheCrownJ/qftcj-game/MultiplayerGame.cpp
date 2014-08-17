@@ -68,7 +68,7 @@ void MultiplayerGame::Connect(std::string server_addr, std::string auth_token)
 	clientChannel.Connect(0, server_addr, 12345);
 	clientChannel.auth_token = auth_token;
 	clientChannel.onEntity = [this](const ServerSendEntity& data) {
-		HandleServerEntity(data);
+		HandleServerEntity(data.entity);
 		return;
 	};
 	clientChannel.onEntityRemoved = [this](const ServerSendEntityRemoved data) {
@@ -113,14 +113,14 @@ void MultiplayerGame::Connect(std::string server_addr, std::string auth_token)
 void MultiplayerGame::RefreshSceneFromServer()
 {
 	clientChannel.GetPlayer([=](ServerResponsePlayerInfo& data) {
-		this->player_entity_id = data.send_entity.entity.info.id;
+		this->player_entity_id = data.entity.info.id;
 
-		auto level_info = LevelCollection::GetLevel(data.send_entity.entity.location.map_id);
+		auto level_info = LevelCollection::GetLevel(data.entity.location.map_id);
 		auto scene = LevelLoader::LoadMap(this->getptr(), 1, level_info->mapFile);
 		LoadScene(scene, false);
-		HandleServerEntity(data.send_entity);
+		HandleServerEntity(data.entity);
 
-		auto updateEntity = currentScene->GetEntity(data.send_entity.entity.info.id);
+		auto updateEntity = currentScene->GetEntity(data.entity.info.id);
 		if (updateEntity)
 		{
 			updateEntity->items = data.items;
@@ -161,44 +161,44 @@ void MultiplayerGame::RequestTurn(int lastTurn)
 	clientChannel.SendPlayerTurnRequest(lastTurn);
 }
 
-void qfcgame::MultiplayerGame::HandleServerEntity(const ServerSendEntity &data)
+void qfcgame::MultiplayerGame::HandleServerEntity(const EntityInfo &serverEntity)
 {
 	std::lock_guard<std::mutex> lock_create(ent_update_mutex);
 	auto level = std::dynamic_pointer_cast<Level>(currentScene);
 	if (!level)
 		return;
 
-	auto updateEntity = currentScene->GetEntity(data.entity.info.id);
+	auto updateEntity = currentScene->GetEntity(serverEntity.info.id);
 
-	if (data.entity.location.map_id != level->Id())
+	if (serverEntity.location.map_id != level->Id())
 	{
 		if (updateEntity)
 			currentScene->RemoveEntity(updateEntity);
 		return;
 	}
 
-	auto position = data.entity.location.position;
+	auto position = serverEntity.location.position;
 
 	if (!updateEntity) {
-		Log::Debug((std::string)"Created Entity: " + std::to_string(data.entity.info.id) + " " + std::to_string(data.entity.info.type));
-		auto entity = CreateEntity(data.entity.info, position);
+		Log::Debug((std::string)"Created Entity: " + std::to_string(serverEntity.info.id) + " " + std::to_string(serverEntity.info.type));
+		auto entity = CreateEntity(serverEntity.info, position);
 		currentScene->AddEntity(entity);
 
 		entity->AddBehavior<Walker>();
 
-		if (player_entity_id == data.entity.info.id)
+		if (player_entity_id == serverEntity.info.id)
 			SetPlayer(entity);
 	}
 	else {
-		if (data.entity.info.id != player_entity_id)
+		if (serverEntity.info.id != player_entity_id)
 		{
 			auto walker = updateEntity->FindBehavior<Walker>();
 			if (walker)
 				walker->WalkTo(position);
 			else
 				updateEntity->Sprite->Position = sf::Vector2f(position.x, position.y);
-			if (data.entity.view.animation >= 0)
-				updateEntity->Sprite->SetCurrentAnimation(NetHelper::DecodeAnimation(data.entity.view.animation));
+			if (serverEntity.view.animation >= 0)
+				updateEntity->Sprite->SetCurrentAnimation(NetHelper::DecodeAnimation(serverEntity.view.animation));
 		}
 	}
 }

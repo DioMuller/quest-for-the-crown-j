@@ -36,7 +36,6 @@ Server::Server(int port)
 		throw std::exception(("Can't open database.sqlite: " + (std::string)sqlite3_errmsg(db)).c_str());
 
 	channel->onClientMessage = [this](const ClientHeader& header, std::shared_ptr<sockaddr_in> sender, int sender_size) {
-		std::lock_guard<std::mutex> lock(mtx_users);
 		auto user = GetUser(header.authKey);
 		if (!user) return;
 
@@ -45,17 +44,14 @@ Server::Server(int port)
 		user->away_time = 0;
 	};
 	channel->handleLoginInfo = [this](const LauncherLoginInfo& info, std::shared_ptr<sockaddr_in> sender, int sender_size) {
-		std::lock_guard<std::mutex> lock(mtx_users);
 		return HandleLoginInfo(info, sender, sender_size);
 	};
 	channel->handleRequestPlayer = [this](const ClientRequestPlayerInfo& data) {
-		std::lock_guard<std::mutex> lock(mtx_users);
 		auto user = GetUser(data.header.authKey);
 		if (!user) return;
 		HandleRequestPlayerInfo(user);
 	};
 	channel->handlePlayerPosition = [this](const ClientSendPlayerPosition& data) {
-		std::lock_guard<std::mutex> lock(mtx_users);
 		auto user = GetUser(data.header.authKey);
 		if (!user) return;
 
@@ -69,46 +65,31 @@ Server::Server(int port)
 		broadcast_data.entity.location.map_id = std::dynamic_pointer_cast<Level>(user->game_entity->Scene().lock())->Id();
 		broadcast_data.entity.location.position = user->game_entity->Sprite->Position;
 
-		for (auto other : logged_users)
+		for (auto other : GetOtherUsers(user->game_entity))
 		{
-			if (other.first != (std::string)data.header.authKey)
-				channel->Send(broadcast_data, other.second->address, other.second->address_size);
+			channel->Send(broadcast_data, other->address, other->address_size);
 		}
 	};
 	channel->handleRequestEntities = [this](const ClientRequestEntities& data) {
-		std::lock_guard<std::mutex> lock(mtx_users);
 		auto user = GetUser(data.header.authKey);
 		if (!user) return;
 		SendEntitiesToPlayer(user);
 	};
 	channel->handlePlayerDisconnect = [this](const ClientSendDisconnect& data) {
-		std::lock_guard<std::mutex> lock(mtx_users);
-		std::string auth_key = data.header.authKey;
-		DisconnectPlayer(auth_key);
-
+		auto user = GetUser(data.header.authKey);
+		if (!user) return;
+		DisconnectPlayer(user);
 	};
 	channel->handleConnectionClose = [this](std::shared_ptr<sockaddr_in> addr) {
-		std::lock_guard<std::mutex> lock(mtx_users);
-
-		std::string user_code;
-		for (auto usr : logged_users)
-		{
-			if (usr.second->address == addr)
-			{
-				user_code = usr.first;
-				break;
-			}
-		}
-
-		if (!user_code.empty())
-			DisconnectPlayer(user_code);
+		auto user = GetUser(addr);
+		if (!user) return;
+		DisconnectPlayer(user);
 	};
 
 	// Battle
 
 	channel->handleCharacterRequestNextTurn = [this](const ClientCharacterBattleNextTurn data)
 	{
-		std::lock_guard<std::mutex> lock(mtx_users);
 		Log::Message("Received Next Turn Request from Client");
 
 		auto user = GetUser(data.header.authKey);
@@ -167,7 +148,6 @@ void Server::UpdateLoop()
 #pragma region Game
 void Server::Update(double delta)
 {
-	std::lock_guard<std::mutex> lock(mtx_users);
 	CheckPlayersTimeout(delta);
 
 	for (auto& battle : ongoing_battles)
@@ -335,12 +315,14 @@ LauncherLoginResponse Server::HandleLoginInfo(const LauncherLoginInfo& login_inf
 		Log::Debug("User authenticated:\n" + user_auth_str);
 
 		playerEntity->Id = LevelLoader::GetFactory()->GenerateId();
+		logged->auth_key = user_auth_str;
 		logged->player_id = playerId;
 		logged->user_id = userId;
 		logged->game_entity = playerEntity;
 		logged->map_id = map_id;
 		logged->address = sender;
 		logged->address_size = sender_size;
+		std::lock_guard<std::mutex> lock(mtx_users);
 		logged_users[user_auth_str] = logged;
 	}
 	else
@@ -353,11 +335,11 @@ void Server::HandleRequestPlayerInfo(std::shared_ptr<LoggedUser> user)
 {
 	ServerResponsePlayerInfo resp;
 	auto pos = user->game_entity->Sprite->Position;
-	resp.send_entity.entity.info.type = ServerHelper::GetEntityType(user->game_entity);
-	resp.send_entity.entity.info.id = user->game_entity->Id;
-	resp.send_entity.entity.info.category = NetHelper::EncodeCategory(user->game_entity->category);
-	resp.send_entity.entity.location.map_id = user->map_id;
-	resp.send_entity.entity.location.position = pos;
+	resp.entity.info.type = ServerHelper::GetEntityType(user->game_entity);
+	resp.entity.info.id = user->game_entity->Id;
+	resp.entity.info.category = NetHelper::EncodeCategory(user->game_entity->category);
+	resp.entity.location.map_id = user->map_id;
+	resp.entity.location.position = pos;
 	resp.items = user->game_entity->items;
 
 	channel->Send(resp, user->address, user->address_size);
@@ -374,13 +356,12 @@ void Server::SetEntityPosition(std::shared_ptr<qfcbase::Entity> entity, int map_
 		itr->second->RemoveEntity(entity);
 
 		bool map_in_use = false;
-		for (auto us : logged_users)
+		for (auto us : GetUsers([&](std::shared_ptr<LoggedUser> u) {
+			return u->game_entity->scene.lock() == itr->second;
+		}))
 		{
-			if (us.second->game_entity->scene.lock() == itr->second)
-			{
-				map_in_use = true;
-				break;
-			}
+			map_in_use = true;
+			break;
 		}
 
 		if (!map_in_use)
@@ -440,10 +421,10 @@ std::shared_ptr<Entity> Server::GenerateEntity(std::weak_ptr<Scene> scene, std::
 			auto level = std::dynamic_pointer_cast<Level>(e->Scene().lock());
 			if (level)
 			{
-				for (auto user : logged_users)
+				for (auto user : GetOtherUsers(e))
 				{
-					if (user.second->game_entity != e)
-						channel->SendEntity(level, e, user.second->address, user.second->address_size);
+					if (user->game_entity != e)
+						channel->SendEntity(level, e, user->address, user->address_size);
 				}
 			}
 		}, NET_SECONDS_PER_FRAME);
@@ -456,32 +437,64 @@ std::shared_ptr<Entity> Server::GenerateEntity(std::weak_ptr<Scene> scene, std::
 #pragma region Helpers
 void Server::CheckPlayersTimeout(double dt)
 {
-	std::vector<std::string> timeout_players;
+	std::vector<std::shared_ptr<LoggedUser>> timeout_players;
 
-	for (auto& user : logged_users)
+	for (auto& user : GetUsers([&](std::shared_ptr<LoggedUser> user) { return true; }))
 	{
-		user.second->away_time += dt;
-		if (user.second->away_time > 10)
-			timeout_players.push_back(user.first);
+		user->away_time += dt;
+		if (user->away_time > 10)
+			timeout_players.push_back(user);
 	}
 
-	for (auto& user_code : timeout_players)
-		DisconnectPlayer(user_code);
+	for (auto& user : timeout_players)
+		DisconnectPlayer(user);
 }
 
 std::shared_ptr<LoggedUser> Server::GetUser(std::string authKey)
 {
-	return logged_users[authKey];
+	std::lock_guard<std::mutex> lock(mtx_users);
+	if (logged_users.count(authKey) > 0)
+		return logged_users[authKey];
+	return nullptr;
+}
+
+std::shared_ptr<LoggedUser> Server::GetUser(std::shared_ptr<sockaddr_in> address)
+{
+	std::lock_guard<std::mutex> lock(mtx_users);
+	for (auto usr : logged_users)
+		if (usr.second->address == address)
+			return usr.second;
+	return nullptr;
 }
 
 std::shared_ptr<LoggedUser> Server::GetUser(std::shared_ptr<qfcbase::Entity> entity)
 {
+	std::lock_guard<std::mutex> lock(mtx_users);
 	for (auto& user : logged_users) {
 		if (user.second->game_entity == entity)
 			return user.second;
 	}
 	return nullptr;
 }
+
+std::vector<std::shared_ptr<LoggedUser>> Server::GetUsers(std::function<bool(std::shared_ptr<LoggedUser>)> predicate)
+{
+	std::lock_guard<std::mutex> lock(mtx_users);
+	std::vector<std::shared_ptr<LoggedUser>> users;
+	for (auto& user : logged_users) {
+		if (predicate(user.second))
+			users.push_back(user.second);
+	}
+	return users;
+}
+
+std::vector<std::shared_ptr<LoggedUser>> Server::GetOtherUsers(std::shared_ptr<qfcbase::Entity> entity)
+{
+	return GetUsers([&](std::shared_ptr<LoggedUser> user) {
+		return user->game_entity != entity;
+	});
+}
+
 
 std::shared_ptr<Hero> Server::CreatePlayerEntity(std::string name, int map_id, std::string animation, float x, float y)
 {
@@ -509,9 +522,9 @@ void Server::db_exec(std::string sql, const std::function<void(int argc, char** 
 	}
 }
 
-void Server::DisconnectPlayer(std::string auth_key)
+void Server::DisconnectPlayer(std::shared_ptr<LoggedUser> user)
 {
-	auto user = logged_users[auth_key];
+	std::lock_guard<std::mutex> lock(mtx_users);
 	SavePlayer(user);
 	if (user->game_entity)
 	{
@@ -525,9 +538,9 @@ void Server::DisconnectPlayer(std::string auth_key)
 
 		UnstackScene(user->game_entity);
 	}
-	logged_users.erase(auth_key);
 
-	Log::Debug(std::string("Client disconnected: ") + auth_key);
+	logged_users.erase(user->auth_key);
+	Log::Debug(std::string("Client disconnected: ") + user->auth_key);
 }
 
 void Server::SavePlayer(std::shared_ptr<LoggedUser> user)
@@ -554,11 +567,10 @@ std::shared_ptr<ServerLevel> qfcserver::Server::LoadLevel(int map_id)
 
 void qfcserver::Server::SendTurn(int turn_id, qfcbase::BattleAction command, int target_id, int additional_info, std::shared_ptr<Entity> entity)
 {
-	for (auto usr : logged_users)
-	{
-		if (usr.second->game_entity->Id == entity->Id)
-			channel->SendServerCommand(turn_id, command, target_id, additional_info, usr.second->address, usr.second->address_size);
-	}
+	auto user = GetUser(entity);
+	if (!user) return;
+
+	channel->SendServerCommand(turn_id, command, target_id, additional_info, user->address, user->address_size);
 }
 
 void qfcserver::Server::AddToPlayer(std::shared_ptr<Entity> entity, int gold, int potions)
@@ -574,5 +586,4 @@ void qfcserver::Server::AddToPlayer(std::shared_ptr<Entity> entity, int gold, in
 		Log::Debug("Potions: " + std::to_string(entity->items.potions));
 	});
 }
-
 #pragma endregion

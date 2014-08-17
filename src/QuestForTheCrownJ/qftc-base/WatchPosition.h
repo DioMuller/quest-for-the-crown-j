@@ -12,13 +12,14 @@ namespace qfcbase
 	{
 	public:
 		int max_repeat = 3;
+		double force_send_every = 3;
 
 	private:
 		sf::Vector2f last_position;
 		std::string last_animation;
 		int repeat_count = 0;
 
-		double current_time, min_time;
+		double current_time, min_time, last_time;
 		std::function<void(std::shared_ptr<Entity>)> onMove;
 
 	public:

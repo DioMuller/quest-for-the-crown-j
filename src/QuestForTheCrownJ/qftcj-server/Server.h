@@ -21,7 +21,7 @@ namespace qfcserver {
 		public:
 			Server(int port);
 
-			void DisconnectPlayer(std::string auth_key);
+			void DisconnectPlayer(std::shared_ptr<LoggedUser> user);
 
 			~Server();
 
@@ -41,7 +41,6 @@ namespace qfcserver {
 			std::vector<std::shared_ptr<qfcserver::ServerBattle>> ongoing_battles;
 			std::mutex mtx_battles;
 			std::mutex mtx_users;
-
 			void UpdateLoop();
 
 			LauncherLoginResponse HandleLoginInfo(const LauncherLoginInfo& login_info, std::shared_ptr<sockaddr_in> sender, int sender_size);
@@ -50,11 +49,16 @@ namespace qfcserver {
 			void SetEntityPosition(std::shared_ptr<qfcbase::Entity> player_entity, int map_id, std::string animation, float x, float y);
 
 			void HandleRequestPlayerInfo(std::shared_ptr<LoggedUser> user);
-			std::shared_ptr<LoggedUser> Server::GetUser(std::shared_ptr<qfcbase::Entity> entity);
+
+			std::shared_ptr<LoggedUser> GetUser(std::shared_ptr<sockaddr_in> address);
+			std::shared_ptr<LoggedUser> GetUser(std::string authKey);
+			std::shared_ptr<LoggedUser> GetUser(std::shared_ptr<qfcbase::Entity> entity);
+			std::vector<std::shared_ptr<LoggedUser>> GetUsers(std::function<bool(std::shared_ptr<LoggedUser>)> predicate);
+			std::vector<std::shared_ptr<LoggedUser>> GetOtherUsers(std::shared_ptr<qfcbase::Entity> entity);
+
 			void Server::SendEntitiesToPlayer(std::shared_ptr<LoggedUser> user);
 
 			void SendEntityToUsers(int id, EntityType type, int x, int y);
-			std::shared_ptr<LoggedUser> Server::GetUser(std::string authKey);
 			void db_exec(std::string sql, const std::function<void(int argc, char** argv, char** azColName)>& callback);
 			void CheckPlayersTimeout(double dt);
 			void SavePlayer(std::shared_ptr<LoggedUser> user);

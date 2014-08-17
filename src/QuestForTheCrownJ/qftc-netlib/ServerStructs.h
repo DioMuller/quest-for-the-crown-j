@@ -25,7 +25,8 @@ typedef struct s_server_send_entity_removed
 
 typedef struct s_server_response_player_info
 {
-	ServerSendEntity send_entity;
+	Header header = { { PacketType::SERVER_RESPONSE_PLAYER_INFO } };
+	EntityInfo entity;
 	qfcbase::Items items;
 } ServerResponsePlayerInfo;
 

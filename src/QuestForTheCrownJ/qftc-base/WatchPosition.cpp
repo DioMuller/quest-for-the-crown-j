@@ -17,6 +17,8 @@ WatchPosition::~WatchPosition()
 
 void WatchPosition::Update(double dt)
 {
+	last_time += dt;
+
 	if (current_time > 0)
 		current_time -= dt;
 
@@ -29,7 +31,7 @@ void WatchPosition::Update(double dt)
 
 	if (ent->Sprite->Position == last_position && ent->Sprite->CurrentAnimation == last_animation)
 	{
-		if (repeat_count >= max_repeat)
+		if (repeat_count >= max_repeat && last_time < force_send_every)
 			return;
 		repeat_count++;
 	}
@@ -42,4 +44,5 @@ void WatchPosition::Update(double dt)
 	current_time = min_time;
 	last_position = ent->Sprite->Position;
 	last_animation = ent->Sprite->CurrentAnimation;
+	last_time = 0;
 }

@@ -10,4 +10,5 @@ typedef struct s_logged_user
 	std::shared_ptr<sockaddr_in> address;
 	int address_size;
 	double away_time;
+	std::string auth_key;
 } LoggedUser;
