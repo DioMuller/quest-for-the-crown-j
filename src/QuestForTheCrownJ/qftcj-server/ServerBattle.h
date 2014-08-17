@@ -7,11 +7,19 @@ namespace qfcserver
 	class ServerBattle : public qfcbase::BattleScene
 	{
 		/////////////////////////////////////
+		// Attributes
+		/////////////////////////////////////
+		private:
+			std::vector<qfcbase::Turn> receivedTurns;
+		/////////////////////////////////////
 		// Constructors
 		/////////////////////////////////////
 		public:
 			ServerBattle(std::weak_ptr<qfcbase::Game> parent);
 			~ServerBattle();
+		/////////////////////////////////////
+		// Methods
+		/////////////////////////////////////
 		public:
 			virtual bool SelectAction(std::shared_ptr<qfcbase::BattleEntity> entity);
 

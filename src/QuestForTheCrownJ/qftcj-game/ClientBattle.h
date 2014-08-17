@@ -34,7 +34,7 @@ namespace qfcgame
 			void PrintMessage(std::string message);
 
 			void RequestTurn();
-			void SendTurn(qfcbase::BattleAction command, int target, int additional_info);
+			void SendTurn(qfcbase::BattleAction command, int entity, int target, int additional_info);
 
 			void ReceiveTurn(qfcbase::BattleAction command, int turn_id, int additional_info, int entity_id, int target_id);
 	};

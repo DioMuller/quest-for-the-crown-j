@@ -119,7 +119,7 @@ bool ClientBattle::SelectAction(std::shared_ptr<qfcbase::BattleEntity> currentEn
 		// TODO: Potions.
 
 		nextTurn = Turn{ currentTurn, currentEntity, targetEntity, playerAction, 3 + rand() % 5 };
-		SendTurn(playerAction, targetEntity->GetParent()->Id, nextTurn.value);
+		SendTurn(playerAction, currentEntity->GetParent()->Id, targetEntity->GetParent()->Id, nextTurn.value);
 		turns.push_back(nextTurn);
 		return true;
 		break;
@@ -161,13 +161,13 @@ void ClientBattle::RequestTurn()
 	}
 }
 
-void ClientBattle::SendTurn(BattleAction command, int target, int additional_info)
+void ClientBattle::SendTurn(BattleAction command, int entity, int target, int additional_info)
 {
 	auto sceneParent = std::dynamic_pointer_cast<MultiplayerGame>(parent.lock());
 
 	if (sceneParent)
 	{
-		sceneParent->SendTurn(currentTurn, command, target, additional_info);
+		sceneParent->SendTurn(currentTurn, command, entity, target, additional_info);
 	}
 }
 

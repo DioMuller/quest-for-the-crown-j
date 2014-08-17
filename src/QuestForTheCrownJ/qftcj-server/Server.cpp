@@ -119,6 +119,15 @@ Server::Server(int port)
 	channel->handleCharacterCommand = [this](const ClientCharacterBattleCommand data)
 	{
 		Log::Message("Received Command " + std::to_string(data.command) + " from Client.");
+		if (!IsLogged(data.header.authKey)) return;
+
+		auto user = logged_users[data.header.authKey];
+		auto battle = entity_battles[user.game_entity->Id];
+
+		if (battle)
+		{
+			battle->ReceiveTurn(data.command, data.additional_info, data.target_id);
+		}
 	};
 }
 
