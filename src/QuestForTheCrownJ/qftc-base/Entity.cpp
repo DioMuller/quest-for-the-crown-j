@@ -11,6 +11,20 @@ using namespace qfcbase;
 Entity::Entity()
 	: status({}), speed(32), lastDirectionName("down")
 {
+	if (nameFont.loadFromFile("Content/fonts/8bitwonder.ttf"))
+	{
+		// select the font
+		nameText.setFont(nameFont);
+
+		// set the character size
+		nameText.setCharacterSize(10); // in pixels, not points!
+
+		// set the color
+		nameText.setColor(sf::Color::White);
+
+		// set the text style
+		nameText.setStyle(sf::Text::Bold);
+	}
 }
 
 
@@ -36,6 +50,11 @@ void Entity::Update(double dt)
 void Entity::Draw(sf::RenderWindow* renderer)
 {
 	sprite->Draw(renderer);
+	if (!nameText.getString().isEmpty())
+	{
+		nameText.setPosition(sf::Vector2f(sprite->Center.x - nameText.getLocalBounds().width / 2, sprite->Feet.y + 4));
+		renderer->draw(nameText);
+	}
 }
 
 void Entity::AddBehavior(std::shared_ptr<Behavior> b)
