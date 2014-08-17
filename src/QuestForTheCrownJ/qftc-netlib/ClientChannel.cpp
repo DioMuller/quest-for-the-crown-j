@@ -104,6 +104,9 @@ void qfcnet::ClientChannel::Listen()
 		case PacketType::SERVER_SEND_ENTITY_REMOVED:
 			HandlePacket("SERVER_SEND_ENTITY_REMOVED", onEntityRemoved, buffer, size);
 			break;
+		case PacketType::SERVER_SEND_ENTITY_NAME:
+			HandlePacket("SERVER_SEND_ENTITY_NAME:", onEntityName, buffer, size);
+			break;
 		case PacketType::SERVER_SEND_BATTLE_START:
 			HandlePacket("SERVER_SEND_BATTLE_START", onBattleStart, buffer, size);
 			break;

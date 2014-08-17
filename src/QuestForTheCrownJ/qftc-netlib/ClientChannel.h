@@ -22,6 +22,7 @@ namespace qfcnet
 		std::string auth_token;
 		std::function<void(ServerSendEntity&)> onEntity;
 		std::function<void(ServerSendEntityRemoved&)> onEntityRemoved;
+		std::function<void(ServerSendEntityName&)> onEntityName;
 
 		std::function<void(ServerBattleStart&)> onBattleStart;
 		std::function<void(ServerBattleTurn&)> onTurnReceived;

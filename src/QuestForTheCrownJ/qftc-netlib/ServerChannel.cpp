@@ -151,9 +151,17 @@ void ServerChannel::SendEntity(std::shared_ptr<Level> level, std::shared_ptr<Ent
 	data.entity.location.map_id = level->Id();
 	data.entity.location.position = entity->Sprite->Position;
 	data.entity.view.animation = NetHelper::EncodeAnimation(entity->Sprite->CurrentAnimation);
-	int r = Send(data, addr, addr_size);
-	if (r == WSAECONNRESET)
+	if (Send(data, addr, addr_size) == WSAECONNRESET)
 		handleConnectionClose(addr);
+
+	if (!entity->GetName().empty())
+	{
+		ServerSendEntityName nameData;
+		nameData.entity_id = entity->Id;
+		strcpy_s(nameData.name, entity->GetName().c_str());
+		if (Send(nameData, addr, addr_size) == WSAECONNRESET)
+			handleConnectionClose(addr);
+	}
 }
 
 
@@ -169,5 +177,6 @@ void ServerChannel::SendServerCommand(int turn_id, qfcbase::BattleAction command
 	data.command = command;
 	data.additional_info = additional_info;
 	data.target_id = target_id;
-	Send(data, addr, addr_size);
+	if (Send(data, addr, addr_size) == WSAECONNRESET)
+		handleConnectionClose(addr);
 }
