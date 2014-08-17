@@ -104,6 +104,16 @@ Server::Server(int port)
 	channel->handleCharacterRequestNextTurn = [this](const ClientCharacterBattleNextTurn data)
 	{
 		Log::Message("Received Next Turn Request from Client");
+
+		if (!IsLogged(data.header.authKey)) return;
+
+		auto user = logged_users[data.header.authKey];
+		auto battle = std::static_pointer_cast<ServerBattle>(user.game_entity->Scene().lock());
+
+		if (battle)
+		{
+			battle->SendTurnToClients(data.lastTurn);
+		}
 	};
 
 	channel->handleCharacterCommand = [this](const ClientCharacterBattleCommand data)

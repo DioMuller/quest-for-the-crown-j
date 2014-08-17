@@ -48,27 +48,47 @@ bool ServerBattle::SelectAction(std::shared_ptr<qfcbase::BattleEntity> currentEn
 			if (be)
 				SendTurn(nextTurn.action, nextTurn.target->Id, nextTurn.value, be->GetParent());
 		}
-		break;
+
+		turns.push_back(nextTurn);
+
+		return true;
 	default:
 		return false;
-	}
-
-	turns.push_back(nextTurn);
-
-	return true;
+	}	
 }
 
-void ServerBattle::SendTurn(qfcbase::BattleAction command, int target, int additional_info, std::shared_ptr<Entity> currentEntity)
+void ServerBattle::SendTurn(qfcbase::BattleAction command, int target, int additional_info, std::shared_ptr<Entity> currentEntity, int turn_id)
 {
+	if (turn_id == -1) turn_id = currentTurn;
+
 	auto sceneParent = std::dynamic_pointer_cast<Server>(parent.lock());
 
 	if (sceneParent)
 	{
-		sceneParent->SendTurn(currentTurn, command, target, additional_info, currentEntity);
+		sceneParent->SendTurn(turn_id, command, target, additional_info, currentEntity);
 	}
 }
 
 void ServerBattle::ReceiveTurn(qfcbase::BattleAction command, int additional_info, int target_id)
 {
 
+}
+
+void ServerBattle::SendTurnToClients(int turn_id)
+{
+	for each (auto turn in turns)
+	{
+		if (turn.id == turn_id)
+		{
+			for (auto entity : GetEntities())
+			{
+				auto be = std::static_pointer_cast<BattleEntity>(entity);
+
+				if (be)
+					SendTurn(turn.action, turn.target->Id, turn.value, be->GetParent());
+			}
+
+			return;
+		}
+	}
 }

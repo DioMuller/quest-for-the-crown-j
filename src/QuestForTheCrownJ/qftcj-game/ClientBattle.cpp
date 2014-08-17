@@ -120,18 +120,17 @@ bool ClientBattle::SelectAction(std::shared_ptr<qfcbase::BattleEntity> currentEn
 
 		nextTurn = Turn{ currentTurn, currentEntity, targetEntity, playerAction, 3 + rand() % 5 };
 		SendTurn(playerAction, targetEntity->GetParent()->Id, nextTurn.value);
+		turns.push_back(nextTurn);
+		return true;
 		break;
 	case BattleEntityType::ENEMY:
 		RequestTurn();
+		return false;
 		//nextTurn = Turn{ currentTurn, currentEntity, targetEntity, BattleAction::ATTACK, 3 + rand() % 5 };
-		break;
+		//break;
 	default:
 		return false;
 	}
-
-	turns.push_back(nextTurn);
-
-	return true;
 }
 
 void ClientBattle::PrintMessage(std::string message)
