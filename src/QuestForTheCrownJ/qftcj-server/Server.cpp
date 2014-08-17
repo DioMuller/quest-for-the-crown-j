@@ -53,21 +53,14 @@ Server::Server(int port)
 	};
 	channel->handlePlayerPosition = [this](const ClientSendPlayerPosition& data) {
 		auto user = GetUser(data.header.authKey);
-		if (!user) return;
+		auto level = std::dynamic_pointer_cast<Level>(user->game_entity->Scene().lock());
+		if (!user || !level) return;
 
 		SetEntityPosition(user->game_entity, data.location.map_id, NetHelper::DecodeAnimation(data.view.animation), data.location.position.x, data.location.position.y);
 
-		ServerSendEntity broadcast_data;
-		broadcast_data.entity.view.animation = NetHelper::EncodeAnimation(user->game_entity->Sprite->CurrentAnimation);
-		broadcast_data.entity.info.id = user->game_entity->Id;
-		broadcast_data.entity.info.type = ServerHelper::GetEntityType(user->game_entity);
-		broadcast_data.entity.info.category = NetHelper::EncodeCategory(user->game_entity->category);
-		broadcast_data.entity.location.map_id = std::dynamic_pointer_cast<Level>(user->game_entity->Scene().lock())->Id();
-		broadcast_data.entity.location.position = user->game_entity->Sprite->Position;
-
 		for (auto other : GetOtherUsers(user->game_entity))
 		{
-			channel->Send(broadcast_data, other->address, other->address_size);
+			channel->SendEntity(level, user->game_entity, other->address, other->address_size);
 		}
 	};
 	channel->handleRequestEntities = [this](const ClientRequestEntities& data) {
