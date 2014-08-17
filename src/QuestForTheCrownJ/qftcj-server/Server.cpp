@@ -108,7 +108,7 @@ Server::Server(int port)
 		if (!IsLogged(data.header.authKey)) return;
 
 		auto user = logged_users[data.header.authKey];
-		auto battle = std::static_pointer_cast<ServerBattle>(user.game_entity->Scene().lock());
+		auto battle = entity_battles[user.game_entity->Id];//std::static_pointer_cast<ServerBattle>(user.game_entity->Scene().lock());
 
 		if (battle)
 		{

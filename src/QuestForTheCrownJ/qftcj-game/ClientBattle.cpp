@@ -128,7 +128,10 @@ bool ClientBattle::SelectAction(std::shared_ptr<qfcbase::BattleEntity> currentEn
 		{
 			for (auto turn : receivedTurns)
 			{
+				if (turn.id == currentTurn + 1 && turn.entity->Type() == BattleEntityType::ENEMY)
+				{
 
+				}
 			}
 		}
 		RequestTurn();
@@ -167,7 +170,7 @@ void ClientBattle::SendTurn(BattleAction command, int target, int additional_inf
 	}
 }
 
-void ClientBattle::ReceiveTurn(qfcbase::BattleAction command, int turn_id, int additional_info, int target_id)
+void ClientBattle::ReceiveTurn(qfcbase::BattleAction command, int turn_id, int additional_info, int entity_id, int target_id)
 {
 	std::shared_ptr<BattleEntity> currentEntity = nullptr;
 	std::shared_ptr<BattleEntity> targetEntity = nullptr;
@@ -177,7 +180,7 @@ void ClientBattle::ReceiveTurn(qfcbase::BattleAction command, int turn_id, int a
 		auto bent = std::static_pointer_cast<BattleEntity>(entity);
 		if ( bent )
 		{
-			if (bent->Type() == BattleEntityType::PLAYER) currentEntity = bent;
+			if (bent->GetParent()->Id == entity_id) currentEntity = bent;
 			if (bent->GetParent()->Id == target_id) targetEntity == bent;
 		}
 	}

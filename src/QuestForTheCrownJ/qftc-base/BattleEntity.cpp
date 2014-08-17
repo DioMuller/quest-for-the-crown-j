@@ -10,7 +10,7 @@ BattleEntity::BattleEntity(std::shared_ptr<Entity> parent, BattleEntityType type
 	this->parent = parent;
 	this->type = type;
 
-	this->Id = parent->Id;
+	//this->Id = parent->Id;
 
 	current_hp = parent->status.HP;
 	current_mp = parent->status.MP;

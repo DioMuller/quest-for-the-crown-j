@@ -136,7 +136,7 @@ void MultiplayerGame::Connect(std::string server_addr, std::string auth_token)
 			return;
 		}
 
-		level->ReceiveTurn(data.command, data.turn_id, data.additional_info, data.target_id);
+		level->ReceiveTurn(data.command, data.turn_id, data.additional_info, data.entity.id, data.target_id);
 	};
 }
 

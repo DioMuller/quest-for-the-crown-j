@@ -36,6 +36,6 @@ namespace qfcgame
 			void RequestTurn();
 			void SendTurn(qfcbase::BattleAction command, int target, int additional_info);
 
-			void ReceiveTurn(qfcbase::BattleAction command, int turn_id, int additional_info, int target_id);
+			void ReceiveTurn(qfcbase::BattleAction command, int turn_id, int additional_info, int entity_id, int target_id);
 	};
 }
