@@ -29,9 +29,23 @@ ClientBattle::ClientBattle(std::weak_ptr<qfcbase::Game> parent, std::string back
 		backgroundImage.setTexture(backgroundTexture);
 
 		//TODO: Non-fixed size?
-		backgroundImage.setScale(sf::Vector2f(800.0f / backgroundTexture.getSize().x, 600.0f / backgroundTexture.getSize().y));
+		backgroundImage.setScale(800.0f / backgroundTexture.getSize().x, 600.0f / backgroundTexture.getSize().y);
 	}
 	
+	if (!messageBoxTexture.loadFromFile("Content/images/MessageBox.png"))
+	{
+		Log::Error("Error loading message box image.");
+	}
+	else
+	{
+		Log::Message("Loaded message box image.");
+		messageBoxImage.setTexture(messageBoxTexture);
+
+		//TODO: Non-fixed size?
+		float scale = 800.0f / messageBoxTexture.getSize().x;
+		messageBoxImage.setScale(scale, scale);
+		messageBoxImage.setPosition(0, 600.0f - (messageBoxTexture.getSize().y * scale));
+	}
 
 	AudioPlayer::PlayBGM("Firebrand");
 }
@@ -64,6 +78,7 @@ void ClientBattle::Draw(sf::RenderWindow* renderer)
 	renderer->setView(sf::View(cameraPosition, screenSize));
 
 	renderer->draw(backgroundImage);
+	renderer->draw(messageBoxImage);
 
 	// Text Initialization.
 	std::ostringstream sstream;
@@ -88,6 +103,7 @@ void ClientBattle::Draw(sf::RenderWindow* renderer)
 
 	//	Players Text
 	int i = 0;
+	int j = 0;
 	for (auto entity : GetEntities())
 	{
 		auto battleEntity = std::static_pointer_cast<BattleEntity>(entity);
@@ -95,11 +111,18 @@ void ClientBattle::Draw(sf::RenderWindow* renderer)
 		if (battleEntity)
 		{
 			if (battleEntity->Type() == BattleEntityType::PLAYER)
+			{
 				battleEntity->DrawInfo(renderer, sf::Vector2f(10.0f + (i * 200.0f), 550.0f));
+				i++;
+			}
 			else if (battleEntity->Type() == BattleEntityType::ENEMY)
-				battleEntity->DrawEntity(renderer, sf::Vector2f(350.0f + (i * 30.0f), 300.0f));
+			{
+				battleEntity->DrawInfo(renderer, sf::Vector2f(690.0f - (j * 200.0f), 550.0f));
+				battleEntity->DrawEntity(renderer, sf::Vector2f(350.0f + (j * 30.0f), 300.0f));
+				j++;
+			}
 		}
-		i++;
+		
 	}
 }
 

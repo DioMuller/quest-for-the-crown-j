@@ -21,6 +21,8 @@ namespace qfcgame
 			std::vector<qfcbase::Turn> receivedTurns;
 			sf::Texture backgroundTexture;
 			sf::Sprite backgroundImage;
+			sf::Texture messageBoxTexture;
+			sf::Sprite messageBoxImage;
 
 		/////////////////////////////////////
 		// Constructors

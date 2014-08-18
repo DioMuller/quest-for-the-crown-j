@@ -41,11 +41,19 @@ void BattleEntity::DrawInfo(sf::RenderWindow* renderer, sf::Vector2f position)
 
 	std::ostringstream sstream;
 	std::string str;
+	std::string name = (type == BattleEntityType::PLAYER) ? parent->Name : "Enemy";
 
-	sstream << "HP " << current_hp << std::endl
+	sstream << name << std::endl
+			<< "HP " << current_hp << std::endl
 			<< "MP " << current_mp << std::endl
-			<< "Potions " << "O";
+			<< "Potions " << parent->items.potions;
 	str = sstream.str();
+
+	if (type == BattleEntityType::ENEMY)
+	{
+		text.setColor(sf::Color(255, 0, 0));
+	}
+
 	text.setString(str);
 	renderer->draw(text);
 }
