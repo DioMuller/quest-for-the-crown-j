@@ -48,7 +48,7 @@ namespace qfcbase
 			std::vector<std::shared_ptr<Behavior>> behaviors;
 			std::string lastDirectionName;
 			sf::Text nameText;
-			sf::Font nameFont;
+			//sf::Font nameFont;
 		public:
 			std::weak_ptr<qfcbase::Scene> scene;
 			std::string category;
