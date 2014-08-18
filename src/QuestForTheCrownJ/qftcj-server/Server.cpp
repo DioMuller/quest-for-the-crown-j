@@ -53,8 +53,10 @@ Server::Server(int port)
 	};
 	channel->handlePlayerPosition = [this](const ClientSendPlayerPosition& data) {
 		auto user = GetUser(data.header.authKey);
+		if (!user) return;
+
 		auto level = std::dynamic_pointer_cast<Level>(user->game_entity->Scene().lock());
-		if (!user || !level) return;
+		if (!level) return;
 
 		SetEntityPosition(user->game_entity, data.location.map_id, NetHelper::DecodeAnimation(data.view.animation), data.location.position.x, data.location.position.y);
 
@@ -150,10 +152,19 @@ void Server::UpdateLoop()
 #pragma region Game
 void Server::Update(double delta)
 {
+	std::lock_guard<std::mutex> lock(mtx_battles);
+
 	CheckPlayersTimeout(delta);
 
-	for (auto& battle : ongoing_battles)
-		battle->Update(delta);
+	auto battleIterator = std::begin(ongoing_battles);
+	while (battleIterator != std::end(ongoing_battles)) {
+		(*battleIterator)->Update(delta);
+
+		if ((*battleIterator)->IsEmpty())
+			battleIterator = ongoing_battles.erase(battleIterator);
+		else
+			++battleIterator;
+	}
 
 	for (auto& level : loaded_levels)
 		level.second->Update(delta);
@@ -161,18 +172,8 @@ void Server::Update(double delta)
 
 void Server::StartConfront(std::shared_ptr<qfcbase::Entity> e1, std::shared_ptr<qfcbase::Entity> e2)
 {
-	std::lock_guard<std::mutex> lock(mtx_battles);
-
 	// TODO: Uncomment messages.
 	Log::Debug((std::string)"Battle: " + std::to_string(e1->Id) + " VS " + std::to_string(e2->Id));
-
-/*	if( (entity_battles.count(e1->Id) > 0 && entity_battles[e1->Id]) || (entity_battles.count(e2->Id) > 0 && entity_battles[e2->Id]) )
-	{
-	    // Hope this fixes the goddamn bug.
-		Log::Debug("Ignored, one of more entities are already on battle.");
-		return;
-	}
-*/
 
 	std::shared_ptr<ServerBattle> battle;
 	if (entity_battles.count(e1->Id) > 0 && entity_battles[e1->Id] != nullptr) {
@@ -220,7 +221,6 @@ void Server::GoToNeighbour(std::shared_ptr<qfcbase::Entity> entity, qfcbase::Dir
 
 void Server::UnstackScene(std::shared_ptr<qfcbase::Entity> entity)
 {
-	std::lock_guard<std::mutex> lock(mtx_battles);
 	if (entity_battles.count(entity->Id) <= 0)
 		return;
 
@@ -231,11 +231,6 @@ void Server::UnstackScene(std::shared_ptr<qfcbase::Entity> entity)
 	});
 	for (auto bEnt : found)
 		battle->RemoveEntity(bEnt);
-	if (battle->IsEmpty())
-	{
-		entity_battles.erase(entity->Id);
-		ongoing_battles.erase(std::remove(ongoing_battles.begin(), ongoing_battles.end(), battle), ongoing_battles.end());
-	}
 }
 #pragma endregion
 
@@ -528,7 +523,8 @@ void Server::db_exec(std::string sql, const std::function<void(int argc, char** 
 
 void Server::DisconnectPlayer(std::shared_ptr<LoggedUser> user)
 {
-	std::lock_guard<std::mutex> lock(mtx_users);
+	std::lock_guard<std::mutex> lockUsers(mtx_users);
+	std::lock_guard<std::mutex> lockBattles(mtx_battles);
 	SavePlayer(user);
 	if (user->game_entity)
 	{
