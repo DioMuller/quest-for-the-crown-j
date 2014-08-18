@@ -2,6 +2,7 @@
 #include "Level.h"
 #include "SFHelper.h"
 #include "Log.h"
+#include "GameAssets.h"
 
 using namespace qfcbase;
 
@@ -11,10 +12,10 @@ using namespace qfcbase;
 Entity::Entity()
 	: status({}), speed(32), lastDirectionName("down")
 {
-	if (nameFont.loadFromFile("Content/fonts/8bitwonder.ttf"))
+	if (GameAssets::DefaultFont())
 	{
 		// select the font
-		nameText.setFont(nameFont);
+		nameText.setFont(*GameAssets::DefaultFont());
 
 		// set the character size
 		nameText.setCharacterSize(10); // in pixels, not points!

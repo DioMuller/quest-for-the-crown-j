@@ -10,7 +10,7 @@ std::shared_ptr<sf::Font> GameAssets::DefaultFont()
 {
 	if (!isFontLoaded)
 	{
-		isFontLoaded = defaultFont->loadFromFile("Content/fonts/8bitwonder.ttf");
+		isFontLoaded = defaultFont->loadFromFile(DEFAULT_FONT);
 
 		if (!isFontLoaded) Log::Error("Could not load font!");
 	}
