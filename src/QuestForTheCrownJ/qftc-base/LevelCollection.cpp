@@ -4,9 +4,9 @@ using namespace qfcbase;
 
 std::vector<std::shared_ptr<LevelInfo>> LevelCollection::levels = std::vector<std::shared_ptr<LevelInfo>>();
 
-void LevelCollection::AddLevel(int id, std::string level, std::string music, std::string title, int neighbours[4])
+void LevelCollection::AddLevel(int id, std::string level, std::string music, std::string background, std::string title, int neighbours[4])
 {
-	LevelInfo* info = new LevelInfo { id, level, music, title, { neighbours[0], neighbours[1], neighbours[2], neighbours[3] } };
+	LevelInfo* info = new LevelInfo { id, level, music, background, title, { neighbours[0], neighbours[1], neighbours[2], neighbours[3] } };
 	levels.push_back(std::shared_ptr<LevelInfo>(info));
 }
 

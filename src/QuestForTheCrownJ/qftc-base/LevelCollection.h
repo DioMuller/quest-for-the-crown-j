@@ -10,6 +10,7 @@ namespace qfcbase
 		int levelId;
 		std::string mapFile;
 		std::string music;
+		std::string background;
 		std::string title;
 		int neighbours[4];
 	} LevelInfo;
@@ -26,7 +27,7 @@ namespace qfcbase
 		// Constructors
 		/////////////////////////////////////
 		public:
-			static void AddLevel(int id, std::string level, std::string music, std::string title, int neighbours[4]);
+			static void AddLevel(int id, std::string level, std::string music, std::string background, std::string title, int neighbours[4]);
 			static std::shared_ptr<LevelInfo> GetLevel(int id);
 			static std::shared_ptr<LevelInfo> GetLevel(std::string mapfile);
 			static std::shared_ptr<LevelInfo> GetNeighbour(int level, Direction direction);

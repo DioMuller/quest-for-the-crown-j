@@ -1,6 +1,8 @@
 #pragma once
 #include "BattleScene.h"
 
+#define REQUEST_INTERVAL 1.0
+
 namespace qfcgame
 {
 	class ClientBattle : public qfcbase::BattleScene
@@ -15,13 +17,16 @@ namespace qfcgame
 			std::deque<std::string> lastMessages;
 			sf::Text text;
 			int lastTurn;
+			double requestInterval;
 			std::vector<qfcbase::Turn> receivedTurns;
+			sf::Texture backgroundTexture;
+			sf::Sprite backgroundImage;
 
 		/////////////////////////////////////
 		// Constructors
 		/////////////////////////////////////
 		public:
-			ClientBattle(std::weak_ptr<qfcbase::Game> parent);
+			ClientBattle(std::weak_ptr<qfcbase::Game> parent, std::string background);
 			~ClientBattle();
 		/////////////////////////////////////
 		// Methods

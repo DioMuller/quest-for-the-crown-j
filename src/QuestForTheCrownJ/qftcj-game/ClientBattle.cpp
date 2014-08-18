@@ -9,14 +9,28 @@
 using namespace qfcgame;
 using namespace qfcbase;
 
-ClientBattle::ClientBattle(std::weak_ptr<qfcbase::Game> parent) : qfcbase::BattleScene(parent)
+ClientBattle::ClientBattle(std::weak_ptr<qfcbase::Game> parent, std::string background) : qfcbase::BattleScene(parent)
 {
 	time = 0.0;
 	lastAttack = 0.0;
+	requestInterval = 0.0;
 
 	text = sf::Text("Battle!", *GameAssets::DefaultFont());
 	text.setCharacterSize(12);
 	text.setPosition(10, 10);
+
+	if (!backgroundTexture.loadFromFile(background))
+	{
+		Log::Error("Error loading battle background image.");
+	}
+	else
+	{
+		Log::Message("Loaded background image: " + background);
+		backgroundImage.setTexture(backgroundTexture);
+
+		//TODO: Non-fixed size?
+		backgroundImage.setScale(sf::Vector2f(800.0f / backgroundTexture.getSize().x, 600.0f / backgroundTexture.getSize().y));
+	}
 	
 
 	AudioPlayer::PlayBGM("Firebrand");
@@ -30,6 +44,7 @@ ClientBattle::~ClientBattle()
 void ClientBattle::Update(double dt)
 {
 	time += dt;
+	requestInterval += dt;
 
 	// Battle Input
 	if (sf::Keyboard::isKeyPressed(sf::Keyboard::Num1)) playerAction = BattleAction::ATTACK;
@@ -47,6 +62,8 @@ void ClientBattle::Draw(sf::RenderWindow* renderer)
 	sf::Vector2f screenSize = sf::Vector2f(renderer->getSize().x, renderer->getSize().y);
 	sf::Vector2f cameraPosition = sf::Vector2f(screenSize.x / 2, screenSize.y / 2);
 	renderer->setView(sf::View(cameraPosition, screenSize));
+
+	renderer->draw(backgroundImage);
 
 	// Text Initialization.
 	std::ostringstream sstream;
@@ -135,8 +152,13 @@ bool ClientBattle::SelectAction(std::shared_ptr<qfcbase::BattleEntity> currentEn
 				}
 			}
 		}
-		RequestTurn();
-		return false;
+
+		if (requestInterval > REQUEST_INTERVAL)
+		{
+			requestInterval = 0.0;
+			RequestTurn();
+			return false;
+		}
 		//nextTurn = Turn{ currentTurn, currentEntity, targetEntity, BattleAction::ATTACK, 3 + rand() % 5 };
 		//break;
 	default:
