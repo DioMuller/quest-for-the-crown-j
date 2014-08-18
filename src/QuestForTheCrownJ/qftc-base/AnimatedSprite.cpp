@@ -105,3 +105,8 @@ sf::FloatRect AnimatedSprite::GetArea() const
 		frameSize.x - padding.width - padding.left,
 		frameSize.y - padding.height - padding.top);
 }
+
+void AnimatedSprite::SetScale(float scale)
+{
+	sprite.setScale(scale, scale);
+}

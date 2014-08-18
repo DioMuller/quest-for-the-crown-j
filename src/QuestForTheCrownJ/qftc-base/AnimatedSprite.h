@@ -57,6 +57,7 @@ namespace qfcbase
 			void Draw(sf::RenderWindow* window);
 			void Update(double deltaTime);
 			void Move(const sf::Vector2f& offset);
+			void SetScale(float scale);
 			bool Overlaps(const AnimatedSprite& other);
 
 			std::string GetCurrentAnimation() { return currentAnimation; }

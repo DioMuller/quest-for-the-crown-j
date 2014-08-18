@@ -118,7 +118,7 @@ void ClientBattle::Draw(sf::RenderWindow* renderer)
 			else if (battleEntity->Type() == BattleEntityType::ENEMY)
 			{
 				battleEntity->DrawInfo(renderer, sf::Vector2f(690.0f - (j * 200.0f), 550.0f));
-				battleEntity->DrawEntity(renderer, sf::Vector2f(350.0f + (j * 30.0f), 300.0f));
+				battleEntity->DrawEntity(renderer, sf::Vector2f(350.0f + (j * 30.0f), 250.0f));
 				j++;
 			}
 		}

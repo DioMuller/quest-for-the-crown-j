@@ -30,9 +30,17 @@ BattleEntity::~BattleEntity()
 void BattleEntity::DrawEntity(sf::RenderWindow* renderer, sf::Vector2f position)
 {
 	sf::Vector2f pos = parent->Sprite->Position;
+	parent->Sprite->SetScale(4.0f);
 	parent->Sprite->SetPosition(position);
 	parent->Sprite->Draw(renderer);
 	parent->Sprite->SetPosition(pos);
+	parent->Sprite->SetScale(1.0f);
+
+	// TODO: Change to update?
+	if (parent->Sprite->CurrentAnimation != "walking_down")
+		parent->Sprite->SetCurrentAnimation("walking_down");
+
+	parent->Sprite->Update(SECONDS_PER_FRAME);
 }
 
 void BattleEntity::DrawInfo(sf::RenderWindow* renderer, sf::Vector2f position)
