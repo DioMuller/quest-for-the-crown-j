@@ -22,6 +22,7 @@ void LevelLoader::LoadLevels(std::string path)
 		std::string path = next->Attribute("path");
 		std::string bgm = next->Attribute("music");
 		std::string title = next->Attribute("title");
+		std::string background = next->Attribute("background");
 
 		auto splitedNeighbours = split(std::string(next->Attribute("neighbors")), ',');
 		int neigh[4];
@@ -30,7 +31,7 @@ void LevelLoader::LoadLevels(std::string path)
 			neigh[(Direction)i] = std::stoi(splitedNeighbours[i]);
 		}
 
-		LevelCollection::AddLevel(id, path, bgm, title, neigh);
+		LevelCollection::AddLevel(id, path, bgm, background, title, neigh);
 		next = next->NextSiblingElement("level");
 	}
 }

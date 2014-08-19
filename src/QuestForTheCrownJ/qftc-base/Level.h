@@ -31,6 +31,7 @@ namespace qfcbase
 			std::vector<Entity*> players;
 			LevelCollection* collectionParent;
 			std::string bgm;
+			std::string battleBackground;
 			std::string title;
 			bool playBGM;
 
@@ -71,6 +72,16 @@ namespace qfcbase
 			std::shared_ptr<tmx::MapLoader> Map()
 			{
 				return map;
+			}
+
+			void BattleBackground(std::string value)
+			{
+				this->battleBackground = value;
+			}
+
+			std::string BattleBackground()
+			{
+				return this->battleBackground;
 			}
 
 		/////////////////////////////////////

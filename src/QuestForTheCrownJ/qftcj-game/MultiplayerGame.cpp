@@ -140,11 +140,15 @@ void MultiplayerGame::RefreshSceneFromServer()
 void MultiplayerGame::StartConfront(std::shared_ptr<Entity> e1, std::shared_ptr<Entity> e2)
 {
 	auto e1Scene = e1->scene.lock();
-	if (!e1Scene)
+	auto level = std::static_pointer_cast<Level>(e1Scene);
+
+	if (!level)
 		return;
 
-	e1Scene->RemoveEntity(e2);
-	auto battle = std::make_shared<ClientBattle>(getptr());
+	level->RemoveEntity(e2);
+	auto battle = std::make_shared<ClientBattle>(getptr(), level->BattleBackground());
+	// std::shared_ptr<ClientBattle>(new ClientBattle(getptr(), level->BattleBackground()));
+	
 
 	if (battle->PlayerJoin(e1) &&
 		battle->AddMonster(e2))

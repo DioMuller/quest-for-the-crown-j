@@ -110,28 +110,31 @@ void BattleScene::ExecuteTurn()
 	if (!target) return;
 	if (!entity) return;
 
+	std::string entityName = entity->Type() == (BattleEntityType::PLAYER) ? entity->GetParent()->Name : "Enemy";
+	std::string targetName = target->Type() == (BattleEntityType::PLAYER) ? entity->GetParent()->Name : "Enemy";
+
 	switch (turns[currentTurn].action)
 	{
 		case BattleAction::ATTACK:
-			PrintMessage(entity->category + " attacked " + target->category);
+			PrintMessage(entityName + " attacked " + targetName);
 			PrintMessage("Damage " + std::to_string(value));
 
 			target->ChangeHP(-value);
 			break;
 		case BattleAction::SPECIAL:
-			PrintMessage(entity->category + " special attacked " + target->category);
+			PrintMessage(entityName + " special attacked " + targetName);
 			PrintMessage("Damage " + std::to_string(value));
 
 			target->ChangeHP(-value);
 			break;
 		case BattleAction::ITEM:
-			PrintMessage(entity->category + " used potion on " + target->category);
+			PrintMessage(entityName + " used potion on " + targetName);
 			PrintMessage("Cured " + std::to_string(value));
 
 			target->ChangeHP(value);
 			break;
 		case BattleAction::RUN:
-			PrintMessage(entity->category + " ran away!");
+			PrintMessage(entityName + " ran away!");
 			RemoveEntity(entity);
 			if (entity->Type() == BattleEntityType::ENEMY) enemyCount--;
 			else if (entity->Type() == BattleEntityType::PLAYER) playerCount--;

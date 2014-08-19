@@ -66,6 +66,7 @@ void Level::LoadMap(std::string tmxFile)
 		this->id = info->levelId;
 		this->bgm = info->music;
 		this->title = info->title;
+		this->battleBackground = info->background;
 
 		for (int i = 0; i < 4; i++)
 		{
