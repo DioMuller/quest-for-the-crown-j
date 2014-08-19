@@ -16,6 +16,7 @@ namespace qfcgame
 			qfcbase::BattleAction playerAction;
 			std::deque<std::string> lastMessages;
 			sf::Text text;
+			sf::Text battleCommands;
 			int lastTurn;
 			double requestInterval;
 			std::vector<qfcbase::Turn> receivedTurns;

@@ -16,8 +16,14 @@ ClientBattle::ClientBattle(std::weak_ptr<qfcbase::Game> parent, std::string back
 	requestInterval = 0.0;
 
 	text = sf::Text("Battle!", *GameAssets::DefaultFont());
+	battleCommands = sf::Text("Commands", *GameAssets::DefaultFont());
+	
 	text.setCharacterSize(12);
-	text.setPosition(10, 10);
+	text.setPosition(400, 500);
+
+	battleCommands.setCharacterSize(20);
+	battleCommands.setPosition(60, 420);
+	battleCommands.setColor(sf::Color(255, 255, 0));
 
 	if (!backgroundTexture.loadFromFile(background))
 	{
@@ -81,17 +87,22 @@ void ClientBattle::Draw(sf::RenderWindow* renderer)
 	renderer->draw(messageBoxImage);
 
 	// Text Initialization.
+	std::ostringstream bstream;
 	std::ostringstream sstream;
 	std::string str;
 
 	// Battle Info Text
-	sstream 
-		<< "Turn: " << currentTurn << std::endl
-		<< "1 Attack " << std::endl
-		<< "2 Magic" << std::endl
-		<< "3 Use Potion" << std::endl
-		<< "4 Run" << std::endl
+	bstream 
+		//<< "Turn: " << currentTurn << std::endl
+		<< "[1] Attack " << std::endl
+		<< "[2] Magic" << std::endl
+		<< "[3] Use Potion" << std::endl
+		<< "[4] Run" << std::endl
 		<< std::endl << std::endl;
+
+	str = bstream.str();
+	battleCommands.setString(str);
+	renderer->draw(battleCommands);
 
 	for (auto message : lastMessages)
 	{
@@ -112,12 +123,12 @@ void ClientBattle::Draw(sf::RenderWindow* renderer)
 		{
 			if (battleEntity->Type() == BattleEntityType::PLAYER)
 			{
-				battleEntity->DrawInfo(renderer, sf::Vector2f(10.0f + (i * 200.0f), 550.0f));
+				battleEntity->DrawInfo(renderer, sf::Vector2f(410.0f + (i * 200.0f), 420.0f));
 				i++;
 			}
 			else if (battleEntity->Type() == BattleEntityType::ENEMY)
 			{
-				battleEntity->DrawInfo(renderer, sf::Vector2f(690.0f - (j * 200.0f), 550.0f));
+				battleEntity->DrawInfo(renderer, sf::Vector2f(600.0f - (j * 200.0f), 420.0f));
 				battleEntity->DrawEntity(renderer, sf::Vector2f(350.0f + (j * 30.0f), 250.0f));
 				j++;
 			}
