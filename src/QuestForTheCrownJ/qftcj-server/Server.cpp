@@ -321,7 +321,7 @@ LauncherLoginResponse Server::HandleLoginInfo(const LauncherLoginInfo& login_inf
 		logged->map_id = map_id;
 		logged->address = sender;
 		logged->address_size = sender_size;
-		std::lock_guard<std::mutex> lock(mtx_users);
+		std::lock_guard<std::recursive_mutex> lock(mtx_users);
 		logged_users[user_auth_str] = logged;
 	}
 	else
@@ -451,7 +451,7 @@ void Server::CheckPlayersTimeout(double dt)
 
 std::shared_ptr<LoggedUser> Server::GetUser(std::string authKey)
 {
-	std::lock_guard<std::mutex> lock(mtx_users);
+	std::lock_guard<std::recursive_mutex> lock(mtx_users);
 	if (logged_users.count(authKey) > 0)
 		return logged_users[authKey];
 	return nullptr;
@@ -459,7 +459,7 @@ std::shared_ptr<LoggedUser> Server::GetUser(std::string authKey)
 
 std::shared_ptr<LoggedUser> Server::GetUser(std::shared_ptr<sockaddr_in> address)
 {
-	std::lock_guard<std::mutex> lock(mtx_users);
+	std::lock_guard<std::recursive_mutex> lock(mtx_users);
 	for (auto usr : logged_users)
 		if (usr.second->address == address)
 			return usr.second;
@@ -468,7 +468,7 @@ std::shared_ptr<LoggedUser> Server::GetUser(std::shared_ptr<sockaddr_in> address
 
 std::shared_ptr<LoggedUser> Server::GetUser(std::shared_ptr<qfcbase::Entity> entity)
 {
-	std::lock_guard<std::mutex> lock(mtx_users);
+	std::lock_guard<std::recursive_mutex> lock(mtx_users);
 	for (auto& user : logged_users) {
 		if (user.second->game_entity == entity)
 			return user.second;
@@ -478,7 +478,7 @@ std::shared_ptr<LoggedUser> Server::GetUser(std::shared_ptr<qfcbase::Entity> ent
 
 std::vector<std::shared_ptr<LoggedUser>> Server::GetUsers(std::function<bool(std::shared_ptr<LoggedUser>)> predicate)
 {
-	std::lock_guard<std::mutex> lock(mtx_users);
+	std::lock_guard<std::recursive_mutex> lock(mtx_users);
 	std::vector<std::shared_ptr<LoggedUser>> users;
 	for (auto& user : logged_users) {
 		if (predicate(user.second))
@@ -523,7 +523,7 @@ void Server::db_exec(std::string sql, const std::function<void(int argc, char** 
 
 void Server::DisconnectPlayer(std::shared_ptr<LoggedUser> user)
 {
-	std::lock_guard<std::mutex> lockUsers(mtx_users);
+	std::lock_guard<std::recursive_mutex> lock(mtx_users);
 	std::lock_guard<std::mutex> lockBattles(mtx_battles);
 	SavePlayer(user);
 	if (user->game_entity)
