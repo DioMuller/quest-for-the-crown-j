@@ -39,7 +39,7 @@ namespace qfcserver {
 			std::map<int, std::shared_ptr<ServerLevel>> loaded_levels;
 			std::map<int/*EntityID*/, std::shared_ptr<qfcserver::ServerBattle>> entity_battles;
 			std::vector<std::shared_ptr<qfcserver::ServerBattle>> ongoing_battles;
-			std::mutex mtx_battles;
+			std::recursive_mutex mtx_battles;
 			std::recursive_mutex mtx_users;
 			void UpdateLoop();
 

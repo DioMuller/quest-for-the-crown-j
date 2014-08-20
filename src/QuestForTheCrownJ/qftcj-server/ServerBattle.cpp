@@ -5,7 +5,8 @@
 using namespace qfcserver;
 using namespace qfcbase;
 
-ServerBattle::ServerBattle(std::weak_ptr<qfcbase::Game> parent) : qfcbase::BattleScene(parent)
+ServerBattle::ServerBattle(std::weak_ptr<qfcbase::Game> parent)
+	: qfcbase::BattleScene(parent)
 {
 }
 
@@ -49,6 +50,12 @@ bool ServerBattle::SelectAction(std::shared_ptr<qfcbase::BattleEntity> currentEn
 			}
 		}
 
+		if (lastLogTurn != currentTurn)
+		{
+			Log::Debug("Waiting for player action on turn " + std::to_string(currentTurn));
+			lastLogTurn = currentTurn;
+		}
+
 		return false;
 		break;
 	case BattleEntityType::ENEMY:
@@ -59,7 +66,7 @@ bool ServerBattle::SelectAction(std::shared_ptr<qfcbase::BattleEntity> currentEn
 			auto be = std::static_pointer_cast<BattleEntity>(entity);
 
 			if (be)
-				SendTurn(nextTurn.action, nextTurn.entity->Id, nextTurn.target->GetParent()->Id, nextTurn.value, be->GetParent());
+				SendTurn(nextTurn.action, nextTurn.entity->GetParent()->Id, nextTurn.target->GetParent()->Id, nextTurn.value, be->GetParent());
 		}
 
 		Log::Debug("Pushing back turn " + std::to_string(currentTurn));
@@ -100,6 +107,12 @@ void ServerBattle::ReceiveTurn(int turn_id, qfcbase::BattleAction command, int a
 
 	if (currentEntity && targetEntity)
 		receivedTurns.push_back(Turn{ turn_id, currentEntity, targetEntity, command, additional_info });
+	else {
+		if (!currentEntity)
+			Log::Error("Unknown battle entity: " + std::to_string(entity_id));
+		else
+			Log::Error("Unknown battle target: " + std::to_string(target_id));
+	}
 }
 
 void ServerBattle::SendTurnToClients(int turn_id)

@@ -19,10 +19,10 @@ namespace qfcgame
 		std::stack<std::shared_ptr<qfcbase::Scene>> pastScenes;
 		bool endScene;
 		bool sceneStacked;
-		std::shared_ptr<qfcbase::Entity> player;
 		std::shared_ptr<qfcgame::Controllable> controllable_behavior;
 	protected:
 		std::shared_ptr<qfcbase::Scene> currentScene;
+		std::shared_ptr<qfcbase::Entity> player;
 
 		/////////////////////////////////////
 		// Constructors

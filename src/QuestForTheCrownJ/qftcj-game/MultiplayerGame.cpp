@@ -83,7 +83,7 @@ void MultiplayerGame::Connect(std::string server_addr, std::string auth_token)
 			updateEntity->Name = data.name;
 	};
 
-	clientChannel.onBattleStart = [this](const ServerBattleStart data) 
+	clientChannel.onBattleStart = [this](const ServerBattleStart data)
 	{
 		Log::Message("Received a Battle Start Message");
 		auto level = std::dynamic_pointer_cast<Level>(currentScene);
@@ -93,7 +93,16 @@ void MultiplayerGame::Connect(std::string server_addr, std::string auth_token)
 			return;
 		}
 
+		auto e2 = level->GetEntity(data.entity.id);
+		if (!e2)
+			e2 = CreateEntity(data.entity, sf::Vector2f());
+		else
+			level->RemoveEntity(e2);
 
+		auto battle = std::make_shared<ClientBattle>(getptr(), level->BattleBackground());
+		battle->PlayerJoin(player);
+		battle->AddMonster(e2);
+		LoadScene(battle, true);
 	};
 
 	clientChannel.onTurnReceived = [this](const ServerBattleTurn data)
@@ -139,20 +148,7 @@ void MultiplayerGame::RefreshSceneFromServer()
 
 void MultiplayerGame::StartConfront(std::shared_ptr<Entity> e1, std::shared_ptr<Entity> e2)
 {
-	auto e1Scene = e1->scene.lock();
-	auto level = std::static_pointer_cast<Level>(e1Scene);
 
-	if (!level)
-		return;
-
-	level->RemoveEntity(e2);
-	auto battle = std::make_shared<ClientBattle>(getptr(), level->BattleBackground());
-	// std::shared_ptr<ClientBattle>(new ClientBattle(getptr(), level->BattleBackground()));
-	
-
-	if (battle->PlayerJoin(e1) &&
-		battle->AddMonster(e2))
-		LoadScene(battle, true);
 }
 
 void MultiplayerGame::SendTurn(int turn_id, qfcbase::BattleAction command, int entity_id, int target_id, int additional_info)

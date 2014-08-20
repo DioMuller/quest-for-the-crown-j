@@ -24,7 +24,6 @@ namespace qfcbase
 	class BattleScene : public Scene
 	{
 		protected:
-			int currentTurn;
 			std::vector<Turn> turns;
 
 			int playerCount;
@@ -32,6 +31,8 @@ namespace qfcbase
 
 			std::vector<std::shared_ptr<BattleEntity>> turnOrder;
 			
+		public:
+			int currentTurn;
 
 		/////////////////////////////////////
 		// Constructors

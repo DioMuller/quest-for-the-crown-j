@@ -179,8 +179,11 @@ bool ClientBattle::SelectAction(std::shared_ptr<qfcbase::BattleEntity> currentEn
 		{
 			for (auto turn : receivedTurns)
 			{
-				if (turn.id == currentTurn && turn.entity->Type() == BattleEntityType::ENEMY)
+				if (turn.id == currentTurn)
 				{
+					if (turn.entity->Type() != BattleEntityType::ENEMY)
+						Log::Error("Client / Server disagree on battle turn");
+
 					turns.push_back(turn);
 					return true;
 				}
@@ -244,4 +247,10 @@ void ClientBattle::ReceiveTurn(qfcbase::BattleAction command, int turn_id, int a
 
 	if ( currentEntity && targetEntity )
 		receivedTurns.push_back(Turn{ turn_id, currentEntity, targetEntity, command, additional_info });
+	else {
+		if (!currentEntity)
+			Log::Error("Unknown battle entity: " + std::to_string(entity_id));
+		else
+			Log::Error("Unknown battle target: " + std::to_string(target_id));
+	}
 }

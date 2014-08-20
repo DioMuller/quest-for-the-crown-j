@@ -85,22 +85,29 @@ Server::Server(int port)
 
 	channel->handleCharacterRequestNextTurn = [this](const ClientCharacterBattleNextTurn data)
 	{
-		Log::Message("Received Next Turn Request from Client");
-
 		auto user = GetUser(data.header.authKey);
-		if (!user) return;
+		if (!user) {
+			Log::Message("Received Turn Request from unknown client");
+			return;
+		}
 
-		auto battle = entity_battles[user->game_entity->Id];//std::static_pointer_cast<ServerBattle>(user.game_entity->Scene().lock());
+		Log::Debug("Received request for battle turn (" + std::to_string(data.lastTurn) + ") from client");
+
+		auto battle = entity_battles[user->game_entity->Id];
 
 		if (battle)
 		{
 			battle->SendTurnToClients(data.lastTurn);
 		}
+		else
+		{
+			Log::Error("User was not found in a battle. User Entity Id: " + std::to_string(user->game_entity->Id));
+		}
 	};
 
 	channel->handleCharacterCommand = [this](const ClientCharacterBattleCommand data)
 	{
-		Log::Message("Received Command " + std::to_string(data.command) + " from Client.");
+		Log::Message("Received Command " + std::to_string(data.command) + " from Client on turn " + std::to_string(data.turn_id) + ".");
 		auto user = GetUser(data.header.authKey);
 		if (!user) return;
 
@@ -152,7 +159,7 @@ void Server::UpdateLoop()
 #pragma region Game
 void Server::Update(double delta)
 {
-	std::lock_guard<std::mutex> lock(mtx_battles);
+	std::lock_guard<std::recursive_mutex> lockBattles(mtx_battles);
 
 	CheckPlayersTimeout(delta);
 
@@ -172,29 +179,49 @@ void Server::Update(double delta)
 
 void Server::StartConfront(std::shared_ptr<qfcbase::Entity> e1, std::shared_ptr<qfcbase::Entity> e2)
 {
+	auto user = GetUser(e1);
+	if (!user)
+		return;
+
 	// TODO: Uncomment messages.
 	Log::Debug((std::string)"Battle: " + std::to_string(e1->Id) + " VS " + std::to_string(e2->Id));
 
 	std::shared_ptr<ServerBattle> battle;
 	if (entity_battles.count(e1->Id) > 0 && entity_battles[e1->Id] != nullptr) {
-		battle = entity_battles[e1->Id];
+		/*battle = entity_battles[e1->Id];
 		if (entity_battles.count(e2->Id) <= 0)
-			AddToBattle(battle, e2);
-	}
-	else if (entity_battles.count(e2->Id) > 0 && entity_battles[e2->Id] != nullptr) {
-		battle = entity_battles[e2->Id];
-		if (entity_battles.count(e1->Id) <= 0)
-			AddToBattle(battle, e1);
-	}
-	else {
-		battle = std::make_shared<ServerBattle>(getptr());
-		AddToBattle(battle, e1);
+		{
 		AddToBattle(battle, e2);
-
-		ongoing_battles.push_back(battle);
-		entity_battles[e1->Id] = battle;
-		entity_battles[e2->Id] = battle;
+		e2->Scene().lock()->RemoveEntity(e2);
+		throw std::logic_error("Server currently does not support multiple entities in one battle!");
+		}*/
+		return;
 	}
+	if (entity_battles.count(e2->Id) > 0 && entity_battles[e2->Id] != nullptr) {
+		/*battle = entity_battles[e2->Id];
+		if (entity_battles.count(e1->Id) <= 0)
+		{
+		AddToBattle(battle, e1);
+		// TODO: Notify player
+		throw std::logic_error("Server currently does not support multiple entities in one battle!");
+		}*/
+		return;
+	}
+
+	battle = std::make_shared<ServerBattle>(getptr());
+	AddToBattle(battle, e1);
+	AddToBattle(battle, e2);
+
+	ServerBattleStart data;
+	data.entity.category = NetHelper::EncodeCategory(e2->category);
+	data.entity.id = e2->Id;
+	data.entity.type = ServerHelper::GetEntityType(e2);
+	//data.battle_id = ?;
+	channel->Send(data, user->address, user->address_size);
+
+	ongoing_battles.push_back(battle);
+	entity_battles[e1->Id] = battle;
+	entity_battles[e2->Id] = battle;
 
 	e2->Scene().lock()->RemoveEntity(e2);
 }
@@ -231,6 +258,9 @@ void Server::UnstackScene(std::shared_ptr<qfcbase::Entity> entity)
 	});
 	for (auto bEnt : found)
 		battle->RemoveEntity(bEnt);
+
+	if (entity_battles.count(entity->Id) > 0)
+		entity_battles.erase(entity->Id);
 }
 #pragma endregion
 
@@ -363,9 +393,9 @@ void Server::SetEntityPosition(std::shared_ptr<qfcbase::Entity> entity, int map_
 			break;
 		}
 
-		if (!map_in_use)
-			loaded_levels.erase(itr);
-		break;
+			if (!map_in_use)
+				loaded_levels.erase(itr);
+			break;
 	}
 
 	entity->Sprite->Position = sf::Vector2f(x, y);
@@ -441,7 +471,7 @@ void Server::CheckPlayersTimeout(double dt)
 	for (auto& user : GetUsers([&](std::shared_ptr<LoggedUser> user) { return true; }))
 	{
 		user->away_time += dt;
-		if (user->away_time > 10)
+		if (user->away_time > 5 * 60)
 			timeout_players.push_back(user);
 	}
 
@@ -524,7 +554,7 @@ void Server::db_exec(std::string sql, const std::function<void(int argc, char** 
 void Server::DisconnectPlayer(std::shared_ptr<LoggedUser> user)
 {
 	std::lock_guard<std::recursive_mutex> lock(mtx_users);
-	std::lock_guard<std::mutex> lockBattles(mtx_battles);
+	std::lock_guard<std::recursive_mutex> lockBattles(mtx_battles);
 	SavePlayer(user);
 	if (user->game_entity)
 	{
@@ -551,7 +581,7 @@ void Server::SavePlayer(std::shared_ptr<LoggedUser> user)
 	update_builder << "UPDATE players set map=" << user->map_id << ", x=" << static_cast<int>(pos.x) << ", y=" << static_cast<int>(pos.y) << " ";
 	update_builder << "WHERE id=" << user->player_id;
 
-	db_exec(update_builder.str(), [&](int c, char** v, char** n) { });
+	db_exec(update_builder.str(), [&](int c, char** v, char** n) {});
 }
 
 std::shared_ptr<ServerLevel> qfcserver::Server::LoadLevel(int map_id)
@@ -565,11 +595,12 @@ std::shared_ptr<ServerLevel> qfcserver::Server::LoadLevel(int map_id)
 	return loaded_levels[map_id];
 }
 
-void qfcserver::Server::SendTurn(int turn_id, qfcbase::BattleAction command, int entity_id, int target_id,  int additional_info, std::shared_ptr<Entity> entity)
+void qfcserver::Server::SendTurn(int turn_id, qfcbase::BattleAction command, int entity_id, int target_id, int additional_info, std::shared_ptr<Entity> entity)
 {
 	auto user = GetUser(entity);
 	if (!user) return;
 
+	Log::Debug("Sending battle turn (" + std::to_string(turn_id) + ") to client");
 	channel->SendServerCommand(turn_id, command, entity_id, target_id, additional_info, user->address, user->address_size);
 }
 
