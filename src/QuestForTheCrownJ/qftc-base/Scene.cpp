@@ -78,10 +78,10 @@ void Scene::RemoveAllEntities()
 	entities.clear();
 }
 
-bool Scene::IsEmpty()
+bool Scene::IsFinished()
 {
 	std::lock_guard<std::mutex> lock(entities_mutex);
-	return entities.empty();
+	return entities.size() < 2;
 }
 
 std::vector<std::shared_ptr<Entity>> Scene::GetEntities()

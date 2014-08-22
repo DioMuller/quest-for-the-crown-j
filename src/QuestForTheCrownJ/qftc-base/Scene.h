@@ -55,7 +55,7 @@ namespace qfcbase
 			bool UpdateAborted();
 			void AbortUpdate();
 			void RemoveAllEntities();
-			bool IsEmpty();
+			bool IsFinished();
 
 		private:
 			void SortEntities();

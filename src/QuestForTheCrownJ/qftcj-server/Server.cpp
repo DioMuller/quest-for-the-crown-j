@@ -167,8 +167,15 @@ void Server::Update(double delta)
 	while (battleIterator != std::end(ongoing_battles)) {
 		(*battleIterator)->Update(delta);
 
-		if ((*battleIterator)->IsEmpty())
+		if ((*battleIterator)->IsFinished())
+		{
+			for (auto e : (*battleIterator)->GetEntities([](std::shared_ptr<Entity> e) { return true; }))
+			{
+				auto bEnt = std::dynamic_pointer_cast<BattleEntity>(e);
+				UnstackScene(bEnt->GetParent());
+			}
 			battleIterator = ongoing_battles.erase(battleIterator);
+		}
 		else
 			++battleIterator;
 	}
@@ -224,6 +231,11 @@ void Server::StartConfront(std::shared_ptr<qfcbase::Entity> e1, std::shared_ptr<
 	entity_battles[e2->Id] = battle;
 
 	e2->Scene().lock()->RemoveEntity(e2);
+
+	ServerSendEntityRemoved entity_removed_data;
+	entity_removed_data.entity_id = e2->Id;
+	for (auto usr : logged_users)
+		channel->Send(entity_removed_data, usr.second->address, usr.second->address_size);
 }
 
 void Server::AddToBattle(std::shared_ptr<ServerBattle> battle, std::shared_ptr<Entity> entity)
@@ -248,6 +260,8 @@ void Server::GoToNeighbour(std::shared_ptr<qfcbase::Entity> entity, qfcbase::Dir
 
 void Server::UnstackScene(std::shared_ptr<qfcbase::Entity> entity)
 {
+	std::lock_guard<std::recursive_mutex> lockBattles(mtx_battles);
+
 	if (entity_battles.count(entity->Id) <= 0)
 		return;
 
@@ -259,8 +273,7 @@ void Server::UnstackScene(std::shared_ptr<qfcbase::Entity> entity)
 	for (auto bEnt : found)
 		battle->RemoveEntity(bEnt);
 
-	if (entity_battles.count(entity->Id) > 0)
-		entity_battles.erase(entity->Id);
+	entity_battles.erase(entity->Id);
 }
 #pragma endregion
 
