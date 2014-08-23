@@ -12,7 +12,7 @@
 #include "KeyboardInput.h"
 #include "Log.h"
 
-#define HIDE_CONSOLE 0
+#define HIDE_CONSOLE 1
 
 #if HIDE_CONSOLE
 #define _WIN32_WINNT 0x0500

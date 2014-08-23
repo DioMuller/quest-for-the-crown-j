@@ -271,7 +271,12 @@ void Server::UnstackScene(std::shared_ptr<qfcbase::Entity> entity)
 		return bEnt->GetParent() == entity;
 	});
 	for (auto bEnt : found)
+	{
 		battle->RemoveEntity(bEnt);
+	}
+
+
+
 
 	entity_battles.erase(entity->Id);
 }
@@ -591,7 +596,8 @@ void Server::SavePlayer(std::shared_ptr<LoggedUser> user)
 	auto pos = user->game_entity->Sprite->Position;
 
 	std::ostringstream update_builder;
-	update_builder << "UPDATE players set map=" << user->map_id << ", x=" << static_cast<int>(pos.x) << ", y=" << static_cast<int>(pos.y) << " ";
+	update_builder << "UPDATE players set map=" << user->map_id << ", x=" << static_cast<int>(pos.x) << ", y=" << static_cast<int>(pos.y)
+		<< ", gold = " << user->game_entity->items.gold << ", potions = " << user->game_entity->items.potions << " ";
 	update_builder << "WHERE id=" << user->player_id;
 
 	db_exec(update_builder.str(), [&](int c, char** v, char** n) {});

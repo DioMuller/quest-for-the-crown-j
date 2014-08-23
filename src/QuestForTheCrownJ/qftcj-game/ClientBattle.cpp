@@ -2,6 +2,7 @@
 #include "GameAssets.h"
 #include "AudioPlayer.h"
 #include "MultiplayerGame.h"
+#include "Hero.h"
 
 #include <sstream>
 #include <SFML/Window/Keyboard.hpp>
@@ -97,7 +98,7 @@ void ClientBattle::Draw(sf::RenderWindow* renderer)
 		<< "[1] Attack " << std::endl
 		<< "[2] Magic" << std::endl
 		<< "[3] Use Potion" << std::endl
-		<< "[4] Run" << std::endl
+		//<< "[4] Run" << std::endl
 		<< std::endl << std::endl;
 
 	str = bstream.str();
@@ -167,7 +168,16 @@ bool ClientBattle::SelectAction(std::shared_ptr<qfcbase::BattleEntity> currentEn
 	case BattleEntityType::PLAYER:
 		if (playerAction == BattleAction::NOACTION) return false;
 		if ((playerAction == BattleAction::SPECIAL && currentEntity->CurrentMP() <= 0)) return false;
-		// TODO: Potions.
+		if (playerAction == BattleAction::ITEM)
+		{
+			if (currentEntity->GetParent()->items.potions <= 0) 
+				return false;
+			else
+			{
+				targetEntity = currentEntity;
+				currentEntity->GetParent()->items.potions--;
+			}
+		}
 
 		nextTurn = Turn{ currentTurn, currentEntity, targetEntity, playerAction, 3 + rand() % 5 };
 		SendTurn(playerAction, currentEntity->GetParent()->Id, targetEntity->GetParent()->Id, nextTurn.value);
